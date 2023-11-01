@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters\Tests;
 
-use namespace HH\Lib\{C, Dict, File, Regex, Str, Vec};
+use namespace HH\Lib\{C, Dict, File, Math, Regex, Str, Vec};
 use namespace HTL\{Pha, PhaLinters};
 use function HH\fun_get_function;
 
@@ -9,6 +9,7 @@ use function HH\fun_get_function;
 async function run_async(): Awaitable<void> {
   $linters = vec[
     PhaLinters\prefer_require_once_linter<>,
+    PhaLinters\no_elseif_linter<>,
   ]
     |> Dict\from_values($$, fun_get_function<>)
     |> Dict\map_keys(
@@ -16,10 +17,19 @@ async function run_async(): Awaitable<void> {
       $f ==> Str\slice($f, Str\search_last($f, '\\') as nonnull + 1),
     );
 
+  // Some tests change their behavior on more recent versions of hhvm.
+  // For example, no_elseif_linter<>, since `elseif (expression) {}` will be
+  // parsed as a function call followed by a legacy curly brace subscript.
+  // This is a Hack error, so reporting a lint error is not needed.
+  // The version number (Mmmmpp) Major, minor, patch is the first version
+  // where a 0 (rather than the stored error count) is expected.
+  $tests_that_should_have_zero_errrors_on_hhvm_version =
+    dict[fun_get_function(PhaLinters\no_elseif_linter<>) => 415800];
+
   $linter_sources_pairs = await Vec\map_async(
-    \glob(__DIR__.'/examples/*.hack'),
+    \glob(__DIR__.'/examples/*.hack*'),
     async $p ==> {
-      $name = Regex\first_match($p, re'#/(\w+)\.hack$#') |> $$[1] ?? 'ERROR';
+      $name = Regex\first_match($p, re'#/(\w+)\.hack#') |> $$[1] ?? 'ERROR';
       $linter = idx($linters, $name);
 
       if ($linter is null) {
@@ -60,6 +70,16 @@ async function run_async(): Awaitable<void> {
         try {
           $lint_errors = $linter($script, $index);
           $err_cnt = Str\to_int($expected_errors[0]['err_cnt']) as nonnull;
+          if (
+            \HHVM_VERSION_ID >=
+              idx(
+                $tests_that_should_have_zero_errrors_on_hhvm_version,
+                fun_get_function($linter),
+                Math\INT64_MAX,
+              )
+          ) {
+            $err_cnt = 0;
+          }
 
           if (C\count($lint_errors) !== $err_cnt) {
             $errors[] = Str\format(
@@ -91,6 +111,6 @@ async function run_async(): Awaitable<void> {
 
   echo Str\format(
     "Running these tests took: %g MB of RAM\n",
-    \memory_get_peak_usage(true) / 1_000_000,
+    \memory_get_peak_usage(true) / 1000000,
   );
 }

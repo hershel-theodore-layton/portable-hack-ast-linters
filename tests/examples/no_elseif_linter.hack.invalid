@@ -1,0 +1,17 @@
+//##! 0
+namespace Linters\Tests\NoElseIfLinter;
+
+function func1(): void {
+  if (true) {
+  } else if (true) {
+  }
+}
+
+//##! 1
+namespace Linters\Tests\NoElseIfLinter;
+
+function func2(): void {
+  if (true) {
+  } elseif (true) {
+  }
+}
