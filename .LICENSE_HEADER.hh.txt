@@ -1,0 +1,1 @@
+/** portable-hack-ast-linters is MIT licensed, see /LICENSE. */

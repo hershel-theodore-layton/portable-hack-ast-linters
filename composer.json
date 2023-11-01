@@ -1,0 +1,27 @@
+{
+  "name": "hershel-theodore-layton/portable-hack-ast-linters",
+  "description": "Hack source code linters authored with portable-hack-ast.",
+  "license": "MIT",
+  "require": {
+    "hhvm": "^4.102"
+  },
+  "require-dev": {
+    "hhvm/hhvm-autoload": "^3.2",
+    "hhvm/hhast": "^4.102",
+    "hhvm/hacktest": "^2.3",
+    "facebook/fbexpect": "^2.8"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "rm vendor/autoload.php vendor/composer/*.php"
+    ],
+    "post-update-cmd": [
+      "rm vendor/autoload.php vendor/composer/*.php"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "hhvm/hhvm-autoload": true
+    }
+  }
+}
