@@ -8,8 +8,9 @@ use function HH\fun_get_function;
 <<__EntryPoint>>
 async function run_async(): Awaitable<void> {
   $linters = vec[
-    PhaLinters\prefer_require_once_linter<>,
     PhaLinters\no_elseif_linter<>,
+    PhaLinters\prefer_require_once_linter<>,
+    PhaLinters\use_statement_without_kind_linter<>,
   ]
     |> Dict\from_values($$, fun_get_function<>)
     |> Dict\map_keys(
