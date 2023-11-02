@@ -30,8 +30,7 @@ function prefer_require_once_linter(
         $linter,
         Str\format(
           'Use require_once instead of %s.',
-          Pha\token_get_text_trivium($script, $n)
-            |> Pha\node_get_code($script, $$),
+          Pha\token_get_text($script, $n),
         ),
       ),
     );
