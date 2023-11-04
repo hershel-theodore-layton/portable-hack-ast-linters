@@ -11,6 +11,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\all_the_whitespace_linters<>,
     PhaLinters\dont_discard_new_expressions_linter<>,
     PhaLinters\group_use_statement_alphabetization_linter<>,
+    PhaLinters\must_use_braces_for_control_flow_linter<>,
     PhaLinters\no_elseif_linter<>,
     PhaLinters\no_string_interpolation_linter<>,
     PhaLinters\no_php_equality_linter<>,
