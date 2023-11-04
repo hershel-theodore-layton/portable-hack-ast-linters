@@ -9,6 +9,7 @@ use function HH\fun_get_function;
 async function run_async(): Awaitable<void> {
   $linters = vec[
     PhaLinters\all_the_whitespace_linters<>,
+    PhaLinters\dont_discard_new_expressions_linter<>,
     PhaLinters\no_elseif_linter<>,
     PhaLinters\no_php_equality_linter<>,
     PhaLinters\prefer_require_once_linter<>,
