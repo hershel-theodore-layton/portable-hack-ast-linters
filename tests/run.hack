@@ -19,6 +19,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\shout_case_enum_members_linter<>,
     PhaLinters\unreachable_code_linter<>,
     PhaLinters\use_statement_with_as_linter<>,
+    PhaLinters\use_statement_with_leading_backslash_linter<>,
     PhaLinters\use_statement_without_kind_linter<>,
   ]
     |> Dict\from_values($$, fun_get_function<>)
