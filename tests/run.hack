@@ -20,16 +20,20 @@ async function run_async(): Awaitable<void> {
       $f ==> Str\slice($f, Str\search_last($f, '\\') as nonnull + 1),
     );
 
+  $linters['license_header_linter'] = ($script, $_index)[] ==>
+    PhaLinters\license_header_linter($script, '/* Example License Text */');
+
   // Some tests change their behavior on more recent versions of hhvm.
   // For example, no_elseif_linter<>, since `elseif (expression) {}` will be
   // parsed as a function call followed by a legacy curly brace subscript.
   // This is a Hack error, so reporting a lint error is not needed.
   // The version number (Mmmmpp) Major, minor, patch is the first version
   // where a 0 (rather than the stored error count) is expected.
-  $tests_that_should_have_zero_errrors_on_hhvm_version =
-    dict[fun_get_function(PhaLinters\no_elseif_linter<>) => 415800];
+  $tests_that_should_have_zero_errrors_on_hhvm_version = dict[
+    'no_elseif_linter' => 415800,
+  ];
 
-  $linter_sources_pairs = await Vec\map_async(
+  $test_groups = await Vec\map_async(
     \glob(__DIR__.'/examples/*.hack*'),
     async $p ==> {
       $name = Regex\first_match($p, re'#/(\w+)\.hack#') |> $$[1] ?? 'ERROR';
@@ -47,7 +51,7 @@ async function run_async(): Awaitable<void> {
         $contents = await $file->readAllAsync();
       }
 
-      return tuple($linter, $contents);
+      return tuple($linter, $name, $contents);
     },
   );
 
@@ -57,7 +61,7 @@ async function run_async(): Awaitable<void> {
     $test_count = 0;
     $ctx = Pha\create_context();
 
-    foreach ($linter_sources_pairs as list($linter, $full_file)) {
+    foreach ($test_groups as list($linter, $linter_name, $full_file)) {
       foreach (Str\split($full_file, '//#') |> Vec\filter($$) as $test) {
         ++$test_count;
         list($script, $ctx) = Pha\parse($test, $ctx);
@@ -77,7 +81,7 @@ async function run_async(): Awaitable<void> {
             \HHVM_VERSION_ID >=
               idx(
                 $tests_that_should_have_zero_errrors_on_hhvm_version,
-                fun_get_function($linter),
+                $linter_name,
                 Math\INT64_MAX,
               )
           ) {

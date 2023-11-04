@@ -1,0 +1,13 @@
+//##! 1 Wrong license header
+
+/* Wrong license header */
+namespace Linters\Tests\LicenseHeaderLinter;
+
+//##! 1 Missing license header
+
+function func1(): void {}
+
+//##! 0 Correct license header
+/* Example License Text */
+
+function func2(): void {}
