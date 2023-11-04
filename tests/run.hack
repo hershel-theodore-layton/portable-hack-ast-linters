@@ -10,6 +10,7 @@ async function run_async(): Awaitable<void> {
   $linters = vec[
     PhaLinters\all_the_whitespace_linters<>,
     PhaLinters\dont_discard_new_expressions_linter<>,
+    PhaLinters\group_use_statement_alphabetization_linter<>,
     PhaLinters\no_elseif_linter<>,
     PhaLinters\no_string_interpolation_linter<>,
     PhaLinters\no_php_equality_linter<>,
