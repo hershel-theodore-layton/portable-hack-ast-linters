@@ -14,6 +14,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\no_string_interpolation_linter<>,
     PhaLinters\no_php_equality_linter<>,
     PhaLinters\prefer_require_once_linter<>,
+    PhaLinters\use_statement_with_as_linter<>,
     PhaLinters\use_statement_without_kind_linter<>,
   ]
     |> Dict\from_values($$, fun_get_function<>)
