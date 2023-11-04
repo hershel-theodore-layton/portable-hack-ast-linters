@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters;
 
-use namespace HH\Lib\{C, Str, Vec};
+use namespace HH\Lib\{C, Vec};
 use namespace HTL\Pha;
 
 function group_use_statement_alphabetization_linter(
