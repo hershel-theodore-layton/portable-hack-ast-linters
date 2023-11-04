@@ -15,6 +15,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\no_php_equality_linter<>,
     PhaLinters\prefer_require_once_linter<>,
     PhaLinters\shout_case_enum_members_linter<>,
+    PhaLinters\unreachable_code_linter<>,
     PhaLinters\use_statement_with_as_linter<>,
     PhaLinters\use_statement_without_kind_linter<>,
   ]
