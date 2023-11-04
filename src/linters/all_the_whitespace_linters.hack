@@ -18,7 +18,8 @@ use namespace HTL\Pha;
 // This linter is similar in style as dont_have_two_empty_lines_in_a_row_linter.
 function all_the_whitespace_linters(
   Pha\Script $script,
-  Pha\SyntaxIndex $_index,
+  Pha\SyntaxIndex $_,
+  Pha\TokenIndex $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

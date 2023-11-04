@@ -6,7 +6,8 @@ use namespace HTL\Pha;
 
 function use_statement_without_kind_linter(
   Pha\Script $script,
-  Pha\SyntaxIndex $index,
+  Pha\SyntaxIndex $syntax_index,
+  Pha\TokenIndex $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -24,12 +25,12 @@ function use_statement_without_kind_linter(
   return Vec\concat(
     Pha\script_get_nodes_by_kind(
       $script,
-      $index,
+      $syntax_index,
       Pha\KIND_NAMESPACE_USE_DECLARATION,
     ),
     Pha\script_get_nodes_by_kind(
       $script,
-      $index,
+      $syntax_index,
       Pha\KIND_NAMESPACE_GROUP_USE_DECLARATION,
     ),
   )

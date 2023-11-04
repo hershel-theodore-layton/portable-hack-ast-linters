@@ -6,7 +6,8 @@ use namespace HTL\Pha;
 
 function dont_discard_new_expressions_linter(
   Pha\Script $script,
-  Pha\SyntaxIndex $index,
+  Pha\SyntaxIndex $syntax_index,
+  Pha\TokenIndex $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -17,8 +18,11 @@ function dont_discard_new_expressions_linter(
     Pha\KIND_EXPRESSION_STATEMENT => Pha\MEMBER_EXPRESSION_STATEMENT_EXPRESSION,
   ]);
 
-  return
-    Pha\script_get_nodes_by_kind($script, $index, Pha\KIND_EXPRESSION_STATEMENT)
+  return Pha\script_get_nodes_by_kind(
+    $script,
+    $syntax_index,
+    Pha\KIND_EXPRESSION_STATEMENT,
+  )
     |> Vec\filter(
       $$,
       $e ==> $get_expression($e) |> $is_object_creation_expression($$),

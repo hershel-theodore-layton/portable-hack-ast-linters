@@ -6,7 +6,8 @@ use namespace HTL\Pha;
 
 function prefer_require_once_linter(
   Pha\Script $script,
-  Pha\SyntaxIndex $index,
+  Pha\SyntaxIndex $syntax_index,
+  Pha\TokenIndex $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -15,8 +16,11 @@ function prefer_require_once_linter(
     Pha\KIND_INCLUSION_EXPRESSION => Pha\MEMBER_INCLUSION_REQUIRE,
   ]);
 
-  return
-    Pha\script_get_nodes_by_kind($script, $index, Pha\KIND_INCLUSION_EXPRESSION)
+  return Pha\script_get_nodes_by_kind(
+    $script,
+    $syntax_index,
+    Pha\KIND_INCLUSION_EXPRESSION,
+  )
     |> Vec\map(
       $$,
       $directive ==> $get_require_keyword($directive) |> Pha\as_token($$),

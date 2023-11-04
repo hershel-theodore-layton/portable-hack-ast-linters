@@ -6,7 +6,8 @@ use namespace HTL\Pha;
 
 function no_php_equality_linter(
   Pha\Script $script,
-  Pha\SyntaxIndex $index,
+  Pha\SyntaxIndex $syntax_index,
+  Pha\TokenIndex $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -23,8 +24,11 @@ function no_php_equality_linter(
   $binop_is_php_equals = ($binop) ==>
     $get_operator($binop) |> $is_php_equals($$);
 
-  return
-    Pha\script_get_nodes_by_kind($script, $index, Pha\KIND_BINARY_EXPRESSION)
+  return Pha\script_get_nodes_by_kind(
+    $script,
+    $syntax_index,
+    Pha\KIND_BINARY_EXPRESSION,
+  )
     |> Vec\filter($$, $binop_is_php_equals)
     |> Vec\map(
       $$,

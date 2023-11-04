@@ -6,12 +6,17 @@ use namespace HTL\Pha;
 
 function no_elseif_linter(
   Pha\Script $script,
-  Pha\SyntaxIndex $index,
+  Pha\SyntaxIndex $syntax_index,
+  Pha\TokenIndex $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
   return Vec\map(
-    Pha\script_get_nodes_by_kind($script, $index, Pha\KIND_ELSEIF_CLAUSE),
+    Pha\script_get_nodes_by_kind(
+      $script,
+      $syntax_index,
+      Pha\KIND_ELSEIF_CLAUSE,
+    ),
     $f ==> new LintError(
       $script,
       $f,
