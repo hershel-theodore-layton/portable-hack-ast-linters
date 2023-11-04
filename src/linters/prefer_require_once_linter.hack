@@ -21,10 +21,7 @@ function prefer_require_once_linter(
     $syntax_index,
     Pha\KIND_INCLUSION_EXPRESSION,
   )
-    |> Vec\map(
-      $$,
-      $directive ==> $get_require_keyword($directive) |> Pha\as_token($$),
-    )
+    |> Vec\map($$, $get_require_keyword)
     |> Vec\filter($$, $require_token ==> !$is_require_once($require_token))
     |> Vec\map(
       $$,
@@ -34,7 +31,7 @@ function prefer_require_once_linter(
         $linter,
         Str\format(
           'Use require_once instead of %s.',
-          Pha\token_get_text($script, $n),
+          Pha\token_get_text($script, Pha\as_token($n)),
         ),
       ),
     );
