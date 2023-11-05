@@ -38,49 +38,34 @@ function dont_create_forwarding_lambdas_linter(
     Pha\create_syntax_matcher($script, Pha\KIND_SCOPE_RESOLUTION_EXPRESSION);
   $is_variable = Pha\create_token_matcher($script, Pha\KIND_VARIABLE_TOKEN);
 
-  $get_argument_list = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FUNCTION_CALL_EXPRESSION => Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST,
-  ]);
-  $get_function_receiver = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FUNCTION_CALL_EXPRESSION => Pha\MEMBER_FUNCTION_CALL_RECEIVER,
-  ]);
-  $get_lambda_async = Pha\create_member_accessor($script, dict[
-    Pha\KIND_LAMBDA_EXPRESSION => Pha\MEMBER_LAMBDA_ASYNC,
-  ]);
-  $get_lambda_body = Pha\create_member_accessor($script, dict[
-    Pha\KIND_LAMBDA_EXPRESSION => Pha\MEMBER_LAMBDA_BODY,
-  ]);
-  $get_lambda_parameters = Pha\create_member_accessor($script, dict[
-    Pha\KIND_LAMBDA_SIGNATURE => Pha\MEMBER_LAMBDA_PARAMETERS,
-  ]);
-  $get_lambda_return_type = Pha\create_member_accessor($script, dict[
-    Pha\KIND_LAMBDA_SIGNATURE => Pha\MEMBER_LAMBDA_TYPE,
-  ]);
-  $get_lambda_signature = Pha\create_member_accessor($script, dict[
-    Pha\KIND_LAMBDA_EXPRESSION => Pha\MEMBER_LAMBDA_SIGNATURE,
-  ]);
-  $get_parameter_call_convention = Pha\create_member_accessor($script, dict[
-    Pha\KIND_PARAMETER_DECLARATION => Pha\MEMBER_PARAMETER_CALL_CONVENTION,
-  ]);
-  $get_parameter_default_value = Pha\create_member_accessor($script, dict[
-    Pha\KIND_PARAMETER_DECLARATION => Pha\MEMBER_PARAMETER_DEFAULT_VALUE,
-  ]);
-  $get_parameter_name = Pha\create_member_accessor($script, dict[
-    Pha\KIND_PARAMETER_DECLARATION => Pha\MEMBER_PARAMETER_NAME,
-  ]);
-  $get_parameter_type = Pha\create_member_accessor($script, dict[
-    Pha\KIND_PARAMETER_DECLARATION => Pha\MEMBER_PARAMETER_TYPE,
-  ]);
-  $get_unary_operator = Pha\create_member_accessor($script, dict[
-    Pha\KIND_PREFIX_UNARY_EXPRESSION => Pha\MEMBER_PREFIX_UNARY_OPERATOR,
-  ]);
-  $get_unary_operand = Pha\create_member_accessor($script, dict[
-    Pha\KIND_PREFIX_UNARY_EXPRESSION => Pha\MEMBER_PREFIX_UNARY_OPERAND,
-  ]);
-  $get_scope_resolution_qualifier = Pha\create_member_accessor($script, dict[
-    Pha\KIND_SCOPE_RESOLUTION_EXPRESSION =>
-      Pha\MEMBER_SCOPE_RESOLUTION_QUALIFIER,
-  ]);
+  $get_argument_list =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST);
+  $get_function_receiver =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_RECEIVER);
+  $get_lambda_async =
+    Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_ASYNC);
+  $get_lambda_body =
+    Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_BODY);
+  $get_lambda_parameters =
+    Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_PARAMETERS);
+  $get_lambda_return_type =
+    Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_TYPE);
+  $get_lambda_signature =
+    Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_SIGNATURE);
+  $get_parameter_call_convention =
+    Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_CALL_CONVENTION);
+  $get_parameter_default_value =
+    Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_DEFAULT_VALUE);
+  $get_parameter_name =
+    Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_NAME);
+  $get_parameter_type =
+    Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_TYPE);
+  $get_unary_operator =
+    Pha\create_member_accessor($script, Pha\MEMBER_PREFIX_UNARY_OPERATOR);
+  $get_unary_operand =
+    Pha\create_member_accessor($script, Pha\MEMBER_PREFIX_UNARY_OPERAND);
+  $get_scope_resolution_qualifier =
+    Pha\create_member_accessor($script, Pha\MEMBER_SCOPE_RESOLUTION_QUALIFIER);
 
   $is_typed_lambda = ($sig, $parameters) ==>
     C\any($parameters, $p ==> !$is_missing($get_parameter_type($p))) ||

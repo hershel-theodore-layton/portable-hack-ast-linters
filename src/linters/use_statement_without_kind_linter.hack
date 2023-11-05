@@ -13,11 +13,11 @@ function use_statement_without_kind_linter(
 
   $is_missing = Pha\create_syntax_matcher($script, Pha\KIND_MISSING);
 
-  $get_kind = Pha\create_member_accessor($script, dict[
-    Pha\KIND_NAMESPACE_USE_DECLARATION => Pha\MEMBER_NAMESPACE_USE_KIND,
-    Pha\KIND_NAMESPACE_GROUP_USE_DECLARATION =>
-      Pha\MEMBER_NAMESPACE_GROUP_USE_KIND,
-  ]);
+  $get_kind = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_NAMESPACE_USE_KIND,
+    Pha\MEMBER_NAMESPACE_GROUP_USE_KIND,
+  );
 
   $kind_is_missing = ($use_clause) ==>
     $get_kind($use_clause) |> $is_missing($$);

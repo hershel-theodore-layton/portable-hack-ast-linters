@@ -12,9 +12,8 @@ function prefer_require_once_linter(
   $linter = __FUNCTION__;
 
   $is_require_once = Pha\create_token_matcher($script, Pha\KIND_REQUIRE_ONCE);
-  $get_require_keyword = Pha\create_member_accessor($script, dict[
-    Pha\KIND_INCLUSION_EXPRESSION => Pha\MEMBER_INCLUSION_REQUIRE,
-  ]);
+  $get_require_keyword =
+    Pha\create_member_accessor($script, Pha\MEMBER_INCLUSION_REQUIRE);
 
   return
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_INCLUSION_EXPRESSION)

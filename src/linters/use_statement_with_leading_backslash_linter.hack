@@ -15,11 +15,11 @@ function use_statement_with_leading_backslash_linter(
     |> C\find($$, Pha\is_token<>) ?? Pha\NIL
     |> Pha\token_get_text($script, Pha\as_token_or_nil($$)) === '\\';
 
-  $get_prefix = Pha\create_member_accessor($script, dict[
-    Pha\KIND_NAMESPACE_USE_CLAUSE => Pha\MEMBER_NAMESPACE_USE_NAME,
-    Pha\KIND_NAMESPACE_GROUP_USE_DECLARATION =>
-      Pha\MEMBER_NAMESPACE_GROUP_USE_PREFIX,
-  ]);
+  $get_prefix = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_NAMESPACE_USE_NAME,
+    Pha\MEMBER_NAMESPACE_GROUP_USE_PREFIX,
+  );
 
   return Vec\concat(
     Pha\index_get_nodes_by_kind(

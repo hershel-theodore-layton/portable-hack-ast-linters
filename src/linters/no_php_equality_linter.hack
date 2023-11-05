@@ -17,9 +17,8 @@ function no_php_equality_linter(
     Pha\KIND_EXCLAMATION_EQUAL,
   );
 
-  $get_operator = Pha\create_member_accessor($script, dict[
-    Pha\KIND_BINARY_EXPRESSION => Pha\MEMBER_BINARY_OPERATOR,
-  ]);
+  $get_operator =
+    Pha\create_member_accessor($script, Pha\MEMBER_BINARY_OPERATOR);
 
   $binop_is_php_equals = ($binop) ==>
     $get_operator($binop) |> $is_php_equals($$);

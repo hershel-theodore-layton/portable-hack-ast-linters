@@ -63,10 +63,11 @@ function dont_await_in_a_loop_linter(
     Pha\KIND_FOREACH_STATEMENT,
   );
 
-  $get_non_looping_part_of_loop = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FOR_STATEMENT => Pha\MEMBER_FOR_INITIALIZER,
-    Pha\KIND_FOREACH_STATEMENT => Pha\MEMBER_FOREACH_COLLECTION,
-  ]);
+  $get_non_looping_part_of_loop = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_FOR_INITIALIZER,
+    Pha\MEMBER_FOREACH_COLLECTION,
+  );
 
   return Vec\filter(
     Pha\index_get_nodes_by_kind($token_index, Pha\KIND_AWAIT),

@@ -16,13 +16,11 @@ function final_or_abstract_classes_linter(
   $is_abstract_or_final =
     Pha\create_token_matcher($script, Pha\KIND_ABSTRACT, Pha\KIND_FINAL);
 
-  $get_class_keyword = Pha\create_member_accessor($script, dict[
-    Pha\KIND_CLASSISH_DECLARATION => Pha\MEMBER_CLASSISH_KEYWORD,
-  ]);
+  $get_class_keyword =
+    Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_KEYWORD);
 
-  $get_method_modifiers = Pha\create_member_accessor($script, dict[
-    Pha\KIND_CLASSISH_DECLARATION => Pha\MEMBER_CLASSISH_MODIFIERS,
-  ]);
+  $get_method_modifiers =
+    Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_MODIFIERS);
 
   return
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_CLASSISH_DECLARATION)

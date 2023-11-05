@@ -56,33 +56,26 @@ function unused_variable_linter(
     Pha\KIND_METHODISH_DECLARATION,
   );
 
-  $get_binop_operator = Pha\create_member_accessor($script, dict[
-    Pha\KIND_BINARY_EXPRESSION => Pha\MEMBER_BINARY_OPERATOR,
-  ]);
-  $get_class_keyword = Pha\create_member_accessor($script, dict[
-    Pha\KIND_CLASSISH_DECLARATION => Pha\MEMBER_CLASSISH_KEYWORD,
-  ]);
-  $get_foreach_key = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FOREACH_STATEMENT => Pha\MEMBER_FOREACH_KEY,
-  ]);
-  $get_foreach_value = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FOREACH_STATEMENT => Pha\MEMBER_FOREACH_VALUE,
-  ]);
-  $get_method_decl_header = Pha\create_member_accessor($script, dict[
-    Pha\KIND_METHODISH_DECLARATION => Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
-  ]);
-  $get_func_decl_header_modifiers = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FUNCTION_DECLARATION_HEADER => Pha\MEMBER_FUNCTION_MODIFIERS,
-  ]);
-  $get_lambda_signature = Pha\create_member_accessor($script, dict[
-    Pha\KIND_LAMBDA_EXPRESSION => Pha\MEMBER_LAMBDA_SIGNATURE,
-  ]);
-  $get_list_expr_members = Pha\create_member_accessor($script, dict[
-    Pha\KIND_LIST_EXPRESSION => Pha\MEMBER_LIST_MEMBERS,
-  ]);
-  $get_parameter_visibility = Pha\create_member_accessor($script, dict[
-    Pha\KIND_PARAMETER_DECLARATION => Pha\MEMBER_PARAMETER_VISIBILITY,
-  ]);
+  $get_binop_operator =
+    Pha\create_member_accessor($script, Pha\MEMBER_BINARY_OPERATOR);
+  $get_class_keyword =
+    Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_KEYWORD);
+  $get_foreach_key =
+    Pha\create_member_accessor($script, Pha\MEMBER_FOREACH_KEY);
+  $get_foreach_value =
+    Pha\create_member_accessor($script, Pha\MEMBER_FOREACH_VALUE);
+  $get_method_decl_header = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
+  );
+  $get_func_decl_header_modifiers =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_MODIFIERS);
+  $get_lambda_signature =
+    Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_SIGNATURE);
+  $get_list_expr_members =
+    Pha\create_member_accessor($script, Pha\MEMBER_LIST_MEMBERS);
+  $get_parameter_visibility =
+    Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_VISIBILITY);
 
   $is_assignment_expression = $node ==> $is_binary_expression($node) &&
     $is_assignment_operator($get_binop_operator($node) |> Pha\as_token($$));

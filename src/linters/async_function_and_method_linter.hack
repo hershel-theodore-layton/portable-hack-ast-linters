@@ -11,9 +11,8 @@ function async_function_and_method_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  $get_return_type = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FUNCTION_DECLARATION_HEADER => Pha\MEMBER_FUNCTION_TYPE,
-  ]);
+  $get_return_type =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_TYPE);
 
   $is_async = $decl ==> $get_return_type($decl)
     |> Support\get_first_token($script, $$)

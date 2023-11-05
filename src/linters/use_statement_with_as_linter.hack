@@ -12,9 +12,8 @@ function use_statement_with_as_linter(
   $linter = __FUNCTION__;
 
   $is_missing = Pha\create_syntax_matcher($script, Pha\KIND_MISSING);
-  $get_as = Pha\create_member_accessor($script, dict[
-    Pha\KIND_NAMESPACE_USE_CLAUSE => Pha\MEMBER_NAMESPACE_USE_AS,
-  ]);
+
+  $get_as = Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_AS);
   $has_as = $n ==> $get_as($n) |> !$is_missing($$);
 
   return

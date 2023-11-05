@@ -11,9 +11,8 @@ function camel_cased_methods_underscored_functions_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  $get_return_type = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FUNCTION_DECLARATION_HEADER => Pha\MEMBER_FUNCTION_TYPE,
-  ]);
+  $get_return_type =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_TYPE);
 
   $is_factory_func = ($decl, string $name) ==> $get_return_type($decl)
     |> Pha\node_get_code($script, $$)

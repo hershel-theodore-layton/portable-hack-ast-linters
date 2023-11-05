@@ -11,9 +11,8 @@ function shout_case_enum_members_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  $get_enumerator = Pha\create_member_accessor($script, dict[
-    Pha\KIND_ENUMERATOR => Pha\MEMBER_ENUMERATOR_NAME,
-  ]);
+  $get_enumerator =
+    Pha\create_member_accessor($script, Pha\MEMBER_ENUMERATOR_NAME);
 
   return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ENUMERATOR)
     |> Vec\filter(

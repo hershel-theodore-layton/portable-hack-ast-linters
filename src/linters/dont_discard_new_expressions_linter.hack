@@ -14,9 +14,10 @@ function dont_discard_new_expressions_linter(
   $is_object_creation_expression =
     Pha\create_syntax_matcher($script, Pha\KIND_OBJECT_CREATION_EXPRESSION);
 
-  $get_expression = Pha\create_member_accessor($script, dict[
-    Pha\KIND_EXPRESSION_STATEMENT => Pha\MEMBER_EXPRESSION_STATEMENT_EXPRESSION,
-  ]);
+  $get_expression = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_EXPRESSION_STATEMENT_EXPRESSION,
+  );
 
   return
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_EXPRESSION_STATEMENT)

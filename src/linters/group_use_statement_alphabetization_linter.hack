@@ -11,14 +11,11 @@ function group_use_statement_alphabetization_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  $get_clauses = Pha\create_member_accessor($script, dict[
-    Pha\KIND_NAMESPACE_GROUP_USE_DECLARATION =>
-      Pha\MEMBER_NAMESPACE_GROUP_USE_CLAUSES,
-  ]);
+  $get_clauses =
+    Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_GROUP_USE_CLAUSES);
 
-  $get_use_name = Pha\create_member_accessor($script, dict[
-    Pha\KIND_NAMESPACE_USE_CLAUSE => Pha\MEMBER_NAMESPACE_USE_NAME,
-  ]);
+  $get_use_name =
+    Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_NAME);
 
   $get_uses_to_be_sorted = $group_use ==> $get_clauses($group_use)
     |> Pha\as_syntax($$)

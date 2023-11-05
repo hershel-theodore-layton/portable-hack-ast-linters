@@ -15,9 +15,8 @@ function enforce_naming(
   $is_function_declaration =
     Pha\create_syntax_matcher($script, Pha\KIND_FUNCTION_DECLARATION);
 
-  $get_function_name = Pha\create_member_accessor($script, dict[
-    Pha\KIND_FUNCTION_DECLARATION_HEADER => Pha\MEMBER_FUNCTION_NAME,
-  ]);
+  $get_function_name =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_NAME);
 
   $get_function_name_as_text = $decl ==> $get_function_name($decl)
     |> Pha\as_token($$)

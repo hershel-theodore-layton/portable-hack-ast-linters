@@ -62,20 +62,17 @@ function no_empty_statements_linter(
     Pha\KIND_BAR_GREATER_THAN,
   );
 
-  $get_binop_operator = Pha\create_member_accessor($script, dict[
-    Pha\KIND_BINARY_EXPRESSION => Pha\MEMBER_BINARY_OPERATOR,
-  ]);
+  $get_binop_operator =
+    Pha\create_member_accessor($script, Pha\MEMBER_BINARY_OPERATOR);
 
-  $get_expression = Pha\create_member_accessor($script, dict[
-    Pha\KIND_EXPRESSION_STATEMENT => Pha\MEMBER_EXPRESSION_STATEMENT_EXPRESSION,
-  ]);
+  $get_expression = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_EXPRESSION_STATEMENT_EXPRESSION,
+  );
 
   $get_parenthesized_expression_expression = Pha\create_member_accessor(
     $script,
-    dict[
-      Pha\KIND_PARENTHESIZED_EXPRESSION =>
-        Pha\MEMBER_PARENTHESIZED_EXPRESSION_EXPRESSION,
-    ],
+    Pha\MEMBER_PARENTHESIZED_EXPRESSION_EXPRESSION,
   );
 
   $expression_is_empty = $node ==> {
