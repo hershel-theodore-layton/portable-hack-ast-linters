@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters;
 
-use namespace HH\Lib\{C, Str, Vec};
+use namespace HH\Lib\{Str, Vec};
 use namespace HTL\Pha;
 
 function async_function_and_method_linter(
@@ -16,8 +16,7 @@ function async_function_and_method_linter(
   ]);
 
   $is_async = $decl ==> $get_return_type($decl)
-    |> Pha\node_get_descendants($script, $$)
-    |> C\find($$, Pha\is_token<>) ?? Pha\NIL
+    |> Support\get_first_token($script, $$)
     |> Pha\token_get_text($script, Pha\as_token_or_nil($$)) === 'Awaitable';
 
   return Support\enforce_naming(
