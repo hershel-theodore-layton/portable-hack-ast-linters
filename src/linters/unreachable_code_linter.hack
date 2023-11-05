@@ -13,7 +13,7 @@ function unreachable_code_linter(
 
   $get_syntax = $kind ==>
     Pha\script_get_nodes_by_kind($script, $syntax_index, $kind);
-  $node_is_list = Pha\create_syntax_matcher($script, Pha\KIND_LIST_EXPRESSION);
+  $node_is_list = Pha\create_syntax_matcher($script, Pha\KIND_NODE_LIST);
   $creates_unreachable_code = $stmt ==> Pha\node_get_parent($script, $stmt)
     |> $node_is_list($$) && Pha\node_get_last_child($script, $$) !== $stmt;
 
