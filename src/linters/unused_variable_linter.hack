@@ -235,11 +235,9 @@ function unused_variable_linter(
     );
 
   return Vec\filter($assignments, $is_unused)
-    |> Vec\map($$, $a ==> $a['var'])
-    |> Vec\sort_by($$, Pha\node_get_source_order<>)
     |> Vec\map(
       $$,
-      $var ==>
-        new LintError($script, $var, $linter, 'This variable is unused.'),
+      $a ==>
+        new LintError($script, $a['var'], $linter, 'This variable is unused.'),
     );
 }
