@@ -11,6 +11,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\all_the_whitespace_linters<>,
     PhaLinters\async_function_and_method_linter<>,
     PhaLinters\camel_cased_methods_underscored_functions_linter<>,
+    PhaLinters\dont_await_in_a_loop_linter<>,
     PhaLinters\dont_create_forwarding_lambdas_linter<>,
     PhaLinters\dont_discard_new_expressions_linter<>,
     PhaLinters\final_or_abstract_classes_linter<>,
