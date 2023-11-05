@@ -16,11 +16,8 @@ function prefer_require_once_linter(
     Pha\KIND_INCLUSION_EXPRESSION => Pha\MEMBER_INCLUSION_REQUIRE,
   ]);
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
-    $syntax_index,
-    Pha\KIND_INCLUSION_EXPRESSION,
-  )
+  return
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_INCLUSION_EXPRESSION)
     |> Vec\map($$, $get_require_keyword)
     |> Vec\filter($$, $require_token ==> !$is_require_once($require_token))
     |> Vec\map(

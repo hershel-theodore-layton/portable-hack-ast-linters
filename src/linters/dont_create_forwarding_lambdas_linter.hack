@@ -201,11 +201,7 @@ function dont_create_forwarding_lambdas_linter(
     },
   );
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
-    $syntax_index,
-    Pha\KIND_LAMBDA_EXPRESSION,
-  )
+  return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_LAMBDA_EXPRESSION)
     |> Vec\filter($$, $lambda ==> {
       $argument_list = $get_argument_list($lambda);
 

@@ -12,13 +12,11 @@ function no_string_interpolation_linter(
   $linter = __FUNCTION__;
 
   return Vec\concat(
-    Pha\script_get_nodes_by_kind(
-      $script,
+    Pha\index_get_nodes_by_kind(
       $token_index,
       Pha\KIND_DOUBLE_QUOTED_STRING_LITERAL_HEAD,
     ),
-    Pha\script_get_nodes_by_kind(
-      $script,
+    Pha\index_get_nodes_by_kind(
       $token_index,
       Pha\KIND_HEREDOC_STRING_LITERAL_HEAD,
     ),

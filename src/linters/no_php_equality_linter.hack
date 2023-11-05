@@ -24,11 +24,7 @@ function no_php_equality_linter(
   $binop_is_php_equals = ($binop) ==>
     $get_operator($binop) |> $is_php_equals($$);
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
-    $syntax_index,
-    Pha\KIND_BINARY_EXPRESSION,
-  )
+  return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_BINARY_EXPRESSION)
     |> Vec\filter($$, $binop_is_php_equals)
     |> Vec\map(
       $$,

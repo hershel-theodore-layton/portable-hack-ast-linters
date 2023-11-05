@@ -17,11 +17,8 @@ function use_statement_with_as_linter(
   ]);
   $has_as = $n ==> $get_as($n) |> !$is_missing($$);
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
-    $syntax_index,
-    Pha\KIND_NAMESPACE_USE_CLAUSE,
-  )
+  return
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_NAMESPACE_USE_CLAUSE)
     |> Vec\filter($$, $has_as)
     |> Vec\map(
       $$,

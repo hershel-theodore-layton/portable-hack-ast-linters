@@ -69,7 +69,7 @@ function dont_await_in_a_loop_linter(
   ]);
 
   return Vec\filter(
-    Pha\script_get_nodes_by_kind($script, $token_index, Pha\KIND_AWAIT),
+    Pha\index_get_nodes_by_kind($token_index, Pha\KIND_AWAIT),
     $await ==> {
       if (!$is_prefix_unary_expression(Pha\node_get_parent($script, $await))) {
         return false;

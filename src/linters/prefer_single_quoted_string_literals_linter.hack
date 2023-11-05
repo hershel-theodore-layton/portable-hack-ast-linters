@@ -25,8 +25,7 @@ function prefer_single_quoted_string_literals_linter(
     '\\0', '\\1', '\\2', '\\3', '\\4', '\\5', '\\6', '\\7' // octal
   ];
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
+  return Pha\index_get_nodes_by_kind(
     $token_index,
     Pha\KIND_DOUBLE_QUOTED_STRING_LITERAL,
   )

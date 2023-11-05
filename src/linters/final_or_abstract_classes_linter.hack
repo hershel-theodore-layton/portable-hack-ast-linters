@@ -24,11 +24,8 @@ function final_or_abstract_classes_linter(
     Pha\KIND_CLASSISH_DECLARATION => Pha\MEMBER_CLASSISH_MODIFIERS,
   ]);
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
-    $syntax_index,
-    Pha\KIND_CLASSISH_DECLARATION,
-  )
+  return
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_CLASSISH_DECLARATION)
     |> Vec\filter(
       $$,
       $c ==> $is_class($get_class_keyword($c)) &&

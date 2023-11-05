@@ -23,13 +23,11 @@ function use_statement_without_kind_linter(
     $get_kind($use_clause) |> $is_missing($$);
 
   return Vec\concat(
-    Pha\script_get_nodes_by_kind(
-      $script,
+    Pha\index_get_nodes_by_kind(
       $syntax_index,
       Pha\KIND_NAMESPACE_USE_DECLARATION,
     ),
-    Pha\script_get_nodes_by_kind(
-      $script,
+    Pha\index_get_nodes_by_kind(
       $syntax_index,
       Pha\KIND_NAMESPACE_GROUP_USE_DECLARATION,
     ),

@@ -24,8 +24,7 @@ function enforce_naming(
     |> Pha\token_get_text($script, $$)
     |> C\reduce($allowed_suffixes, Str\strip_suffix<>, $$);
 
-  list($function_decls, $method_decls) = Pha\script_get_nodes_by_kind(
-    $script,
+  list($function_decls, $method_decls) = Pha\index_get_nodes_by_kind(
     $syntax_index,
     Pha\KIND_FUNCTION_DECLARATION_HEADER,
   )

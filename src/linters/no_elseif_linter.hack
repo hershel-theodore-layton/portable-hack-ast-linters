@@ -12,11 +12,7 @@ function no_elseif_linter(
   $linter = __FUNCTION__;
 
   return Vec\map(
-    Pha\script_get_nodes_by_kind(
-      $script,
-      $syntax_index,
-      Pha\KIND_ELSEIF_CLAUSE,
-    ),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ELSEIF_CLAUSE),
     $f ==> new LintError(
       $script,
       $f,

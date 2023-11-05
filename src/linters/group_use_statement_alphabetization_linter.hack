@@ -24,8 +24,7 @@ function group_use_statement_alphabetization_linter(
     |> Pha\as_syntax($$)
     |> Pha\list_get_items_of_children($script, $$);
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
+  return Pha\index_get_nodes_by_kind(
     $syntax_index,
     Pha\KIND_NAMESPACE_GROUP_USE_DECLARATION,
   )

@@ -22,16 +22,11 @@ function use_statement_with_leading_backslash_linter(
   ]);
 
   return Vec\concat(
-    Pha\script_get_nodes_by_kind(
-      $script,
+    Pha\index_get_nodes_by_kind(
       $syntax_index,
       Pha\KIND_NAMESPACE_GROUP_USE_DECLARATION,
     ),
-    Pha\script_get_nodes_by_kind(
-      $script,
-      $syntax_index,
-      Pha\KIND_NAMESPACE_USE_CLAUSE,
-    ),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_NAMESPACE_USE_CLAUSE),
   )
     |> Vec\map($$, $get_prefix)
     |> Vec\filter($$, $has_leading_backslash)

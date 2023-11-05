@@ -30,24 +30,12 @@ function must_use_braces_for_control_flow_linter(
     $get_body($node) |> !$is_compound_statement_or_if_statement($$);
 
   return Vec\concat(
-    Pha\script_get_nodes_by_kind($script, $syntax_index, Pha\KIND_DO_STATEMENT),
-    Pha\script_get_nodes_by_kind($script, $syntax_index, Pha\KIND_ELSE_CLAUSE),
-    Pha\script_get_nodes_by_kind($script, $syntax_index, Pha\KIND_IF_STATEMENT),
-    Pha\script_get_nodes_by_kind(
-      $script,
-      $syntax_index,
-      Pha\KIND_FOR_STATEMENT,
-    ),
-    Pha\script_get_nodes_by_kind(
-      $script,
-      $syntax_index,
-      Pha\KIND_FOREACH_STATEMENT,
-    ),
-    Pha\script_get_nodes_by_kind(
-      $script,
-      $syntax_index,
-      Pha\KIND_WHILE_STATEMENT,
-    ),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_DO_STATEMENT),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ELSE_CLAUSE),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_IF_STATEMENT),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_FOR_STATEMENT),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_FOREACH_STATEMENT),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_WHILE_STATEMENT),
   )
     |> Vec\filter($$, $is_braceless)
     |> Vec\map(

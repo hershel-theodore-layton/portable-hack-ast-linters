@@ -26,11 +26,8 @@ function no_final_method_in_final_classes_linter(
     return $node;
   };
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
-    $syntax_index,
-    Pha\KIND_METHODISH_DECLARATION,
-  )
+  return
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_METHODISH_DECLARATION)
     |> Vec\filter(
       $$,
       $method ==> (

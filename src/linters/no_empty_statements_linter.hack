@@ -91,11 +91,8 @@ function no_empty_statements_linter(
       );
   };
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
-    $syntax_index,
-    Pha\KIND_EXPRESSION_STATEMENT,
-  )
+  return
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_EXPRESSION_STATEMENT)
     |> Vec\map($$, $s ==> $get_expression($s) |> Pha\as_syntax($$))
     |> Vec\filter($$, $expression_is_empty)
     |> Vec\map(

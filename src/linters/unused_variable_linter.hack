@@ -216,7 +216,7 @@ function unused_variable_linter(
   };
 
   list($assignments, $usages) =
-    Pha\script_get_nodes_by_kind($script, $token_index, Pha\KIND_VARIABLE_TOKEN)
+    Pha\index_get_nodes_by_kind($token_index, Pha\KIND_VARIABLE_TOKEN)
     |> Vec\map($$, $classify_use)
     |> Vec\filter_nulls($$)
     |> Vec\filter($$, $u ==> $u['var_name'] !== '$this')

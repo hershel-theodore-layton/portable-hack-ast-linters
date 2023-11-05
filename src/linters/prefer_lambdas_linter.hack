@@ -11,11 +11,7 @@ function prefer_lambdas_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  return Pha\script_get_nodes_by_kind(
-    $script,
-    $syntax_index,
-    Pha\KIND_ANONYMOUS_FUNCTION,
-  )
+  return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ANONYMOUS_FUNCTION)
     |> Vec\map(
       $$,
       $f ==> new LintError(
