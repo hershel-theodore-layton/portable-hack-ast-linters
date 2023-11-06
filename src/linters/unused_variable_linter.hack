@@ -39,10 +39,10 @@ function unused_variable_linter(
   $is_abstract = Pha\create_token_matcher($script, Pha\KIND_ABSTRACT);
   $is_assignment_operator = Support\assignment_operator_matcher($script);
   $is_binary_expression = $build_matcher(Pha\KIND_BINARY_EXPRESSION);
-  $is_class = Pha\create_token_matcher($script, Pha\KIND_CLASS);
   $is_classish_declaration = $build_matcher(Pha\KIND_CLASSISH_DECLARATION);
   $is_decl_header = $build_matcher(Pha\KIND_FUNCTION_DECLARATION_HEADER);
   $is_foreach = $build_matcher(Pha\KIND_FOREACH_STATEMENT);
+  $is_interface = Pha\create_token_matcher($script, Pha\KIND_INTERFACE);
   $is_lambda = $build_matcher(Pha\KIND_LAMBDA_EXPRESSION);
   $is_lambda_signature = $build_matcher(Pha\KIND_LAMBDA_SIGNATURE);
   $is_list_expression = $build_matcher(Pha\KIND_LIST_EXPRESSION);
@@ -198,7 +198,7 @@ function unused_variable_linter(
     $classish = Pha\node_get_syntax_ancestors($script, $owner)
       |> C\findx($$, $is_classish_declaration);
 
-    return !$is_class($get_class_keyword($classish)) ||
+    return $is_interface($get_class_keyword($classish)) ||
       C\any(
         $get_method_decl_header($owner)
           |> Pha\as_syntax($$)
