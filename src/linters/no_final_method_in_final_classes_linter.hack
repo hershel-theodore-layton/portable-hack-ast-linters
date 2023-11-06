@@ -13,35 +13,34 @@ function no_final_method_in_final_classes_linter(
 
   $is_classish_declaration =
     Pha\create_syntax_matcher($script, Pha\KIND_CLASSISH_DECLARATION);
-
   $is_final = Pha\create_token_matcher($script, Pha\KIND_FINAL);
+
+  $get_method_function_decl = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
+  );
+  $get_function_modifiers =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_MODIFIERS);
+  $get_classish_modifiers =
+    Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_MODIFIERS);
 
   $any_child_is_final = $node ==>
     C\any(Pha\node_get_children($script, $node), $is_final);
-
-  $multi_member = (Pha\Syntax $node, Pha\Member ...$members) ==> {
-    foreach ($members as $m) {
-      $node = Pha\syntax_member($script, Pha\as_syntax($node), $m);
-    }
-    return $node;
-  };
 
   return
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_METHODISH_DECLARATION)
     |> Vec\filter(
       $$,
       $method ==> (
-        $multi_member(
-          $method,
-          Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
-          Pha\MEMBER_FUNCTION_MODIFIERS,
-        )
+        $get_method_function_decl($method)
+        |> Pha\as_syntax($$)
+        |> $get_function_modifiers($$)
         |> $any_child_is_final($$)
       ) &&
         (
           Pha\node_get_syntax_ancestors($script, $method)
           |> C\findx($$, $is_classish_declaration)
-          |> $multi_member($$, Pha\MEMBER_CLASSISH_MODIFIERS)
+          |> $get_classish_modifiers($$)
           |> $any_child_is_final($$)
         ),
     )
