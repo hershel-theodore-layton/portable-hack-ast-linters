@@ -16,6 +16,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\dont_discard_new_expressions_linter<>,
     PhaLinters\final_or_abstract_classes_linter<>,
     PhaLinters\group_use_statement_alphabetization_linter<>,
+    PhaLinters\group_use_statements_linter<>,
     PhaLinters\must_use_braces_for_control_flow_linter<>,
     PhaLinters\no_elseif_linter<>,
     PhaLinters\no_empty_statements_linter<>,
