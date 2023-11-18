@@ -21,7 +21,7 @@ function unused_use_clause_linter(
       $n ==>
         C\find(Pha\node_get_ancestors($script, $n), $is_qualified_name) ?? $n,
     )
-    |> Vec\unique_by($$, Pha\node_get_source_order<>)
+    |> Vec\unique_by($$, Pha\node_get_id<>)
     |> Vec\map(
       $$,
       $n ==> Pha\resolve_name_and_use_clause(
@@ -32,13 +32,13 @@ function unused_use_clause_linter(
     )
     |> Vec\filter($$, $c ==> $c !== Pha\NIL)
     |> Vec\map($$, Pha\as_syntax<>)
-    |> Keyset\map($$, Pha\node_get_source_order<>);
+    |> Keyset\map($$, Pha\node_get_id<>);
 
   return
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_NAMESPACE_USE_CLAUSE)
     |> Vec\filter(
       $$,
-      $c ==> !C\contains_key($used_clauses, Pha\node_get_source_order($c)),
+      $c ==> !C\contains_key($used_clauses, Pha\node_get_id($c)),
     )
     |> Vec\map(
       $$,

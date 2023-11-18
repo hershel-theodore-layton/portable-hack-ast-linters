@@ -41,7 +41,7 @@ function namespace_private_symbol_linter(
       $n ==>
         C\find(Pha\node_get_ancestors($script, $n), $is_qualified_name) ?? $n,
     )
-    |> Vec\unique_by($$, Pha\node_get_source_order<>)
+    |> Vec\unique_by($$, Pha\node_get_id<>)
     |> Vec\filter(
       $$,
       $n ==> {
@@ -61,7 +61,8 @@ function namespace_private_symbol_linter(
         $nearest_namespace = C\find(
           Pha\node_get_syntax_ancestors($script, $n),
           $is_namespace_declaration,
-        ) ?? $main_namespace;
+        ) ??
+          $main_namespace;
 
         if ($nearest_namespace is null) {
           return true;
