@@ -14,6 +14,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\dont_await_in_a_loop_linter<>,
     PhaLinters\dont_create_forwarding_lambdas_linter<>,
     PhaLinters\dont_discard_new_expressions_linter<>,
+    PhaLinters\dont_use_asio_join_linter<>,
     PhaLinters\final_or_abstract_classes_linter<>,
     PhaLinters\group_use_statement_alphabetization_linter<>,
     PhaLinters\group_use_statements_linter<>,
