@@ -26,6 +26,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\prefer_lambdas_linter<>,
     PhaLinters\prefer_single_quoted_string_literals_linter<>,
     PhaLinters\prefer_require_once_linter<>,
+    PhaLinters\namespace_private_use_clause_linter<>,
     PhaLinters\shout_case_enum_members_linter<>,
     PhaLinters\unreachable_code_linter<>,
     PhaLinters\unused_pipe_variable_linter<>,
