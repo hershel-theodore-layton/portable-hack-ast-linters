@@ -32,6 +32,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\shout_case_enum_members_linter<>,
     PhaLinters\unreachable_code_linter<>,
     PhaLinters\unused_pipe_variable_linter<>,
+    PhaLinters\unused_use_clause_linter<>,
     PhaLinters\unused_variable_linter<>,
     PhaLinters\use_statement_with_as_linter<>,
     PhaLinters\use_statement_with_leading_backslash_linter<>,
