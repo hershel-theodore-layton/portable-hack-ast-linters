@@ -78,20 +78,27 @@ function no_empty_statements_linter(
 
   $expression_is_empty = $node ==> {
     while ($is_parenthesized_expression($node)) {
-      $node =
-        $get_parenthesized_expression_expression($node) |> Pha\as_syntax($$);
+      $node = Pha\as_syntax($node)
+        |> $get_parenthesized_expression_expression($$)
+        |> Pha\as_syntax($$);
     }
 
     return $is_always_empty_expression($node) ||
       (
         $is_binary_expression($node) &&
-        !$is_side_effecty_operator(Pha\as_token($get_binop_operator($node)))
+        (
+          $node
+          |> Pha\as_syntax($$)
+          |> $get_binop_operator($$)
+          |> Pha\as_token($$)
+          |> !$is_side_effecty_operator($$)
+        )
       );
   };
 
   return
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_EXPRESSION_STATEMENT)
-    |> Vec\map($$, $s ==> $get_expression($s) |> Pha\as_syntax($$))
+    |> Vec\map($$, $get_expression)
     |> Vec\filter($$, $expression_is_empty)
     |> Vec\map(
       $$,
