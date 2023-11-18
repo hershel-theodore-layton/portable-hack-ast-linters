@@ -27,3 +27,18 @@ function func3(): void {
   not_join(async {
   });
 }
+
+//##! 0 A different join
+use namespace HH\Lib\Str;
+
+function func4(): void {
+  Str\join(vec[], '');
+}
+
+//##! 0 If you really must
+
+function func5(): void {
+  $join = \HH\Asio\join<>;
+  $join(async {
+  });
+}
