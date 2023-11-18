@@ -8,6 +8,7 @@ function shout_case_enum_members_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
+  Pha\Resolver $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

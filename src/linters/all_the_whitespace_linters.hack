@@ -20,6 +20,7 @@ function all_the_whitespace_linters(
   Pha\Script $script,
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $_,
+  Pha\Resolver $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

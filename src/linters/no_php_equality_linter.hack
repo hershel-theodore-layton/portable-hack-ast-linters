@@ -8,6 +8,7 @@ function no_php_equality_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
+  Pha\Resolver $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

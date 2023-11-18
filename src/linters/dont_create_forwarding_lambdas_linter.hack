@@ -8,6 +8,7 @@ function dont_create_forwarding_lambdas_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
+  Pha\Resolver $_,
   shape(?'no_error_for_lambdas_with_typed_parameters_or_return' => bool)
     $options = shape(),
 )[]: vec<LintError> {

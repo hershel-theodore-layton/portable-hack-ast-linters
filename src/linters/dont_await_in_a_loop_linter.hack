@@ -8,6 +8,7 @@ function dont_await_in_a_loop_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
+  Pha\Resolver $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

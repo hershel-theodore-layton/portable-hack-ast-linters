@@ -8,6 +8,7 @@ function no_final_method_in_final_classes_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
+  Pha\Resolver $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

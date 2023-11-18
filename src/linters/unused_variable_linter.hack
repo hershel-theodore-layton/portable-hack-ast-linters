@@ -30,6 +30,7 @@ function unused_variable_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
+  Pha\Resolver $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

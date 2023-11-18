@@ -8,6 +8,7 @@ function no_elseif_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
+  Pha\Resolver $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
