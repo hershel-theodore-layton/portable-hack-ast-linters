@@ -39,8 +39,6 @@ function namespace_private_use_clause_linter(
 
   $get_namespace_name =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_NAME);
-  $get_qualified_name_parts =
-    Pha\create_member_accessor($script, Pha\MEMBER_QUALIFIED_NAME_PARTS);
 
   $current_namespace = Pha\index_get_nodes_by_kind(
     $syntax_index,
@@ -58,11 +56,7 @@ function namespace_private_use_clause_linter(
         Pha\as_token($name) |> Pha\token_get_text($script, $$);
     } else {
       $namespace_prefix = Pha\as_syntax($name)
-        |> Support\qualified_name_to_string(
-          $script,
-          $$,
-          $get_qualified_name_parts,
-        )
+        |> Pha\node_get_code_compressed($script, $$)
         |> Str\split($$, '\\')[0];
     }
   }

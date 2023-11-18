@@ -11,7 +11,6 @@ function get_flattened_namespace_uses(
 )[]: dict<UseKind, vec<(Pha\Syntax, string)>> {
   $is_const = Pha\create_token_matcher($script, Pha\KIND_CONST);
   $is_function = Pha\create_token_matcher($script, Pha\KIND_FUNCTION);
-  $is_name = Pha\create_token_matcher($script, Pha\KIND_NAME);
   $is_namespace = Pha\create_token_matcher($script, Pha\KIND_NAMESPACE);
   $is_type = Pha\create_token_matcher($script, Pha\KIND_TYPE);
 
@@ -23,8 +22,6 @@ function get_flattened_namespace_uses(
 
   $get_grouped_prefix =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_GROUP_USE_PREFIX);
-  $get_qualified_name_parts =
-    Pha\create_member_accessor($script, Pha\MEMBER_QUALIFIED_NAME_PARTS);
   $get_clauses = Pha\create_member_accessor(
     $script,
     Pha\MEMBER_NAMESPACE_USE_CLAUSES,
@@ -33,22 +30,11 @@ function get_flattened_namespace_uses(
   $get_clause_name =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_NAME);
 
-  $parse_clause = $clause ==> {
-    $name = $get_clause_name($clause);
-    if ($is_name($name)) {
-      return Pha\as_token($name) |> Pha\token_get_text($script, $$);
-    }
-
-    return Pha\as_syntax($name)
-      |> qualified_name_to_string($script, $$, $get_qualified_name_parts);
-  };
+  $parse_clause = $clause ==>
+    $get_clause_name($clause) |> Pha\node_get_code_compressed($script, $$);
 
   $parse_group_prefix = $use ==> $get_grouped_prefix($use)
-    |> qualified_name_to_string(
-      $script,
-      Pha\as_syntax($$),
-      $get_qualified_name_parts,
-    );
+    |> Pha\node_get_code_compressed($script, $$);
 
   $get_kind_as_enum = $use ==> $get_kind($use)
     |> $is_const($$)

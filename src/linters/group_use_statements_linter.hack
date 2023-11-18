@@ -37,8 +37,6 @@ function group_use_statements_linter(
 
   $get_grouped_prefix =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_GROUP_USE_PREFIX);
-  $get_qualified_name_parts =
-    Pha\create_member_accessor($script, Pha\MEMBER_QUALIFIED_NAME_PARTS);
   $get_clauses =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_CLAUSES);
   $get_clause_name =
@@ -51,23 +49,15 @@ function group_use_statements_linter(
       return $no_prefix;
     }
 
-    return Pha\as_syntax($name)
-      |> Support\qualified_name_to_string(
-        $script,
-        $$,
-        $get_qualified_name_parts,
-      )
+    return Pha\node_get_code_compressed($script, $name)
       |> Str\split($$, '\\')
       |> Vec\slice($$, 0, C\count($$) - 1)
       |> Str\join($$, '\\');
   };
 
   $parse_group_prefix = $use ==> $get_grouped_prefix($use)
-    |> Support\qualified_name_to_string(
-      $script,
-      Pha\as_syntax($$),
-      $get_qualified_name_parts,
-    );
+    |> Pha\node_get_code_compressed($script, $$)
+    |> Str\strip_suffix($$, '\\');
 
   $get_kind_as_enum = $use ==> $get_kind($use)
     |> $is_const($$)
