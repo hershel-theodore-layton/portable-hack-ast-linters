@@ -48,6 +48,12 @@ async function run_async(): Awaitable<void> {
 
   $linters['license_header_linter'] = ($script, $_, $_, $_, $_)[] ==>
     PhaLinters\license_header_linter($script, '/* Example License Text */');
+  $linters['pragma_prefix_unknown_linter'] = ($script, $_, $_, $_, $map)[] ==>
+    PhaLinters\pragma_prefix_unknown_linter(
+      $script,
+      $map,
+      keyset['known_prefix'],
+    );
 
   // Some tests change their behavior on more recent versions of hhvm.
   // For example, no_elseif_linter<>, since `elseif (expression) {}` will be
