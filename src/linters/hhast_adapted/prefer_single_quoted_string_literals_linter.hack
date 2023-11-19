@@ -9,6 +9,7 @@ function prefer_single_quoted_string_literals_linter(
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
   Pha\Resolver $_,
+  Pha\PragmaMap $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

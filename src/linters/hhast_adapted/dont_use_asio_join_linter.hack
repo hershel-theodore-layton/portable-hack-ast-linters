@@ -9,6 +9,7 @@ function dont_use_asio_join_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $resolver,
+  Pha\PragmaMap $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

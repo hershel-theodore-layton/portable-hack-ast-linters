@@ -44,7 +44,7 @@ async function pragma_test_async(): Awaitable<void> {
       $f ==> Str\slice($f, Str\search_last($f, '\\') as nonnull + 1),
     );
 
-  $linters['license_header_linter'] = ($script, $_, $_, $_)[] ==>
+  $linters['license_header_linter'] = ($script, $_, $_, $_, $_)[] ==>
     PhaLinters\license_header_linter($script, '/* Example License Text */');
 
   $file = File\open_read_only(__DIR__.'/pragma_example.hack');
@@ -60,7 +60,8 @@ async function pragma_test_async(): Awaitable<void> {
   $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
   foreach ($linters as $linter_name => $linter) {
-    $errors = $linter($script, $syntax_index, $token_index, $resolver);
+    $errors =
+      $linter($script, $syntax_index, $token_index, $resolver, $pragma_map);
     if (C\is_empty($errors)) {
       throw new \Exception('Expected an error for: '.$linter_name);
     }

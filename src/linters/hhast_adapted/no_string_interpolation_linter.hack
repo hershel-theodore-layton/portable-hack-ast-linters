@@ -9,6 +9,7 @@ function no_string_interpolation_linter(
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
   Pha\Resolver $_,
+  Pha\PragmaMap $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

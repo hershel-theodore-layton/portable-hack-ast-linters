@@ -18,6 +18,7 @@ function namespace_private_symbol_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $token_index,
   Pha\Resolver $resolver,
+  Pha\PragmaMap $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

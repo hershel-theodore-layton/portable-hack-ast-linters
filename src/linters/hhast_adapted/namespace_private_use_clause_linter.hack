@@ -24,6 +24,7 @@ function namespace_private_use_clause_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
+  Pha\PragmaMap $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

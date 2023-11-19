@@ -46,7 +46,7 @@ async function run_async(): Awaitable<void> {
       $f ==> Str\slice($f, Str\search_last($f, '\\') as nonnull + 1),
     );
 
-  $linters['license_header_linter'] = ($script, $_, $_, $_)[] ==>
+  $linters['license_header_linter'] = ($script, $_, $_, $_, $_)[] ==>
     PhaLinters\license_header_linter($script, '/* Example License Text */');
 
   // Some tests change their behavior on more recent versions of hhvm.
@@ -95,6 +95,7 @@ async function run_async(): Awaitable<void> {
         $token_index = Pha\create_token_kind_index($script);
         $resolver =
           Pha\create_name_resolver($script, $syntax_index, $token_index);
+        $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
         $expected_errors =
           Regex\every_match($test, re'/\#! (?<err_cnt>\d+)\s/');
@@ -104,8 +105,13 @@ async function run_async(): Awaitable<void> {
         }
 
         try {
-          $lint_errors =
-            $linter($script, $syntax_index, $token_index, $resolver);
+          $lint_errors = $linter(
+            $script,
+            $syntax_index,
+            $token_index,
+            $resolver,
+            $pragma_map,
+          );
           $err_cnt = Str\to_int($expected_errors[0]['err_cnt']) as nonnull;
           if (
             \HHVM_VERSION_ID >=

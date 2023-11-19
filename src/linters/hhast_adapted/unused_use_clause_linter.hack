@@ -9,6 +9,7 @@ function unused_use_clause_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $token_index,
   Pha\Resolver $resolver,
+  Pha\PragmaMap $_,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
