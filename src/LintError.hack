@@ -29,8 +29,11 @@ final class LintError {
     return $this->linterName;
   }
 
-  public function getLinterNameWithoutNamespace()[]: string {
-    return Str\split($this->linterName, '\\') |> C\lastx($$);
+  public function getLinterNameWithoutNamespaceAndLinter()[]: string {
+    return Str\split($this->linterName, '\\')
+      |> C\lastx($$)
+      |> Str\strip_suffix($$, '_linter')
+      |> Str\strip_suffix($$, 'Linter');
   }
 
   public function isIgnored(Pha\PragmaMap $pragma_map)[]: bool {
@@ -43,8 +46,8 @@ final class LintError {
       |> Vec\flatten($$)
       |> Vec\map($$, $str ==> Str\trim($str, '"\''))
       |> Vec\filter($$, $str ==> Str\starts_with($str, 'ignore:'))
-      |> Vec\map($$, $str ==> Str\strip_prefix($str, 'ignore:').'_linter')
-      |> C\contains($$, $this->getLinterNameWithoutNamespace());
+      |> Vec\map($$, $str ==> Str\strip_prefix($str, 'ignore:'))
+      |> C\contains($$, $this->getLinterNameWithoutNamespaceAndLinter());
   }
 
   public function toString()[]: string {

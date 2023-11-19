@@ -7,8 +7,9 @@ use function HH\fun_get_function;
 
 <<__EntryPoint>>
 async function run_async(): Awaitable<void> {
+  await pragma_test_async();
+
   $linters = vec[
-    PhaLinters\all_the_whitespace_linters<>,
     PhaLinters\async_function_and_method_linter<>,
     PhaLinters\camel_cased_methods_underscored_functions_linter<>,
     PhaLinters\dont_await_in_a_loop_linter<>,
@@ -37,6 +38,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\use_statement_with_as_linter<>,
     PhaLinters\use_statement_with_leading_backslash_linter<>,
     PhaLinters\use_statement_without_kind_linter<>,
+    PhaLinters\whitespace_linter<>,
   ]
     |> Dict\from_values($$, fun_get_function<>)
     |> Dict\map_keys(

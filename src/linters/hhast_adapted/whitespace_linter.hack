@@ -16,7 +16,7 @@ use namespace HTL\Pha;
 //
 // It also also quintuples as no_newline_at_start_of_control_flow_block_linter.
 // This linter is similar in style as dont_have_two_empty_lines_in_a_row_linter.
-function all_the_whitespace_linters(
+function whitespace_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $_,
