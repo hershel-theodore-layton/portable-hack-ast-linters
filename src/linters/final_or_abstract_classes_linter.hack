@@ -13,13 +13,13 @@ function final_or_abstract_classes_linter(
   $linter = __FUNCTION__;
 
   $is_class = Pha\create_token_matcher($script, Pha\KIND_CLASS);
-
   $is_abstract_or_final =
     Pha\create_token_matcher($script, Pha\KIND_ABSTRACT, Pha\KIND_FINAL);
 
+  $get_class_name =
+    Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_NAME);
   $get_class_keyword =
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_KEYWORD);
-
   $get_method_modifiers =
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_MODIFIERS);
 
@@ -38,7 +38,7 @@ function final_or_abstract_classes_linter(
       $$,
       $c ==> new LintError(
         $script,
-        $c,
+        $get_class_name($c),
         $linter,
         'Classes should be abstract or final.',
       ),
