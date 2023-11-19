@@ -16,14 +16,16 @@ function no_final_method_in_final_classes_linter(
     Pha\create_syntax_matcher($script, Pha\KIND_CLASSISH_DECLARATION);
   $is_final = Pha\create_token_matcher($script, Pha\KIND_FINAL);
 
+  $get_classish_modifiers =
+    Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_MODIFIERS);
   $get_method_function_decl = Pha\create_member_accessor(
     $script,
     Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
   );
   $get_function_modifiers =
     Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_MODIFIERS);
-  $get_classish_modifiers =
-    Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_MODIFIERS);
+  $get_function_name =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_NAME);
 
   $any_child_is_final = $node ==>
     C\any(Pha\node_get_children($script, $node), $is_final);
@@ -49,7 +51,10 @@ function no_final_method_in_final_classes_linter(
       $$,
       $f ==> new LintError(
         $script,
-        $f,
+        $f
+          |> $get_method_function_decl($$)
+          |> Pha\as_syntax($$)
+          |> $get_function_name($$),
         $linter,
         'Remove the final keyword. The surrounding class is already final.',
       ),
