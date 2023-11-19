@@ -37,7 +37,8 @@ function dont_create_forwarding_lambdas_linter(
     Pha\create_syntax_matcher($script, Pha\KIND_PREFIX_UNARY_EXPRESSION);
   $is_scope_resolution_expression =
     Pha\create_syntax_matcher($script, Pha\KIND_SCOPE_RESOLUTION_EXPRESSION);
-  $is_variable = Pha\create_token_matcher($script, Pha\KIND_VARIABLE_TOKEN);
+  $is_variable_expression =
+    Pha\create_syntax_matcher($script, Pha\KIND_VARIABLE_SYNTAX);
 
   $get_argument_list =
     Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST);
@@ -175,10 +176,11 @@ function dont_create_forwarding_lambdas_linter(
               : Support\CallingCovention::VARIADIC
           )
         : (
-            $is_variable($first_token)
+            $is_variable_expression($a)
               ? Support\CallingCovention::PLAIN
               : Support\CallingCovention::OTHER
           );
+
       return shape(
         'name' =>
           Pha\token_get_text($script, Support\get_last_token($script, $a)),

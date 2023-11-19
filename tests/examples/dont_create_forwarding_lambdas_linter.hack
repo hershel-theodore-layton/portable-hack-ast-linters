@@ -35,6 +35,12 @@ function func2(): void {
   $_ = (nothing $a) ==> example($a->hi());
 }
 
+//##! 0 False positive from hhvm-autoload
+function func3(): void {
+  $root = '';
+  $_ = $x ==> \is_dir($root.'/'.$x);
+}
+
 
 //##! 0 Special rules for parent and self, since it is not always valid to
 //      form a function reference to them. parent::m1<> is never allowed,
