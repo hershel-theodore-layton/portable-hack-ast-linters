@@ -24,7 +24,7 @@ function prefer_require_once_linter(
       $$,
       $n ==> new LintError(
         $script,
-        $n,
+        Pha\node_get_parent($script, $n),
         $linter,
         Str\format(
           'Use require_once instead of %s.',
