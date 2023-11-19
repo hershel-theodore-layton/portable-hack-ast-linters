@@ -35,9 +35,10 @@ function use_statement_with_leading_backslash_linter(
       $$,
       $n ==> new LintError(
         $script,
-        $n,
+        Pha\node_get_parent($script, $n),
         $linter,
-        'The leading backslash here does nothing. You may remove it.',
+        'The leading backslashes in use declarations do not have an effect. '.
+        'You may remove them.',
       ),
     );
 }
