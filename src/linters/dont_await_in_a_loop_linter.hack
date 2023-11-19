@@ -104,9 +104,10 @@ function dont_await_in_a_loop_linter(
   )
     |> Vec\map(
       $$,
-      $await_in_loop ==> new LintError(
+      $await_token ==> new LintError(
         $script,
-        $await_in_loop,
+        // Blame the whole expression, not just the token.
+        Pha\token_get_parent($script, $await_token),
         $linter,
         'Do not await in a loop.',
       ),
