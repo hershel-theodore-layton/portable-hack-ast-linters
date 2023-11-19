@@ -106,7 +106,8 @@ function no_empty_statements_linter(
         $script,
         $expr,
         $linter,
-        'You are not using the result of this expression. '.'If this .',
+        'You are not using the result of this expression. '.
+        'You can silency this warning by assigning it to `$_`.',
       ),
     );
 }
