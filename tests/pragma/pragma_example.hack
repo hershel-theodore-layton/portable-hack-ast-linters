@@ -64,7 +64,7 @@ async function pragmaExample()[]: Awaitable<void> {
     $_ = function() {};
 
     pragma('PhaLinters', 'ignore:prefer_require_once');
-    include '';
+    include __FILE__;
 
     pragma('PhaLinters', 'ignore:unused_pipe_variable');
     $_ = 0 |> 0;
