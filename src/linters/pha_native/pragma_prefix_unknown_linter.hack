@@ -16,7 +16,7 @@ function pragma_prefix_unknown_linter(
       $$,
       $p ==> $p[2][0]
         |> Str\trim($$, '"\'')
-        |> C\contains_key($known_pragma_prefixes, $$),
+        |> !C\contains_key($known_pragma_prefixes, $$),
     )
     |> Vec\map(
       $$,
