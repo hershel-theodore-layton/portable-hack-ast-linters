@@ -238,7 +238,11 @@ function unused_variable_linter(
   return Vec\filter($assignments, $is_unused)
     |> Vec\map(
       $$,
-      $a ==>
-        new LintError($script, $a['var'], $linter, 'This variable is unused.'),
+      $a ==> new LintError(
+        $script,
+        Pha\token_get_parent($script, $a['var']),
+        $linter,
+        'This variable is unused.',
+      ),
     );
 }
