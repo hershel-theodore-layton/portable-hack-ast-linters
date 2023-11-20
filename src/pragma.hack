@@ -5,7 +5,7 @@ namespace HTL\Pragma;
  * @package The `pragma(...)` directive and `<<Pragmas(...)>>`
  * attribute are a more structured way to communicate with source analyzers.
  * The typechecker looks for hh_fixme and hh_ignore_error directives.
- * HHAST looks for hh_ignore_error, hh_ignore_all, and hh_fixme directives.
+ * HHAST looks for hhast_ignore_error, hhast_ignore_all, and hhast_fixme directives.
  *
  * I don't like the state of things, because nothings checks the comments.
  * It is unclear if a comment is a directive for something, a normal comment,
@@ -21,7 +21,7 @@ namespace HTL\Pragma;
  * The 1st addresses a library, and the 2nd to last are implementation defined.
  * These take effect for the lines they are on and the next line.
  *
- * The attribute take any number of vecs, each of which is a directive.
+ * The attribute takes any number of vecs, each of which is a directive.
  * The scope is from attribute to closing curly brace if atop a class.
  * A file attribute `<<file: Pragmas(...)>>` affects the entire file.
  *
