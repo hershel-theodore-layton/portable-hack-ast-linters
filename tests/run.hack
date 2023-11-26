@@ -12,6 +12,7 @@ async function run_async(): Awaitable<void> {
   $linters = vec[
     PhaLinters\async_function_and_method_linter<>,
     PhaLinters\camel_cased_methods_underscored_functions_linter<>,
+    PhaLinters\concat_merge_or_union_expression_can_be_simplified_linter<>,
     PhaLinters\count_expression_can_be_simplified_linter<>,
     PhaLinters\dont_await_in_a_loop_linter<>,
     PhaLinters\dont_create_forwarding_lambdas_linter<>,
@@ -34,7 +35,6 @@ async function run_async(): Awaitable<void> {
     PhaLinters\prefer_require_once_linter<>,
     PhaLinters\shout_case_enum_members_linter<>,
     PhaLinters\unreachable_code_linter<>,
-    PhaLinters\unneeded_concat_merge_or_union_call<>,
     PhaLinters\unused_pipe_variable_linter<>,
     PhaLinters\unused_use_clause_linter<>,
     PhaLinters\unused_variable_linter<>,

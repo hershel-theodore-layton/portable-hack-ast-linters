@@ -4,7 +4,7 @@ namespace HTL\PhaLinters;
 use namespace HH\Lib\{C, Str, Vec};
 use namespace HTL\Pha;
 
-function unneeded_concat_merge_or_union_call(
+function concat_merge_or_union_expression_can_be_simplified_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
@@ -30,6 +30,12 @@ function unneeded_concat_merge_or_union_call(
       $$ === 'HH\Lib\Keyset\union' ||
       $$ === 'HH\Lib\Vec\concat';
 
+  $simplified_call = dict[
+    'HH\Lib\Dict\merge' => 'dict',
+    'HH\Lib\Keyset\union' => 'keyset',
+    'HH\Lib\Vec\concat' => 'vec',
+  ];
+
   return Pha\index_get_nodes_by_kind(
     $syntax_index,
     Pha\KIND_FUNCTION_CALL_EXPRESSION,
@@ -45,15 +51,19 @@ function unneeded_concat_merge_or_union_call(
     })
     |> Vec\map(
       $$,
-      $call ==> new LintError(
-        $script,
-        $call,
-        $linter,
-        Str\format(
-          'A call to %s(...) with a single argument is unneeded. '.
-          'You may replace the call with its first argument.',
-          $resolve_function_name($call),
+      $call ==> $resolve_function_name($call)
+        |> new LintError(
+          $script,
+          $call,
+          $linter,
+          Str\format(
+            'This call to %s(...) can be simplified to %s(...). '.
+            'If the type of the first argument is already %s, '.
+            'you do not need to call any function.',
+            $$,
+            $simplified_call[$$],
+            $simplified_call[$$],
+          ),
         ),
-      ),
     );
 }

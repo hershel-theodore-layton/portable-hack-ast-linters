@@ -1,5 +1,5 @@
 //##! 3
-namespace Linters\Tests\UnneededConcatMergeOrUnionCall;
+namespace Linters\Tests\ConcatMergeOrUnionExpressionCanBeSimplifiedLinter;
 
 use namespace HH\Lib\{Dict, Keyset, Vec};
 
