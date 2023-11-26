@@ -1,5 +1,5 @@
 //##! 16 All errors
-namespace Linters\Tests\UseCIsEmptyLinter;
+namespace Linters\Tests\CountExpressionCanBeSimplified;
 
 use namespace HH\Lib\C;
 

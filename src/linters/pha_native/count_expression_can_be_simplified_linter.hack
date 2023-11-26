@@ -4,7 +4,7 @@ namespace HTL\PhaLinters;
 use namespace HH\Lib\{Str, Vec};
 use namespace HTL\Pha;
 
-function use_c_is_empty_linter(
+function count_expression_can_be_simplified_linter(
   Pha\Script $script,
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
