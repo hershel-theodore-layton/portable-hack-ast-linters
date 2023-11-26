@@ -33,6 +33,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\prefer_require_once_linter<>,
     PhaLinters\shout_case_enum_members_linter<>,
     PhaLinters\unreachable_code_linter<>,
+    PhaLinters\unneeded_concat_merge_or_union_call<>,
     PhaLinters\unused_pipe_variable_linter<>,
     PhaLinters\unused_use_clause_linter<>,
     PhaLinters\unused_variable_linter<>,
