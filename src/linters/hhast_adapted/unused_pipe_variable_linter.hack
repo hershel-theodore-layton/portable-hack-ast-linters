@@ -28,9 +28,7 @@ function unused_pipe_variable_linter(
     |> Pha\node_get_descendants($script, $$)
     |> C\any($$, $is_dollar_dollar);
 
-  return Vec\concat(
-    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_BINARY_EXPRESSION),
-  )
+  return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_BINARY_EXPRESSION)
     |> Vec\filter(
       $$,
       $expr ==> $is_pipe_expression($expr) && !$rhs_uses_dollar_dollar($expr),
