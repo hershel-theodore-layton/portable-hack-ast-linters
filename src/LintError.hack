@@ -29,6 +29,10 @@ final class LintError {
     return $this->linterName;
   }
 
+  public function getPosition()[]: Pha\LineAndColumnNumbers {
+    return $this->position;
+  }
+
   public function getLinterNameWithoutNamespaceAndLinter()[]: string {
     return Str\split($this->linterName, '\\')
       |> C\lastx($$)
