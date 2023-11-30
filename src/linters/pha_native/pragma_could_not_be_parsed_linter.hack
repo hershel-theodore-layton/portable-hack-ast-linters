@@ -24,7 +24,7 @@ function pragma_could_not_be_parsed_linter(
       $$,
       $t ==> Vec\drop($t[2], 1)
         |> Vec\map($$, $str ==> Str\trim($str, '"\''))
-        |> C\find($$, $str ==> !Str\starts_with($str, 'ignore:')) is nonnull,
+        |> C\find($$, $str ==> !Str\starts_with($str, 'fixme:')) is nonnull,
     )
     |> Vec\map(
       $$,
@@ -32,7 +32,7 @@ function pragma_could_not_be_parsed_linter(
         $script,
         $p[0],
         $linter,
-        'Your version of PhaLinters only supports ignore:linter_name',
+        'Your version of PhaLinters only supports fixme:linter_name',
       ),
     );
 

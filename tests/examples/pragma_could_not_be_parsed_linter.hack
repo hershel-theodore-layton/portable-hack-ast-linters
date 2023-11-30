@@ -7,11 +7,11 @@ use function HTL\Pragma\pragma;
 <<file:
   Pragmas(
     vec['PhaLinters', 'enable:bad'],
-    vec['PhaLinters', 'ignore:good'],
+    vec['PhaLinters', 'fixme:good'],
   )>>
 
-<<Pragmas(vec['PhaLinters', 'enable:bad'], vec['PhaLinters', 'ignore:good'])>>
+<<Pragmas(vec['PhaLinters', 'enable:bad'], vec['PhaLinters', 'fixme:good'])>>
 function func1(): void {
   pragma('PhaLinters', 'enable:bad');
-  pragma('PhaLinters', 'ignore:good');
+  pragma('PhaLinters', 'fixme:good');
 }

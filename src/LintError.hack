@@ -49,8 +49,8 @@ final class LintError {
       )
       |> Vec\flatten($$)
       |> Vec\map($$, $str ==> Str\trim($str, '"\''))
-      |> Vec\filter($$, $str ==> Str\starts_with($str, 'ignore:'))
-      |> Vec\map($$, $str ==> Str\strip_prefix($str, 'ignore:'))
+      |> Vec\filter($$, $str ==> Str\starts_with($str, 'fixme:'))
+      |> Vec\map($$, $str ==> Str\strip_prefix($str, 'fixme:'))
       |> C\contains($$, $this->getLinterNameWithoutNamespaceAndLinter());
   }
 
