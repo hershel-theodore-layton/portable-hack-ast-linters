@@ -19,11 +19,7 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
     Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_RECEIVER);
 
   $resolve_function_name = $call ==> $get_call_receiver($call)
-    |> Pha\resolve_name(
-      $resolver,
-      $$,
-      Pha\node_get_code_compressed($script, $$),
-    );
+    |> Pha\resolve_name($resolver, $script, $$);
 
   $is_concat_merge_or_union = $call ==> $resolve_function_name($call)
     |> $$ === 'HH\Lib\Dict\merge' ||

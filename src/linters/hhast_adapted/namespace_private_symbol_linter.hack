@@ -46,11 +46,7 @@ function namespace_private_symbol_linter(
     |> Vec\filter(
       $$,
       $n ==> {
-        $name = Pha\resolve_name(
-          $resolver,
-          $n,
-          Pha\node_get_code_compressed($script, $n),
-        );
+        $name = Pha\resolve_name($resolver, $script, $n);
 
         $public_and_private_part = Str\split($name, '\\__Private', 2)
           |> C\count($$) !== 1 ? $$ : Str\split(C\onlyx($$), '\\_Private', 2);
@@ -72,11 +68,7 @@ function namespace_private_symbol_linter(
         $namespace_prefix = $get_namespace_header($nearest_namespace)
           |> Pha\as_syntax($$)
           |> $get_namespace_name($$)
-          |> Pha\resolve_name(
-            $resolver,
-            $$,
-            Pha\node_get_code_compressed($script, $$),
-          )
+          |> Pha\resolve_name($resolver, $script, $$)
           |> Str\split($$, '\\')
           |> C\firstx($$);
 

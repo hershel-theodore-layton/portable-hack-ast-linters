@@ -25,11 +25,7 @@ function unused_use_clause_linter(
     |> Vec\unique_by($$, Pha\node_get_id<>)
     |> Vec\map(
       $$,
-      $n ==> Pha\resolve_name_and_use_clause(
-        $resolver,
-        $n,
-        Pha\node_get_code_compressed($script, $n),
-      )[1],
+      $n ==> Pha\resolve_name_and_use_clause($resolver, $script, $n)[1],
     )
     |> Vec\filter($$, $c ==> $c !== Pha\NIL)
     |> Vec\map($$, Pha\as_syntax<>)

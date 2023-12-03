@@ -46,12 +46,7 @@ function count_expression_can_be_simplified_linter(
     Pha\create_member_accessor($script, Pha\MEMBER_PREFIX_UNARY_OPERATOR);
 
   $is_c_count = $call ==> $get_call_receiver($call)
-    |> Pha\resolve_name(
-      $resolver,
-      $$,
-      Pha\node_get_code_compressed($script, $$),
-    ) ===
-      'HH\Lib\C\count';
+    |> Pha\resolve_name($resolver, $script, $$) === 'HH\Lib\C\count';
 
   $is_logical_not = $n ==> $is_prefix_unary_expression($n) &&
     $is_exclamation($get_prefix_operator($n));

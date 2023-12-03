@@ -23,11 +23,7 @@ function dont_use_asio_join_linter(
     |> Vec\filter(
       $$,
       $n ==> $get_function_call_receiver($n)
-        |> Pha\resolve_name(
-          $resolver,
-          $$,
-          Pha\node_get_code_compressed($script, $$),
-        )
+        |> Pha\resolve_name($resolver, $script, $$)
         |> $$ === 'HH\\Asio\\join',
     )
     |> Vec\map(
