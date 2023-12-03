@@ -10,6 +10,7 @@ function camel_cased_methods_underscored_functions_linter(
   Pha\TokenIndex $_,
   Pha\Resolver $_,
   Pha\PragmaMap $_,
+  ?vec<string> $allowed_suffixes = null,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

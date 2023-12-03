@@ -10,6 +10,7 @@ function async_function_and_method_linter(
   Pha\TokenIndex $_,
   Pha\Resolver $_,
   Pha\PragmaMap $_,
+  ?vec<string> $allowed_suffixes = null,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 

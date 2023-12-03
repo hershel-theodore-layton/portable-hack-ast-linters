@@ -9,8 +9,18 @@ function enforce_naming(
   Pha\SyntaxIndex $syntax_index,
   (function(string, Pha\Syntax)[_]: bool) $function_name_func,
   (function(string, Pha\Syntax)[_]: bool) $method_name_func,
+  ?vec<string> $allowed_suffixes = null,
 )[ctx $function_name_func, ctx $method_name_func]: vec<Pha\Syntax> {
-  $allowed_suffixes = vec['_DEPRECATED', '_DO_NOT_USE', '_UNTYPED', '_UNSAFE'];
+  $allowed_suffixes ??= vec[
+    '__DEPRECATED',
+    '__DO_NOT_USE',
+    '__UNTYPED',
+    '__UNSAFE',
+    '_DEPRECATED',
+    '_DO_NOT_USE',
+    '_UNTYPED',
+    '_UNSAFE',
+  ];
 
   $is_function_declaration =
     Pha\create_syntax_matcher($script, Pha\KIND_FUNCTION_DECLARATION);

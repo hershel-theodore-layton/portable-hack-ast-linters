@@ -42,3 +42,9 @@ function a_DEPRECATED(): void {}
 function a_DO_NOT_USE(): void {}
 function a_UNSAFE(): void {}
 function a_UNTYPED(): void {}
+
+//##! 0 suffix with double underscore in method
+
+final class X4 {
+  public function a__DO_NOT_USE(): void {}
+}
