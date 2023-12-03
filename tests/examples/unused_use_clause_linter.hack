@@ -68,3 +68,14 @@ use namespace HH\Lib\Keyset;
 function func7(): void {
   \HH\Lib\Keyset\map<>;
 }
+
+//##! 0 Setup
+
+type DB = int;
+
+//##! 0 All caps type in classic type position
+use type Linters\Tests\UnusedUseClauseLinter\DB;
+
+function func8(): DB {
+  return 0;
+}
