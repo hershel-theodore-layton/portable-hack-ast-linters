@@ -36,6 +36,7 @@ function camel_cased_methods_underscored_functions_linter(
         !Regex\matches($name, re'/^[a-z][a-zA-Z0-9]*$/') &&
         !$is_factory_func($decl, $name);
     },
+    $allowed_suffixes,
   )
     |> Vec\map(
       $$,

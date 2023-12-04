@@ -31,6 +31,7 @@ function async_function_and_method_linter(
       !Str\starts_with($name, 'test') &&
       !Str\ends_with($name, 'Async') &&
       !Str\ends_with($name, 'Asyncx'),
+    $allowed_suffixes,
   )
     |> Vec\map(
       $$,
