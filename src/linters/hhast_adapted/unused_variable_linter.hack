@@ -36,10 +36,16 @@ function unused_variable_linter(
     $build_matcher(Pha\KIND_MEMBER_SELECTION_EXPRESSION);
   $is_methodish_declaration = $build_matcher(Pha\KIND_METHODISH_DECLARATION);
   $is_parameter_declaration = $build_matcher(Pha\KIND_PARAMETER_DECLARATION);
+  $is_plus_plus_or_minus_minus =
+    Pha\create_token_matcher($script, Pha\KIND_PLUS_PLUS, Pha\KIND_MINUS_MINUS);
   $is_scope = $build_matcher(
     Pha\KIND_FUNCTION_DECLARATION,
     Pha\KIND_LAMBDA_EXPRESSION,
     Pha\KIND_METHODISH_DECLARATION,
+  );
+  $is_unary_expression = $build_matcher(
+    Pha\KIND_PREFIX_UNARY_EXPRESSION,
+    Pha\KIND_POSTFIX_UNARY_EXPRESSION,
   );
 
   $get_binop_operator =
@@ -64,6 +70,11 @@ function unused_variable_linter(
     Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_NAME);
   $get_parameter_visibility =
     Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_VISIBILITY);
+  $get_unary_operator = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_PREFIX_UNARY_OPERATOR,
+    Pha\MEMBER_POSTFIX_UNARY_OPERATOR,
+  );
 
   $is_assignment_expression = $node ==> $is_binary_expression($node) &&
     $is_assignment_operator($get_binop_operator($node) |> Pha\as_token($$));
@@ -121,6 +132,10 @@ function unused_variable_linter(
         $is_assignment_expression($loop_node) &&
         Support\get_first_token($script, $loop_node) === $variable &&
         !$assignment_has_non_local_effects($loop_node, $variable)
+      ) ||
+      (
+        $is_unary_expression($loop_node) &&
+        $is_plus_plus_or_minus_minus($get_unary_operator($loop_node))
       ) ||
       (
         $is_list_expression($loop_node) &&

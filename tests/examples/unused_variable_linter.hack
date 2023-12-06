@@ -87,3 +87,18 @@ function func7(inout vec<int> $items, inout vec<int> $unused): void {
     $counter[] = 2;
   };
 }
+
+//##! 5 Pre and post increment are not expressions in hhvm 4.38 and above
+//      For this reason, we can treat them as assignments (not as a use).
+
+function func8(int $unused, inout int $used): void {
+  ++$unused;
+  $unused++;
+  --$unused;
+  $unused--;
+
+  ++$used;
+  $used++;
+  --$used;
+  $used++;
+}
