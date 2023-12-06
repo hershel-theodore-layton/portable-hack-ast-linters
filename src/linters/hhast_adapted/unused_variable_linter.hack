@@ -4,22 +4,6 @@ namespace HTL\PhaLinters;
 use namespace HH\Lib\{C, Dict, Math, Str, Vec};
 use namespace HTL\Pha;
 
-type TUnusedVariableLinterAfterShadowing = shape(
-  'is_assignment' => bool,
-  'owners' => vec<Pha\Syntax>,
-  'var' => Pha\Token,
-  'var_name' => string,
-);
-
-type TUnusedVariableLinterUsage = shape(
-  'is_assignment' => bool,
-  'param_of_func' => Pha\NillableSyntax,
-  'param_of_lambda' => Pha\NillableSyntax,
-  'scopes' => vec<Pha\Syntax>,
-  'var' => Pha\Token,
-  'var_name' => string,
-);
-
 // This linter implements unused_variable_linter.
 //
 // It also doubles as unused_parameter_linter.
@@ -76,6 +60,8 @@ function unused_variable_linter(
     Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_SIGNATURE);
   $get_list_expr_members =
     Pha\create_member_accessor($script, Pha\MEMBER_LIST_MEMBERS);
+  $get_parameter_name =
+    Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_NAME);
   $get_parameter_visibility =
     Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_VISIBILITY);
 
@@ -96,7 +82,24 @@ function unused_variable_linter(
     |> Support\vec_take_while_incl_true($$, $node ==> $node === $assignment)
     |> C\any($$, $is_member_selection_expression);
 
-  $classify_use = ($variable): ?TUnusedVariableLinterUsage ==> {
+  $inout_scopes = Pha\index_get_nodes_by_kind($token_index, Pha\KIND_INOUT)
+    |> Vec\map(
+      $$,
+      $i ==> Pha\node_get_parent($script, $i)
+        |> !$is_parameter_declaration($$)
+          ? null
+          : shape(
+              'name' => $get_parameter_name(Pha\as_syntax($$))
+                |> Pha\node_get_code_compressed($script, $$),
+              'scope' =>
+                C\findx(Pha\node_get_ancestors($script, $$), $is_scope),
+            ),
+    )
+    |> Vec\filter_nulls($$)
+    |> Dict\group_by($$, $shape ==> $shape['name'])
+    |> Dict\map($$, $shapes ==> Vec\map($shapes, $s ==> $s['scope']));
+
+  $classify_use = ($variable): ?Support\TUnusedVariableLinterUsage ==> {
     $ret = shape(
       'is_assignment' => false,
       'param_of_func' => Pha\NIL,
@@ -105,6 +108,9 @@ function unused_variable_linter(
       'var' => $variable,
       'var_name' => Pha\token_get_text($script, $variable),
     );
+
+    $is_param =
+      $is_parameter_declaration(Pha\node_get_parent($script, $variable));
 
     $assigns_to_var_local = ($loop_node): bool ==> $is_foreach($loop_node) &&
       (
@@ -146,6 +152,14 @@ function unused_variable_linter(
 
       if ($is_scope($node)) {
         $ret['scopes'][] = $node;
+        // Any assignment to a inout variable should be treated as a use.
+        // Reason being, they have effects on the outer scopes / the caller.
+        if (
+          !$is_param &&
+          C\contains(idx($inout_scopes, $ret['var_name'], vec[]), $node)
+        ) {
+          $ret['is_assignment'] = false;
+        }
       }
     }
 
@@ -153,8 +167,8 @@ function unused_variable_linter(
   };
 
   $apply_shadowing_rules = (
-    vec<TUnusedVariableLinterUsage> $usages,
-  ): vec<TUnusedVariableLinterAfterShadowing> ==> {
+    vec<Support\TUnusedVariableLinterUsage> $usages,
+  ): vec<Support\TUnusedVariableLinterAfterShadowing> ==> {
     $lambda_params =
       Vec\filter($usages, $u ==> $u['param_of_lambda'] !== Pha\NIL)
       |> Vec\map(
@@ -220,7 +234,7 @@ function unused_variable_linter(
 
   $usages_by_name = Dict\group_by($usages, $u ==> $u['var_name']);
 
-  $is_unused = (TUnusedVariableLinterAfterShadowing $a) ==>
+  $is_unused = (Support\TUnusedVariableLinterAfterShadowing $a) ==>
     !Str\starts_with($a['var_name'], '$_') &&
     !$is_promoted_contructor_parameter($a['var']) &&
     !C\any($a['owners'], $is_abstract_scope) &&

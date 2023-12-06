@@ -78,3 +78,12 @@ function func6(): void {
   // This test is a little contrived, this proves $b is not unused.
   list($a[$b]) = $a;
 }
+
+//##! 1 inout parameters are used in write-only positions
+
+function func7(inout vec<int> $items, inout vec<int> $unused): void {
+  $items[] = 2;
+  $_ = (inout vec<int> $counter) ==> {
+    $counter[] = 2;
+  };
+}
