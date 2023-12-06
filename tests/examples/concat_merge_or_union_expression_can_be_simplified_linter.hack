@@ -21,3 +21,11 @@ function func2(): void {
   union(keyset[], keyset[]);
   concat(vec[], vec[]);
 }
+
+//##! 0 Spreading a tuple is okay, since we can't know the arity of the tuple.
+
+function func3(): void {
+  $tuple = tuple(dict[]);
+
+  \HH\Lib\Vec\concat(...$tuple);
+}

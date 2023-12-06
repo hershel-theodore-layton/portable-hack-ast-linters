@@ -21,6 +21,9 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
   $resolve_function_name = $call ==> $get_call_receiver($call)
     |> Pha\resolve_name($resolver, $script, $$);
 
+  $is_decorated_expression =
+    Pha\create_syntax_matcher($script, Pha\KIND_DECORATED_EXPRESSION);
+
   $is_concat_merge_or_union = $call ==> $resolve_function_name($call)
     |> $$ === 'HH\Lib\Dict\merge' ||
       $$ === 'HH\Lib\Keyset\union' ||
@@ -43,7 +46,7 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
 
       return $get_argument_list($call)
         |> Pha\list_get_items_of_children($script, Pha\as_syntax($$))
-        |> C\count($$) === 1;
+        |> C\count($$) === 1 && !$is_decorated_expression($$[0]);
     })
     |> Vec\map(
       $$,
