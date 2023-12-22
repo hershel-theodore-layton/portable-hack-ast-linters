@@ -48,7 +48,7 @@ use namespace HH;
  * @param ...$_args[0] The name of the library you are targetting.
  * @param ...$_args[1..] Arguments passed to the library.
  */
-function pragma(mixed ...$_args)[]: void {}
+function pragma(string ...$_args)[]: void {}
 
 /**
  * Apply a set of pragmas to an entire scope.
@@ -62,5 +62,9 @@ final class Pragmas
     HH\FunctionAttribute,
     HH\MethodAttribute,
     HH\FileAttribute {
-  public function __construct(public vec<mixed> ...$values)[] {}
+  public vec<vec<string>> $values;
+
+  public function __construct(vec<string> ...$values)[] {
+    $this->values = vec($values);
+  }
 }
