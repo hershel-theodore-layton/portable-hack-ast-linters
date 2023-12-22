@@ -27,5 +27,7 @@ jobs:
         with:
           hhvm: ${{matrix.hhvm}}
           skip_lint: ${{ matrix.hhvm != '4.168' }}
-          # This library uses its own test runner
           skip_tests: true
+      - name: Run tests
+        shell: bash
+        run: hhvm tests/run.hack
