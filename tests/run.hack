@@ -174,4 +174,6 @@ async function run_async(): Awaitable<void> {
     "Running these tests took: %g MB of RAM\n",
     \memory_get_peak_usage(true) / 1000000,
   );
+
+  exit(C\is_empty($errors) ? 0 : 1);
 }
