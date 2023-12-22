@@ -17,12 +17,15 @@ function license_header_linter(
     |> Pha\node_get_children($script, $$)
     |> C\findx($$, $n ==> !$is_markup_section($n))
     |> Pha\node_get_descendants($script, $$)
-    |> C\findx($$, Pha\is_trivium<>)
-    |> Str\contains(Pha\node_get_code($script, $$), $expected_license_header)
+    |> C\any(
+      $$,
+      $n ==> Pha\is_trivium($n) &&
+        Str\contains(Pha\node_get_code($script, $n), $expected_license_header),
+    )
       ? vec[]
       : vec[new LintError(
         $script,
-        $$,
+        C\firstx($$),
         $linter,
         'Expected the find your license header at the top of this file: '.
         $expected_license_header,
