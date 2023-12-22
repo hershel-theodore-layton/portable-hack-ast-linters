@@ -452,6 +452,13 @@ const TokenKind KIND_YIELD = 'yield';
 ///// src/LineAndColumnNumbers.hack /////
 /** portable-hack-ast is MIT licensed, see /LICENSE. */
 namespace HTL\Pha{
+/**
+ * The start of the first trivium of a file is at line(0), col(0).
+ * A column is determined by the place of the cursor, not the start of the byte.
+ * A node consisting of a single byte is one column large.
+ * The end column of a node with no text is the same as its start column.
+ * Newlines are considered to be the last column of a line.
+ */
 final class LineAndColumnNumbers {
   public function __construct(
     private int $startLine,
@@ -1705,33 +1712,6 @@ final class TranslationUnit {
     return $to_exclusive is null
       ? Str\slice($this->sourceText, $from)
       : Str\slice($this->sourceText, $from, $to_exclusive - $from);
-  }
-
-  public function debugDumpHex()[]: string {
-    $out = "SOURCE ORDER:\n";
-
-    $dump_node = $node ==> Str\format(
-      '%x|%02x|%05x|%05x|%05x',
-      node_get_field_0($node) & 0b11,
-      node_get_field_1($node),
-      node_get_field_2($node),
-      node_get_field_3($node),
-      node_get_field_4($node),
-    );
-
-    foreach ($this->sourceOrder as $node) {
-      $out .= '  '.$dump_node($node)."\n";
-    }
-
-    $out .= "SIBLINGS:\n";
-    foreach ($this->siblings as $node) {
-      $out .= '  '.$dump_node($node)."\n";
-    }
-
-    $out .= "SOURCE TEXT:\n";
-    $out .= $this->sourceText;
-
-    return $out;
   }
 
   public function getLineBreaks()[]: vec<SourceByteOffset> {
@@ -5008,14 +4988,9 @@ function source_range_to_line_and_column_numbers(
     ++$i;
   }
 
-  if ($i === 0) {
-    $start_line = 1;
-    $start_column = 0;
-  } else {
-    $start_line = $i;
-    $start_column = _Private\source_byte_offset_to_int($start) -
-      _Private\source_byte_offset_to_int($breaks[$i - 1]);
-  }
+  $start_line = Math\maxva(0, $i - 1);
+  $start_column = _Private\source_byte_offset_to_int($start) -
+    _Private\source_byte_offset_to_int($breaks[$start_line]);
 
   while (
     $i < $count &&
@@ -5027,19 +5002,14 @@ function source_range_to_line_and_column_numbers(
     ++$i;
   }
 
-  if ($i === 0) {
-    $end_line = 1;
-    $end_column = 0;
-  } else {
-    $end_line = $i;
-    $end_column = _Private\source_byte_offset_to_int($end_exclusive) -
-      _Private\source_byte_offset_to_int($breaks[$i - 1]);
-  }
+  $end_line = Math\maxva(0, $i - 1);
+  $end_column = _Private\source_byte_offset_to_int($end_exclusive) -
+    _Private\source_byte_offset_to_int($breaks[$end_line]);
 
   return new LineAndColumnNumbers(
-    $start_line - 1,
+    $start_line,
     $start_column,
-    $end_line - 1,
+    $end_line,
     $end_column,
   );
 }

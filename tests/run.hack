@@ -155,7 +155,7 @@ async function run_async(): Awaitable<void> {
           $errors[] = Str\format(
             "ERROR Exception: %s\nCore dump: %s",
             $e->getMessage(),
-            Pha\_Private\translation_unit_reveal($script)->debugDumpHex(),
+            Pha\node_get_code($script, Pha\SCRIPT_NODE),
           );
         }
       }
