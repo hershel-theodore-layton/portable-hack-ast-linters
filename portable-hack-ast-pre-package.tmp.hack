@@ -2316,7 +2316,7 @@ final class NameResolver {
 
   public function resolveName(
     Pha\Node $name,
-    Pha\Node $parent,
+    Pha\Syntax $parent,
     string $compressed_code,
     Pha\ResolveStrategy $strategy = Pha\ResolveStrategy::JUST_GUESS,
   )[]: (string, NillableSyntax) {
@@ -2340,9 +2340,7 @@ final class NameResolver {
         if (static::isUnderscoreOrBuiltinAttribute($compressed_code)) {
           return tuple($compressed_code, NIL);
         }
-        $kind = ($this->parentMakesMeGuessItIsAType)($parent)
-          ? UseKind::TYPE
-          : static::guessKind($parts);
+        $kind = $this->guessKind($parent, $parts);
     }
 
     $original_namespace =
@@ -2390,9 +2388,16 @@ final class NameResolver {
     return tuple($original_namespace->getName().$compressed_code, NIL);
   }
 
-  private static function guessKind(vec<string> $parts)[]: UseKind {
+  private function guessKind(
+    Pha\Syntax $parent,
+    vec<string> $parts,
+  )[]: UseKind {
     if (C\count($parts) !== 1) {
       return UseKind::NAMESPACE;
+    }
+
+    if (($this->parentMakesMeGuessItIsAType)($parent)) {
+      return UseKind::TYPE;
     }
 
     $last_part = C\lastx($parts);
@@ -3464,7 +3469,9 @@ function resolve_name_and_use_clause(
 )[]: (string, NillableSyntax) {
   return _Private\resolver_reveal($resolver)->resolveName(
     $node,
-    node_get_parent($script, $node),
+    is_token($node)
+      ? token_get_parent($script, as_token($node))
+      : syntax_get_parent($script, as_syntax($node)),
     node_get_code_compressed($script, $node),
   );
 }

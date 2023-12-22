@@ -79,3 +79,8 @@ use type Linters\Tests\UnusedUseClauseLinter\DB;
 function func8(): DB {
   return 0;
 }
+
+//##! 0 Used
+use namespace HTL\PhaLinters\Support;
+
+function func9(Support\UseKind $_kind): void {}
