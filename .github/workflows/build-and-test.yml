@@ -27,3 +27,5 @@ jobs:
         with:
           hhvm: ${{matrix.hhvm}}
           skip_lint: ${{ matrix.hhvm != '4.168' }}
+          # This library uses its own test runner
+          skip_tests: true
