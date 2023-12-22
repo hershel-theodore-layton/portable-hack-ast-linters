@@ -142,7 +142,7 @@ async function run_async(): Awaitable<void> {
               $test,
             );
           }
-        } catch (\ExceptionWithPureGetMessage $e) {
+        } catch (Pha\PhaException $e) {
           $errors[] = Str\format(
             "ERROR Exception: %s\nCore dump: %s",
             $e->getMessage(),
