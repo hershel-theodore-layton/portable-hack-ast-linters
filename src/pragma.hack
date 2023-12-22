@@ -58,7 +58,7 @@ final class Pragmas
   implements
     HH\ClassAttribute,
     HH\EnumAttribute,
-    HH\EnumClassAttribute,
+    /* HHVM 4.103+ exclusive HH\EnumClassAttribute, */
     HH\FunctionAttribute,
     HH\MethodAttribute,
     HH\FileAttribute {
