@@ -9,7 +9,6 @@ use function HH\fun_get_function;
 async function run_async(): Awaitable<void> {
   require_once __DIR__.'/../vendor/autoload.hack';
   \Facebook\AutoloadMap\initialize();
-  require_once __DIR__.'/../portable-hack-ast-pre-package.tmp.hack';
 
   await pragma_test_async();
 
