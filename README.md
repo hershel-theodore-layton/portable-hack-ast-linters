@@ -10,7 +10,7 @@ start linting right away. PhaLinters **does not work this way**. You must add a
 Hack source code file which does the linting and call the linters directly.
 The linters are in the `HTL\PhaLinters` namespace, so autocomplete away.
 
-This library (TODO) lints itself. You can check [lint.hack](./tests/lint.hack)
+This library lints itself. You can check [lint.hack](./tests/lint.hack)
 and copy it verbatim. This file is explicitly licensed as
 [MIT-0](https://choosealicense.com/licenses/mit-0/), not MIT like the rest of
 this library. This means you can do all the things permitted by the MIT license,
