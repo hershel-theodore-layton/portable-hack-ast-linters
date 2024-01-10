@@ -34,7 +34,7 @@ namespace HTL\Pragma;
  * `use namespace HTL\Pragma; ... Pragma\pragma(...) ... <<Pragma\Pragmas(...)>>`
  * Using `use function HTL\Pragma\pragma as not_pragma` is also not allowed.
  *
- * A PragmaMap scanner is included in `hershel-theodore-layton/portable-hack-ast`.
+ * A PragmaMap is included in `hershel-theodore-layton/portable-hack-ast-extras`.
  * A checker for aimless pragmas (where the library is not known) is included in
  * `hershel-theodore-layton/portable-hack-ast-linters`.
  */
@@ -45,7 +45,7 @@ use namespace HH;
  */
 
 /**
- * @param ...$_args[0] The name of the library you are targetting.
+ * @param ...$_args[0] The name of the library you are targeting.
  * @param ...$_args[1..] Arguments passed to the library.
  */
 function pragma(string ...$_args)[]: void {}
