@@ -9,7 +9,7 @@ function no_empty_statements_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -103,8 +103,9 @@ function no_empty_statements_linter(
     |> Vec\filter($$, $expression_is_empty)
     |> Vec\map(
       $$,
-      $expr ==> new LintError(
+      $expr ==> LintError::create(
         $script,
+        $pragma_map,
         $expr,
         $linter,
         'You are not using the result of this expression. '.

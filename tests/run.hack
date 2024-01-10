@@ -52,8 +52,12 @@ async function run_async(): Awaitable<void> {
       $f ==> Str\slice($f, Str\search_last($f, '\\') as nonnull + 1),
     );
 
-  $linters['license_header_linter'] = ($script, $_, $_, $_, $_)[] ==>
-    PhaLinters\license_header_linter($script, '/* Example License Text */');
+  $linters['license_header_linter'] = ($script, $_, $_, $_, $pragma_map)[] ==>
+    PhaLinters\license_header_linter(
+      $script,
+      $pragma_map,
+      '/* Example License Text */',
+    );
   $linters['pragma_prefix_unknown_linter'] = ($script, $_, $_, $_, $map)[] ==>
     PhaLinters\pragma_prefix_unknown_linter(
       $script,
@@ -105,17 +109,12 @@ async function run_async(): Awaitable<void> {
         list($script, $ctx) = Pha\parse($test, $ctx);
         $syntax_index = Pha\create_syntax_kind_index($script);
         $token_index = Pha\create_token_kind_index($script);
-        $resolver = Pha\create_name_resolver(
-          $script,
-          $syntax_index,
-          $token_index,
-        );
+        $resolver =
+          Pha\create_name_resolver($script, $syntax_index, $token_index);
         $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
-        $expected_errors = Regex\every_match(
-          $test,
-          re'/\#! (?<err_cnt>\d+)\s/',
-        );
+        $expected_errors =
+          Regex\every_match($test, re'/\#! (?<err_cnt>\d+)\s/');
         if (C\count($expected_errors) !== 1) {
           $errors[] = "ERROR Failed to parse error count directive: \n".$test;
           continue;

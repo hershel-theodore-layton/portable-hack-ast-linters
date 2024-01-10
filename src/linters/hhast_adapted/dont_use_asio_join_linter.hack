@@ -9,7 +9,7 @@ function dont_use_asio_join_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $resolver,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -28,6 +28,12 @@ function dont_use_asio_join_linter(
     )
     |> Vec\map(
       $$,
-      $n ==> new LintError($script, $n, $linter, "Don't use Asio\join()."),
+      $n ==> LintError::create(
+        $script,
+        $pragma_map,
+        $n,
+        $linter,
+        "Don't use Asio\join().",
+      ),
     );
 }

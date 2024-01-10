@@ -9,7 +9,7 @@ function dont_discard_new_expressions_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -29,8 +29,9 @@ function dont_discard_new_expressions_linter(
     )
     |> Vec\map(
       $$,
-      $stmt ==> new LintError(
+      $stmt ==> LintError::create(
         $script,
+        $pragma_map,
         $stmt,
         $linter,
         'You are ignoring the new object. Please use it or assign it to `$_`.',

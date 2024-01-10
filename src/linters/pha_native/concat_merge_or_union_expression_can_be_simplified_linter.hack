@@ -9,7 +9,7 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $resolver,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -51,8 +51,9 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
     |> Vec\map(
       $$,
       $call ==> $resolve_function_name($call)
-        |> new LintError(
+        |> LintError::create(
           $script,
+          $pragma_map,
           $call,
           $linter,
           Str\format(

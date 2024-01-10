@@ -28,8 +28,9 @@ function pragma_could_not_be_parsed_linter(
     )
     |> Vec\map(
       $$,
-      $p ==> new LintError(
+      $p ==> LintError::create(
         $script,
+        $pragma_map,
         $p[0],
         $linter,
         'Your version of PhaLinters only supports fixme:linter_name',

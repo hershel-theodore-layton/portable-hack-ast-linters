@@ -9,7 +9,7 @@ function use_statement_with_leading_backslash_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -34,8 +34,9 @@ function use_statement_with_leading_backslash_linter(
     |> Vec\filter($$, $has_leading_backslash)
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         Pha\node_get_parent($script, $n),
         $linter,
         'The leading backslashes in use declarations do not have an effect. '.

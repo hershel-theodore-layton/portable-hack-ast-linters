@@ -5,19 +5,34 @@ use namespace HH\Lib\{C, Str, Vec};
 use namespace HTL\Pha;
 
 final class LintError {
-  private Pha\LineAndColumnNumbers $position;
-
   public function __construct(
-    private Pha\Script $script,
-    private Pha\Node $blamedNode,
     private string $linterName,
     private string $description,
-  )[] {
-    $this->position =
-      Pha\node_get_line_and_column_numbers($script, $blamedNode);
+    private Pha\Node $blamedNode,
+    private Pha\LineAndColumnNumbers $position,
+    private string $code,
+    private bool $isIgnored,
+  )[] {}
+
+  public static function create(
+    Pha\Script $script,
+    Pha\PragmaMap $pragma_map,
+    Pha\Node $blamed_node,
+    string $linter_name,
+    string $description,
+  )[]: this {
+    $position = Pha\node_get_line_and_column_numbers($script, $blamed_node);
+    return new static(
+      $linter_name,
+      $description,
+      $blamed_node,
+      $position,
+      Pha\node_get_code($script, $blamed_node),
+      static::isIgnoredImpl($pragma_map, $position, $linter_name),
+    );
   }
 
-  public function getBlameNode()[]: Pha\Node {
+  public function getBlamedNode()[]: Pha\Node {
     return $this->blamedNode;
   }
 
@@ -29,19 +44,34 @@ final class LintError {
     return $this->linterName;
   }
 
+  public function getLinterNameWithoutNamespaceAndLinter()[]: string {
+    return static::stripLinterSuffix($this->linterName);
+  }
+
   public function getPosition()[]: Pha\LineAndColumnNumbers {
     return $this->position;
   }
 
-  public function getLinterNameWithoutNamespaceAndLinter()[]: string {
-    return Str\split($this->linterName, '\\')
-      |> C\lastx($$)
-      |> Str\strip_suffix($$, '_linter')
-      |> Str\strip_suffix($$, 'Linter');
+  public function isIgnored()[]: bool {
+    return $this->isIgnored;
   }
 
-  public function isIgnored(Pha\PragmaMap $pragma_map)[]: bool {
-    return $pragma_map->getOverlappingPragmas($this->position)
+  public function toString()[]: string {
+    return Str\format(
+      "Error(%s): %s\n-----\n%s\n-----\nOn line: %d",
+      $this->getLinterName(),
+      $this->getDescription(),
+      $this->code,
+      $this->position->getEndLine(),
+    );
+  }
+
+  private static function isIgnoredImpl(
+    Pha\PragmaMap $pragma_map,
+    Pha\LineAndColumnNumbers $position,
+    string $linter_name,
+  )[]: bool {
+    return $pragma_map->getOverlappingPragmas($position)
       |> Vec\filter(
         $$,
         $p ==> Str\trim($p[0], '"\'')
@@ -51,17 +81,13 @@ final class LintError {
       |> Vec\map($$, $str ==> Str\trim($str, '"\''))
       |> Vec\filter($$, $str ==> Str\starts_with($str, 'fixme:'))
       |> Vec\map($$, $str ==> Str\strip_prefix($str, 'fixme:'))
-      |> C\contains($$, $this->getLinterNameWithoutNamespaceAndLinter());
+      |> C\contains($$, static::stripLinterSuffix($linter_name));
   }
 
-  public function toString()[]: string {
-    return Str\format(
-      "Error(%s): %s\n-----\n%s\n-----\nOn line: %d",
-      $this->getLinterName(),
-      $this->getDescription(),
-      Pha\node_get_code($this->script, $this->getBlameNode()),
-      Pha\node_get_line_and_column_numbers($this->script, $this->getBlameNode())
-        ->getEndLine(),
-    );
+  private static function stripLinterSuffix(string $linter_name)[]: string {
+    return Str\split($linter_name, '\\')
+      |> C\lastx($$)
+      |> Str\strip_suffix($$, '_linter')
+      |> Str\strip_suffix($$, 'Linter');
   }
 }

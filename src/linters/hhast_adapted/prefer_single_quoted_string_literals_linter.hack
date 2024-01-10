@@ -9,7 +9,7 @@ function prefer_single_quoted_string_literals_linter(
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -37,8 +37,9 @@ function prefer_single_quoted_string_literals_linter(
     })
     |> Vec\map(
       $$,
-      $t ==> new LintError(
+      $t ==> LintError::create(
         $script,
+        $pragma_map,
         $t,
         $linter,
         'This could be a single quoted string.',

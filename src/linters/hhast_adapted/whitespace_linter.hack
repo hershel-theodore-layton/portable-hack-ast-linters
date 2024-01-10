@@ -21,7 +21,7 @@ function whitespace_linter(
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -66,8 +66,9 @@ function whitespace_linter(
     $line_counter = $line_counter * $is_line + ($is_line | $block_start);
 
     if ($line_counter > 2 && !$is_eof_trivium) {
-      $errors[] = new LintError(
+      $errors[] = LintError::create(
         $script,
+        $pragma_map,
         $trivium,
         $linter,
         'Too many newlines in a row.',
@@ -77,8 +78,9 @@ function whitespace_linter(
 
     // #region no_whitespace_at_end_of_line_linter | consistent_line_endings_linter
     if ($is_eol && ($prev_whitespace || $text !== "\n")) {
-      $errors[] = new LintError(
+      $errors[] = LintError::create(
         $script,
+        $pragma_map,
         $trivium,
         $linter,
         'There is whitespace before the end of this line.',
@@ -91,8 +93,9 @@ function whitespace_linter(
 
   // #region must_have_newline_at_end_of_file_linter
   if ($line_counter === 1) {
-    $errors[] = new LintError(
+    $errors[] = LintError::create(
       $script,
+      $pragma_map,
       C\lastx($trivia),
       $linter,
       'Files must end with on or more newlines.',

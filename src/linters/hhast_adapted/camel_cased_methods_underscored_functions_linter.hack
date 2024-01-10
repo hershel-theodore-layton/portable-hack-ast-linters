@@ -9,7 +9,7 @@ function camel_cased_methods_underscored_functions_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
   ?vec<string> $allowed_suffixes = null,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
@@ -40,8 +40,9 @@ function camel_cased_methods_underscored_functions_linter(
   )
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         $n,
         $linter,
         'Methods must use camelCase() and functions must use snake_case().',

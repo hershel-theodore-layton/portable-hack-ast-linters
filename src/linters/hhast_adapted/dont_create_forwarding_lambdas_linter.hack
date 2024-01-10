@@ -9,7 +9,7 @@ function dont_create_forwarding_lambdas_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
   shape(?'no_error_for_lambdas_with_typed_parameters_or_return' => bool)
     $options = shape(),
 )[]: vec<LintError> {
@@ -222,8 +222,9 @@ function dont_create_forwarding_lambdas_linter(
     })
     |> Vec\map(
       $$,
-      $lambda ==> new LintError(
+      $lambda ==> LintError::create(
         $script,
+        $pragma_map,
         $lambda,
         $linter,
         'This lambda just forwards to the inner function. '.

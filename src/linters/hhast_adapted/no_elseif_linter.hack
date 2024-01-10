@@ -9,14 +9,15 @@ function no_elseif_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
   return Vec\map(
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ELSEIF_CLAUSE),
-    $f ==> new LintError(
+    $f ==> LintError::create(
       $script,
+      $pragma_map,
       $f,
       $linter,
       'Use else if instead of elseif. '.

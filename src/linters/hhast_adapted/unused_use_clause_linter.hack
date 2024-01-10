@@ -9,7 +9,7 @@ function unused_use_clause_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $token_index,
   Pha\Resolver $resolver,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -39,7 +39,12 @@ function unused_use_clause_linter(
     )
     |> Vec\map(
       $$,
-      $c ==>
-        new LintError($script, $c, $linter, 'This use clause is not used.'),
+      $c ==> LintError::create(
+        $script,
+        $pragma_map,
+        $c,
+        $linter,
+        'This use clause is not used.',
+      ),
     );
 }

@@ -24,7 +24,7 @@ function namespace_private_use_clause_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -83,8 +83,9 @@ function namespace_private_use_clause_linter(
     })
     |> Vec\map(
       $$,
-      $v ==> new LintError(
+      $v ==> LintError::create(
         $script,
+        $pragma_map,
         $v[0],
         $linter,
         'This use declaration includes a private namespace. '.

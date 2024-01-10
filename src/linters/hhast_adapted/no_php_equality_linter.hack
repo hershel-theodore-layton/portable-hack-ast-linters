@@ -9,7 +9,7 @@ function no_php_equality_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -29,8 +29,9 @@ function no_php_equality_linter(
     |> Vec\filter($$, $binop_is_php_equals)
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         $n,
         $linter,
         'Do not use `==` or `!=`. '.

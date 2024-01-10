@@ -9,7 +9,7 @@ function use_statement_without_kind_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -37,8 +37,9 @@ function use_statement_without_kind_linter(
     |> Vec\filter($$, $kind_is_missing)
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         $n,
         $linter,
         'Must use namespace kind (`type` or `namespace`).',

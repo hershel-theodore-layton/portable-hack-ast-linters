@@ -9,7 +9,7 @@ function no_string_interpolation_linter(
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -25,8 +25,9 @@ function no_string_interpolation_linter(
   )
     |> Vec\map(
       $$,
-      $h ==> new LintError(
+      $h ==> LintError::create(
         $script,
+        $pragma_map,
         Pha\node_get_parent($script, $h),
         $linter,
         'Avoid string interpolation, consider concatenation or Str\\format(...).',

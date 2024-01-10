@@ -9,7 +9,7 @@ function prefer_require_once_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -23,8 +23,9 @@ function prefer_require_once_linter(
     |> Vec\filter($$, $require_token ==> !$is_require_once($require_token))
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         Pha\node_get_parent($script, $n),
         $linter,
         Str\format(

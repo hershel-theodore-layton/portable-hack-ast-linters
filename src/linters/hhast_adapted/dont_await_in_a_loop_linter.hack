@@ -9,7 +9,7 @@ function dont_await_in_a_loop_linter(
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -105,8 +105,9 @@ function dont_await_in_a_loop_linter(
   )
     |> Vec\map(
       $$,
-      $await_token ==> new LintError(
+      $await_token ==> LintError::create(
         $script,
+        $pragma_map,
         // Blame the whole expression, not just the token.
         Pha\token_get_parent($script, $await_token),
         $linter,

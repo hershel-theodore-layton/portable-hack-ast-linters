@@ -9,7 +9,7 @@ function final_or_abstract_classes_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -37,8 +37,9 @@ function final_or_abstract_classes_linter(
     )
     |> Vec\map(
       $$,
-      $c ==> new LintError(
+      $c ==> LintError::create(
         $script,
+        $pragma_map,
         $get_class_name($c),
         $linter,
         'Classes should be abstract or final.',

@@ -9,7 +9,7 @@ function no_final_method_in_final_classes_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -50,8 +50,9 @@ function no_final_method_in_final_classes_linter(
     )
     |> Vec\map(
       $$,
-      $f ==> new LintError(
+      $f ==> LintError::create(
         $script,
+        $pragma_map,
         $f
           |> $get_method_function_decl($$)
           |> Pha\as_syntax($$)

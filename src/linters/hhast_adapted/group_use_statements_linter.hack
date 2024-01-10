@@ -9,7 +9,7 @@ function group_use_statements_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -134,8 +134,9 @@ function group_use_statements_linter(
     |> Vec\flatten($$)
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         $n,
         $linter,
         'This use directive can be grouped with a previous use directive.',

@@ -9,7 +9,7 @@ function unused_pipe_variable_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -35,8 +35,9 @@ function unused_pipe_variable_linter(
     )
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         $n,
         $linter,
         'You did not use the $$ variable on the right hand side of the `|>`.',

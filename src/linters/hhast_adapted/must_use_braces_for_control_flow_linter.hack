@@ -9,7 +9,7 @@ function must_use_braces_for_control_flow_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -43,8 +43,9 @@ function must_use_braces_for_control_flow_linter(
     |> Vec\filter($$, $is_braceless)
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         $n,
         $linter,
         'Use curly braces {} for control flow.',

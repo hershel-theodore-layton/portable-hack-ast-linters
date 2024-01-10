@@ -44,8 +44,12 @@ async function pragma_test_async(): Awaitable<void> {
       $f ==> Str\slice($f, Str\search_last($f, '\\') as nonnull + 1),
     );
 
-  $linters['license_header_linter'] = ($script, $_, $_, $_, $_)[] ==>
-    PhaLinters\license_header_linter($script, '/* Example License Text */');
+  $linters['license_header_linter'] = ($script, $_, $_, $_, $pragma_map)[] ==>
+    PhaLinters\license_header_linter(
+      $script,
+      $pragma_map,
+      '/* Example License Text */',
+    );
 
   $file = File\open_read_only(__DIR__.'/pragma_example.hack');
   using ($file->closeWhenDisposed(), $file->tryLockx(File\LockType::SHARED)) {
@@ -66,7 +70,7 @@ async function pragma_test_async(): Awaitable<void> {
       throw new \Exception('Expected an error for: '.$linter_name);
     }
 
-    $remaining_errors = Vec\filter($errors, $e ==> !$e->isIgnored($pragma_map));
+    $remaining_errors = Vec\filter($errors, $e ==> !$e->isIgnored());
     if (!C\is_empty($remaining_errors)) {
       throw new \Exception(
         'The following error was not ignored: '.

@@ -9,7 +9,7 @@ function group_use_statement_alphabetization_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -40,8 +40,9 @@ function group_use_statement_alphabetization_linter(
     )
     |> Vec\map(
       $$,
-      $group_use ==> new LintError(
+      $group_use ==> LintError::create(
         $script,
+        $pragma_map,
         $group_use,
         $linter,
         'Group use clauses should be sorted alphabetically.',

@@ -47,7 +47,7 @@ async function lint_async(): Awaitable<void> {
       $l ==> $l($script, $syntax_index, $token_index, $resolver, $pragma_map),
     )
       |> Vec\flatten($$)
-      |> Vec\filter($$, $e ==> !$e->isIgnored($pragma_map))
+      |> Vec\filter($$, $e ==> !$e->isIgnored())
       |> Vec\map($$, $e ==> Str\format("%s in %s\n", $e->toString(), $path))
       |> Str\join($$, '');
 
@@ -104,8 +104,12 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\whitespace_linter<>,
   ];
 
-  $linters[] = ($script, $_, $_, $_, $_) ==>
-    PhaLinters\license_header_linter($script, $expected_license_header);
+  $linters[] = ($script, $_, $_, $_, $pragma_map) ==>
+    PhaLinters\license_header_linter(
+      $script,
+      $pragma_map,
+      $expected_license_header,
+    );
   $linters[] = ($script, $_, $_, $_, $pragma_map) ==>
     PhaLinters\pragma_prefix_unknown_linter(
       $script,

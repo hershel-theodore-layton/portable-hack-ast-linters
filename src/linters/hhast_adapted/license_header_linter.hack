@@ -6,6 +6,7 @@ use namespace HTL\Pha;
 
 function license_header_linter(
   Pha\Script $script,
+  Pha\PragmaMap $pragma_map,
   string $expected_license_header,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
@@ -23,8 +24,9 @@ function license_header_linter(
         Str\contains(Pha\node_get_code($script, $n), $expected_license_header),
     )
       ? vec[]
-      : vec[new LintError(
+      : vec[LintError::create(
         $script,
+        $pragma_map,
         C\firstx($$),
         $linter,
         'Expected the find your license header at the top of this file: '.

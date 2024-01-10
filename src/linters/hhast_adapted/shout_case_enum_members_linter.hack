@@ -9,7 +9,7 @@ function shout_case_enum_members_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $_,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -26,8 +26,9 @@ function shout_case_enum_members_linter(
     )
     |> Vec\map(
       $$,
-      $e ==> new LintError(
+      $e ==> LintError::create(
         $script,
+        $pragma_map,
         $e,
         $linter,
         'Rename this enum member to SHOUT_CASE.',

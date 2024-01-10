@@ -20,8 +20,9 @@ function pragma_prefix_unknown_linter(
     )
     |> Vec\map(
       $$,
-      $p ==> new LintError(
+      $p ==> LintError::create(
         $script,
+        $pragma_map,
         $p[0],
         $linter,
         'This pragma prefix is not known. '.

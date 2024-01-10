@@ -15,7 +15,7 @@ function unused_variable_linter(
   Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
   Pha\Resolver $_,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -268,8 +268,9 @@ function unused_variable_linter(
   return Vec\filter($assignments, $is_unused)
     |> Vec\map(
       $$,
-      $a ==> new LintError(
+      $a ==> LintError::create(
         $script,
+        $pragma_map,
         Pha\token_get_parent($script, $a['var']),
         $linter,
         'This variable is unused.',

@@ -18,7 +18,7 @@ function namespace_private_symbol_linter(
   Pha\SyntaxIndex $syntax_index,
   Pha\TokenIndex $token_index,
   Pha\Resolver $resolver,
-  Pha\PragmaMap $_,
+  Pha\PragmaMap $pragma_map,
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
@@ -77,8 +77,9 @@ function namespace_private_symbol_linter(
     )
     |> Vec\map(
       $$,
-      $n ==> new LintError(
+      $n ==> LintError::create(
         $script,
+        $pragma_map,
         $n,
         $linter,
         'This constant/function/type comes from a private namespace. '.
