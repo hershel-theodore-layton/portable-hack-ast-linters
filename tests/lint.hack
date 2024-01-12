@@ -60,6 +60,13 @@ async function lint_async(): Awaitable<void> {
     }
   }
 
+  if ($ok) {
+    await $stdout->writeAllAsync(Str\format(
+      "Memory peak usage: %g MiB\n",
+      \memory_get_peak_usage(true) / (1024 * 1024),
+    ));
+  }
+
   await $stdout->writeAllAsync($ok ? "No errors!\n" : "Get fixin'!\n");
   exit($ok ? 0 : 1);
 }
