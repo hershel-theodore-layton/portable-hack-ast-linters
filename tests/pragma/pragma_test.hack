@@ -9,6 +9,9 @@ use function HH\fun_get_function;
 async function pragma_test_async(): Awaitable<void> {
   // Ignoring no_elseif and use_statement_without_kind.
   // They make the file unparsable for other linters.
+  // This list of linters, although long, isn't exhaustive.
+  // I believe the tests for the pragma system to be so thorough that
+  // extending this list wouldn't find problems anymore; leaving it as-is.
   $linters = vec[
     PhaLinters\async_function_and_method_linter<>,
     PhaLinters\camel_cased_methods_underscored_functions_linter<>,
