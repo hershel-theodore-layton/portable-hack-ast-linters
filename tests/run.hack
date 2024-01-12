@@ -32,6 +32,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\no_final_method_in_final_classes_linter<>,
     PhaLinters\no_string_interpolation_linter<>,
     PhaLinters\no_php_equality_linter<>,
+    PhaLinters\no_newline_at_start_of_control_flow_block_linter<>,
     PhaLinters\pragma_could_not_be_parsed_linter<>,
     PhaLinters\prefer_lambdas_linter<>,
     PhaLinters\prefer_single_quoted_string_literals_linter<>,

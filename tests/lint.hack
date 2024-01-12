@@ -87,6 +87,7 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\no_elseif_linter<>,
     PhaLinters\no_empty_statements_linter<>,
     PhaLinters\no_final_method_in_final_classes_linter<>,
+    PhaLinters\no_newline_at_start_of_control_flow_block_linter<>,
     PhaLinters\no_php_equality_linter<>,
     PhaLinters\no_string_interpolation_linter<>,
     PhaLinters\pragma_could_not_be_parsed_linter<>,
