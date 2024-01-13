@@ -17,7 +17,7 @@ function func2(): void {
   });
 }
 
-//##! 2 Function used
+//##! 4 Function used (both use clauses and both invocations)
 use function HH\Asio\join;
 use function HH\Asio\join as not_join;
 
@@ -35,8 +35,7 @@ function func4(): void {
   Str\join(vec[], '');
 }
 
-//##! 0 If you really must
-
+//##! 1 You can't outsmart this linter with levels of indirection.
 function func5(): void {
   $join = \HH\Asio\join<>;
   $join(async {
