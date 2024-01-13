@@ -6,7 +6,7 @@ use namespace HTL\Pha;
 
 function dont_use_asio_join_linter(
   Pha\Script $script,
-  Pha\SyntaxIndex $syntax_index,
+  Pha\SyntaxIndex $_,
   Pha\TokenIndex $token_index,
   Pha\Resolver $resolver,
   Pha\PragmaMap $pragma_map,
