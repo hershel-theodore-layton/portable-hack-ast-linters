@@ -27,6 +27,9 @@ type TLinter = (function(
 // For the best performance results, run this in a web-server in repo-auth mode.
 <<__EntryPoint>>
 async function lint_async(): Awaitable<void> {
+  require_once __DIR__.'/../vendor/autoload.hack';
+  \Facebook\AutoloadMap\initialize();
+
   $linters = get_linters();
   $files = await get_files_async();
   $ctx = Pha\create_context();
