@@ -90,7 +90,7 @@ function unused_variable_linter(
     Pha\Syntax $assignment,
     Pha\Token $var,
   ) ==> Pha\node_get_syntax_ancestors($script, $var)
-    |> Support\vec_take_while_incl_true($$, $node ==> $node === $assignment)
+    |> Support\vec_take_while_inclusive($$, $node ==> $node !== $assignment)
     |> C\any($$, $is_member_selection_expression);
 
   $inout_scopes = Pha\index_get_nodes_by_kind($token_index, Pha\KIND_INOUT)

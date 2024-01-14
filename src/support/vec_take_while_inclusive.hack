@@ -3,15 +3,15 @@ namespace HTL\PhaLinters\Support;
 
 /**
  * Returns a new vec with all elements up until and including the first element
- * for which the predicate holds.
- * If the predicate doesn't hold for any element, all elements are returned.
+ * for which the does not predicate hold.
+ * If the predicate holds for all elements, all elements are returned.
  *
  * ```
  * $nums = vec[1, 2, 3, 4, 5, 6, 7];
- * vec_take_while_incl_true($nums, $n ==> $n === 4); // vec[1, 2, 3, 4]
+ * vec_take_while_inclusive($nums, $n ==> $n !== 4); // vec[1, 2, 3, 4]
  * ```
  */
-function vec_take_while_incl_true<T>(
+function vec_take_while_inclusive<T>(
   Traversable<T> $traversable,
   (function(T)[_]: bool) $predicate,
 )[ctx $predicate]: vec<T> {
@@ -19,7 +19,7 @@ function vec_take_while_incl_true<T>(
 
   foreach ($traversable as $el) {
     $out[] = $el;
-    if ($predicate($el)) {
+    if (!$predicate($el)) {
       return $out;
     }
   }
