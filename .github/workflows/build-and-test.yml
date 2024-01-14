@@ -26,8 +26,11 @@ jobs:
       - uses: hhvm/actions/hack-lint-test@master
         with:
           hhvm: ${{matrix.hhvm}}
-          skip_lint: ${{ matrix.hhvm != '4.168' }}
+          skip_lint: true
           skip_tests: true
       - name: Run tests
         shell: bash
         run: hhvm tests/run.hack
+      - name: Run lints
+        shell: bash
+        run: hhvm tests/lint.hack
