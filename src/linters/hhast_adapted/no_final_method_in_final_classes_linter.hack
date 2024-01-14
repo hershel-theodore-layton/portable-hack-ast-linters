@@ -53,8 +53,7 @@ function no_final_method_in_final_classes_linter(
       $f ==> LintError::create(
         $script,
         $pragma_map,
-        $f
-          |> $get_method_function_decl($$)
+        $get_method_function_decl($f)
           |> Pha\as_syntax($$)
           |> $get_function_name($$),
         $linter,
