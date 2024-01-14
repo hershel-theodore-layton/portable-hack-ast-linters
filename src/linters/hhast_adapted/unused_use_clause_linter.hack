@@ -13,16 +13,7 @@ function unused_use_clause_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  $is_qualified_name =
-    Pha\create_syntax_matcher($script, Pha\KIND_QUALIFIED_NAME);
-
   $used_clauses = Pha\index_get_nodes_by_kind($token_index, Pha\KIND_NAME)
-    |> Vec\map(
-      $$,
-      $n ==>
-        C\find(Pha\node_get_ancestors($script, $n), $is_qualified_name) ?? $n,
-    )
-    |> Vec\unique_by($$, Pha\node_get_id<>)
     |> Vec\map(
       $$,
       $n ==> Pha\resolve_name_and_use_clause($resolver, $script, $n)[1],
