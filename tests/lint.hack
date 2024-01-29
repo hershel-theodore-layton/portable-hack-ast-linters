@@ -146,10 +146,15 @@ function get_files_async(
   )
     |> Vec\map_async(
       $$,
-      async $path ==> shape(
-        'path' => realpath($path),
-        'contents' => await File\open_read_only($path)->readAllAsync(),
-      ),
+      async $path ==> {
+        $file = File\open_read_only($path);
+        using $file->closeWhenDisposed();
+        using $file->tryLockx(File\LockType::SHARED);
+        return shape(
+          'path' => realpath($path),
+          'contents' => await $file->readAllAsync(),
+        );
+      },
     );
 }
 
