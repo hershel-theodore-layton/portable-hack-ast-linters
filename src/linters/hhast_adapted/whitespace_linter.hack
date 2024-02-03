@@ -72,7 +72,7 @@ function whitespace_linter(
       $pragma_map,
       C\lastx($trivia),
       $linter,
-      'Files must end with on or more newlines.',
+      'Files must end with one or more newlines.',
     );
   }
   // #endregion
