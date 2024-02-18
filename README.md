@@ -19,93 +19,7 @@ _This choice of license does not change the license for the rest of this project
 
 ## Which linters are included?
 
-### HHAST adapted linters
-
-If you've used HHAST before, many of these linters will look familiar. Many of
-them are a great idea, and a couple have been kept for backwards compatibility
-purposes.
-
-The following linters share functionality with linters bundled with HHAST:
-
-- [async_function_and_method_linter](./src/linters/hhast_adapted/async_function_and_method_linter.hack)
-  - [AsyncFunctionAndMethodLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/AsyncFunctionAndMethodLinter.hack)
-- [camel_cased_methods_underscored_functions_linter](./src/linters/hhast_adapted/camel_cased_methods_underscored_functions_linter.hack)
-  - [CamelCasedMethodsUnderscoredFunctionsLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/CamelCasedMethodsUnderscoredFunctionsLinter.hack)
-- [dont_await_in_a_loop_linter](./src/linters/hhast_adapted/dont_await_in_a_loop_linter.hack)
-  - [DontAwaitInALoopLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/DontAwaitInALoopLinter.hack)
-- [dont_create_forwarding_lambdas_linter](./src/linters/hhast_adapted/dont_create_forwarding_lambdas_linter.hack)
-  - [DontCreateForwardingLambdasLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/DontCreateForwardingLambdasLinter.hack)
-- [dont_discard_new_expressions_linter](./src/linters/hhast_adapted/dont_discard_new_expressions_linter.hack)
-  - [DontDiscardNewExpressionsLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/DontDiscardNewExpressionsLinter.hack)
-- [dont_use_asio_join_linter](./src/linters/hhast_adapted/dont_use_asio_join_linter.hack)
-  - [DontUseAsioJoinLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/DontUseAsioJoinLinter.hack)
-- [final_or_abstract_classes_linter](./src/linters/hhast_adapted/final_or_abstract_classes_linter.hack)
-  - [FinalOrAbstractClassLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/FinalOrAbstractClassLinter.hack)
-- [group_use_statement_alphabetization_linter](./src/linters/hhast_adapted/group_use_statement_alphabetization_linter.hack)
-  - [GroupUseStatementAlphabetizationLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/GroupUseStatementAlphabetizationLinter.hack)
-- [group_use_statements_linter](./src/linters/hhast_adapted/group_use_statements_linter.hack)
-  - [GroupUseStatementsLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/GroupUseStatementsLinter.hack)
-- [license_header_linter](./src/linters/hhast_adapted/license_header_linter.hack)
-  - [LicenseHeaderLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/LicenseHeaderLinter.hack)
-- [must_use_braces_for_control_flow_linter](./src/linters/hhast_adapted/must_use_braces_for_control_flow_linter.hack)
-  - [MustUseBracesForControlFlowLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/MustUseBracesForControlFlowLinter.hack)
-- [namespace_private_symbol_linter](./src/linters/hhast_adapted/namespace_private_symbol_linter.hack)
-  - [NamespacePrivateLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NamespacePrivateLinter.hack)
-- [namespace_private_use_clause_linter](./src/linters/hhast_adapted/namespace_private_use_clause_linter.hack)[^1]
-  - [NamespacePrivateLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NamespacePrivateLinter.hack)
-- [no_elseif_linter](./src/linters/hhast_adapted/no_elseif_linter.hack)
-  - [NoElseifLinter](https://github.com/hhvm/hhast/blob/c5c6208af1be5cd6ec39fc73d68558d4c9a4a62d/src/Linters/NoElseifLinter.hack)
-- [no_empty_statements_linter](./src/linters/hhast_adapted/no_empty_statements_linter.hack)
-  - [NoEmptyStatementsLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NoEmptyStatementsLinter.hack)
-- [no_final_method_in_final_classes_linter](./src/linters/hhast_adapted/no_final_method_in_final_classes_linter.hack)
-  - [NoFinalMethodInFinalClassLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NoFinalMethodInFinalClassLinter.hack)
-- [no_php_equality_linter](./src/linters/hhast_adapted/no_php_equality_linter.hack)
-  - [NoPHPEqualityLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NoPHPEqualityLinter.hack)
-- [no_string_interpolation_linter](./src/linters/hhast_adapted/no_string_interpolation_linter.hack)
-  - [NoStringInterpolationLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NoStringInterpolationLinter.hack)
-- [prefer_lambdas_linter](./src/linters/hhast_adapted/prefer_lambdas_linter.hack)
-  - [PreferLambdasLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/PreferLambdasLinter.hack)
-- [prefer_require_once_linter](./src/linters/hhast_adapted/prefer_require_once_linter.hack)
-  - [PreferRequireOnceLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/PreferRequireOnceLinter.hack)
-- [prefer_single_quoted_string_literals_linter](./src/linters/hhast_adapted/prefer_single_quoted_string_literals_linter.hack)
-  - [PreferSingleQuotedStringLiteralLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/PreferSingleQuotedStringLiteralLinter.hack)
-- [shout_case_enum_members_linter](./src/linters/hhast_adapted/shout_case_enum_members_linter.hack)
-  - [ShoutCaseEnumMembersLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/ShoutCaseEnumMembersLinter.hack)
-- [unreachable_code_linter](./src/linters/hhast_adapted/unreachable_code_linter.hack)
-  - [UnreachableCodeLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UnreachableCodeLinter.hack)
-- [unused_pipe_variable_linter](./src/linters/hhast_adapted/unused_pipe_variable_linter.hack)
-  - [UnusedPipeVariableLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UnusedPipeVariableLinter.hack)
-- [unused_use_clause_linter](./src/linters/hhast_adapted/unused_use_clause_linter.hack)
-  - [UnusedUseClauseLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UnusedUseClauseLinter.hack)
-- [unused_variable_linter](./src/linters/hhast_adapted/unused_variable_linter.hack)
-  - [UnusedLambdaParameterLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UnusedLambdaParameterLinter.hack)
-  - [UnusedParameterLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UnusedParameterLinter.hack)
-  - [UnusedVariableLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UnusedVariableLinter.hack)
-- [use_statement_with_as_linter](./src/linters/hhast_adapted/use_statement_with_as_linter.hack)
-  - [UseStatementWithAsLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UseStatementWithAsLinter.hack)
-- [use_statement_with_leading_backslash_linter](./src/linters/hhast_adapted/use_statement_with_leading_backslash_linter.hack)
-  - [UseStatementWithLeadingBackslashLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UseStatementWithLeadingBackslashLinter.hack)
-- [use_statement_without_kind_linter](./src/linters/hhast_adapted/use_statement_without_kind_linter.hack)
-  - [UseStatementWIthoutKindLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/UseStatementWIthoutKindLinter.hack)
-- [whitespace_linter](./src/linters/hhast_adapted/whitespace_linter.hack)
-  - [ConsistentLineEndingsLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/ConsistentLineEndingsLinter.hack)
-  - [DontHaveTwoEmptyLinesInARowLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/DontHaveTwoEmptyLinesInARowLinter.hack)
-  - [NewlineAtEndOfFileLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NewlineAtEndOfFileLinter.hack)
-  - [NoNewlineAtStartOfControlFlowBlockLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NoNewlineAtStartOfControlFlowBlockLinter.hack)
-  - [NoWhitespaceAtEndOfLineLinter](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/NoWhitespaceAtEndOfLineLinter.hack)
-
-### Pha native linters
-
-There are also a couple of completely new linters (you can't get these in hhast).
-They can be found in the [pha_native](./src/linters/pha_native) directory:
-
-- [concat_merge_or_union_expression_can_be_simplified_linter](./src/linters/pha_native/concat_merge_or_union_expression_can_be_simplified_linter.hack)
-- [count_expression_can_be_simplified_linter](./src/linters/pha_native/count_expression_can_be_simplified_linter.hack)
-- [pragma_could_not_be_parsed_linter](./src/linters/pha_native/pragma_could_not_be_parsed_linter.hack)
-- [pragma_prefix_unknown_linter](./src/linters/pha_native/pragma_prefix_unknown_linter.hack)
-
-_This list may become incomplete when new linters are added in [the pha_native directory](./src/linters/pha_native)_
-_and I forget to update this README. Issues and PRs welcome._
+For the full list, see [bundled linters](./BUNDLED_LINTERS.md), almost all linters from HHAST are included, and some never before seen linters, only available in portable-hack-ast-linters.
 
 ### Missing linters from HHAST
 
@@ -174,10 +88,11 @@ This comment-to-suppress-a-lint-error mechanism has always bothered me a little.
 I subscribe wholehartedly to the following quote from the [CppCoreGuidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines):
 
 ```
-Compilers don’t read comments ... and neither do many programmers (consistently).
+Compilers don’t read comments ...
+and neither do many programmers (consistently).
 ```
 
-As a replacement to fixme comments, PhaLinters uses the `pragma(...)` directive
+As a replacement for fixme comments, PhaLinters uses the `pragma(...)` directive
 and the `<<Pragmas(...)>>` annotation. The following pieces of code express the
 same intent.
 
@@ -190,8 +105,3 @@ await $object->methodAsync();
 pragma('PhaLinters', 'fixme:dont_await_in_a_loop');
 await $object->methodAsync();
 ```
-
-[^1]:
-    This linter works in tandem with `namespace_private_symbol_linter`.
-    If the namespace use clause is already clearly `_Private`, you'll
-    get lint errors early.
