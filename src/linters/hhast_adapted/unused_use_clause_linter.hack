@@ -13,7 +13,11 @@ function unused_use_clause_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  $used_clauses = Pha\index_get_nodes_by_kind($token_index, Pha\KIND_NAME)
+  $used_clauses = Vec\concat(
+    Pha\index_get_nodes_by_kind($token_index, Pha\KIND_NAME),
+    Pha\index_get_nodes_by_kind($token_index, Pha\KIND_XHP_CLASS_NAME),
+    Pha\index_get_nodes_by_kind($token_index, Pha\KIND_XHP_ELEMENT_NAME),
+  )
     |> Vec\map(
       $$,
       $n ==> Pha\resolve_name_and_use_clause($resolver, $script, $n)[1],

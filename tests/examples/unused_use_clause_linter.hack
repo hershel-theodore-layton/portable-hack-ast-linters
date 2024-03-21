@@ -5,6 +5,15 @@ use namespace HTL\Pha;
 
 const Pha\Syntax NIL = Pha\SCRIPT_NODE;
 
+abstract class XhpConstructor {
+  public function __construct(mixed ... $_) {}
+}
+
+final xhp class ExampleElement extends XhpConstructor {}
+final xhp class UI:ExampleElement extends XhpConstructor {}
+
+
+
 //##! 1 Unused namespace
 use namespace HH\Lib\NotVec;
 use namespace HH\Lib\Vec;
@@ -84,3 +93,13 @@ function func8(): DB {
 use namespace HTL\PhaLinters\Support;
 
 function func9(Support\UseKind $_kind): void {}
+
+//##! 0 XHP names are their own kind of token.
+//      They need to be checked too.
+use type Linters\Tests\UnusedUseClauseLinter\ExampleElement;
+use namespace Linters\Tests\UnusedUseClauseLinter\UI;
+
+function funca(): void {
+  $_ = <ExampleElement />;
+  $_ = <UI:ExampleElement />;
+}
