@@ -12,6 +12,7 @@ final class LintError {
     private Pha\LineAndColumnNumbers $position,
     private string $code,
     private bool $isIgnored,
+    private ?Pha\Patches $patches,
   )[] {}
 
   public static function create(
@@ -21,6 +22,24 @@ final class LintError {
     string $linter_name,
     string $description,
   )[]: this {
+    return static::createWithPatches(
+      $script,
+      $pragma_map,
+      $blamed_node,
+      $linter_name,
+      $description,
+      null,
+    );
+  }
+
+  public static function createWithPatches(
+    Pha\Script $script,
+    Pha\PragmaMap $pragma_map,
+    Pha\Node $blamed_node,
+    string $linter_name,
+    string $description,
+    ?Pha\Patches $patches,
+  )[]: this {
     $position = Pha\node_get_line_and_column_numbers($script, $blamed_node);
     return new static(
       $linter_name,
@@ -29,6 +48,7 @@ final class LintError {
       $position,
       Pha\node_get_code($script, $blamed_node),
       static::isIgnoredImpl($pragma_map, $position, $linter_name),
+      $patches,
     );
   }
 
@@ -46,6 +66,10 @@ final class LintError {
 
   public function getLinterNameWithoutNamespaceAndLinter()[]: string {
     return static::stripLinterSuffix($this->linterName);
+  }
+
+  public function getPatches()[]: ?Pha\Patches {
+    return $this->patches;
   }
 
   public function getPosition()[]: Pha\LineAndColumnNumbers {

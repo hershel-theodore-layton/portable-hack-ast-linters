@@ -1,0 +1,11 @@
+//##! with-fixes 1 But if you write it as a typecheck, this is a strong indication
+//    that it is a simple getter in the
+//    `getB(): ?B` `hasB(): bool`, `getBx(): B` style.
+
+final class C7 {
+  private ?C7 $parent;
+
+  public function isRoot()[]: bool {
+    return $this->parent is null;
+  }
+}

@@ -89,6 +89,7 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\dont_discard_new_expressions_linter<>,
     PhaLinters\dont_use_asio_join_linter<>,
     PhaLinters\final_or_abstract_classes_linter<>,
+    PhaLinters\getter_method_could_have_a_context_list_linter<>,
     PhaLinters\group_use_statement_alphabetization_linter<>,
     PhaLinters\group_use_statements_linter<>,
     PhaLinters\must_use_braces_for_control_flow_linter<>,

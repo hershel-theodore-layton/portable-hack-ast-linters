@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters\Tests;
 
-use namespace HH\Lib\{C, Dict, File, Math, Regex, Str, Vec};
+use namespace HH\Lib\{C, Dict, File, Math, OS, Regex, Str, Vec};
 use namespace HTL\{Pha, PhaLinters};
 use function HH\fun_get_function;
 
@@ -22,6 +22,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\dont_discard_new_expressions_linter<>,
     PhaLinters\dont_use_asio_join_linter<>,
     PhaLinters\final_or_abstract_classes_linter<>,
+    PhaLinters\getter_method_could_have_a_context_list_linter<>,
     PhaLinters\group_use_statement_alphabetization_linter<>,
     PhaLinters\group_use_statements_linter<>,
     PhaLinters\must_use_braces_for_control_flow_linter<>,
@@ -77,7 +78,10 @@ async function run_async(): Awaitable<void> {
   ];
 
   $test_groups = await Vec\map_async(
-    \glob(__DIR__.'/examples/*.hack*'),
+    Vec\concat(
+      \glob(__DIR__.'/examples/*.hack'),
+      \glob(__DIR__.'/examples/*.hack.invalid'),
+    ),
     async $p ==> {
       $name = Regex\first_match($p, re'#/(\w+)\.hack#') |> $$[1] ?? 'ERROR';
       $linter = idx($linters, $name);
@@ -94,7 +98,19 @@ async function run_async(): Awaitable<void> {
         $contents = await $file->readAllAsync();
       }
 
-      return tuple($linter, $name, $contents);
+      try {
+        $autofix_file = File\open_read_only($p.'.autofix');
+        using (
+          $autofix_file->closeWhenDisposed(),
+          $autofix_file->tryLockx(File\LockType::SHARED)
+        ) {
+          $autofix_contents = await $autofix_file->readAllAsync();
+        }
+      } catch (OS\NotFoundException $e) {
+        $autofix_contents = null;
+      }
+
+      return tuple($linter, $name, $contents, $autofix_contents);
     },
   );
 
@@ -104,7 +120,10 @@ async function run_async(): Awaitable<void> {
     $test_count = 0;
     $ctx = Pha\create_context();
 
-    foreach ($test_groups as list($linter, $linter_name, $full_file)) {
+    foreach (
+      $test_groups as
+        $test_number => list($linter, $linter_name, $full_file, $autofix)
+    ) {
       foreach (Str\split($full_file, '//#') |> Vec\filter($$) as $test) {
         ++$test_count;
         list($script, $ctx) = Pha\parse($test, $ctx);
@@ -114,12 +133,16 @@ async function run_async(): Awaitable<void> {
           Pha\create_name_resolver($script, $syntax_index, $token_index);
         $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
-        $expected_errors =
-          Regex\every_match($test, re'/\#! (?<err_cnt>\d+)\s/');
+        $expected_errors = Regex\every_match(
+          $test,
+          re'/\#! (?<fix>with-fixes )?(?<err_cnt>\d+)\s/',
+        );
         if (C\count($expected_errors) !== 1) {
           $errors[] = "ERROR Failed to parse error count directive: \n".$test;
           continue;
         }
+
+        $expected = C\onlyx($expected_errors);
 
         try {
           $lint_errors = $linter(
@@ -129,7 +152,7 @@ async function run_async(): Awaitable<void> {
             $resolver,
             $pragma_map,
           );
-          $err_cnt = Str\to_int($expected_errors[0]['err_cnt']) as nonnull;
+          $err_cnt = Str\to_int($expected['err_cnt']) as nonnull;
           if (
             \HHVM_VERSION_ID >=
               idx(
@@ -149,6 +172,41 @@ async function run_async(): Awaitable<void> {
               Str\join(Vec\map($lint_errors, $e ==> $e->toString()), "\n"),
               $test,
             );
+          }
+
+          $patches = Vec\map($lint_errors, $e ==> $e->getPatches())
+            |> Vec\filter_nulls($$);
+
+          if ($expected['fix'] !== '') {
+            if ($autofix is null) {
+              $errors[] = Str\format(
+                "ERROR Expected an autofix file for %s, because test %d has a `with-fixes` modifier\n",
+                $linter_name,
+                $test_number,
+              );
+              continue;
+            }
+
+            if (C\count($patches) !== 1) {
+              $errors[] = Str\format(
+                "ERROR Expected 1 patch for test %s:%d, got %d\n",
+                $linter_name,
+                $test_number,
+                C\count($patches),
+              );
+              continue;
+            }
+
+            $autofixed = Pha\patches_apply(C\onlyx($patches));
+
+            if (!Str\contains($autofix, $autofixed)) {
+              $errors[] = Str\format(
+                "The autofix for test %s:%d was not found in the autofix file.\n%s\n",
+                $linter_name,
+                $test_count,
+                $autofixed,
+              );
+            }
           }
         } catch (Pha\PhaException $e) {
           $errors[] = Str\format(
