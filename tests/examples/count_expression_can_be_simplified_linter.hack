@@ -1,9 +1,11 @@
-//##! 16 All errors
+//##! 17 All errors
 namespace Linters\Tests\CountExpressionCanBeSimplified;
 
 use namespace HH\Lib\C;
 
 function func1(): void {
+  $_ = !C\count(vec[]);
+
   $_ = C\count(vec[]) === 0;
   $_ = C\count(vec[]) !== 0;
   $_ = C\count(vec[]) < 0;

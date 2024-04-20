@@ -34,6 +34,8 @@ function count_expression_can_be_simplified_linter(
   $is_prefix_unary_expression =
     Pha\create_syntax_matcher($script, Pha\KIND_PREFIX_UNARY_EXPRESSION);
 
+  $get_argument_list =
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST);
   $get_binop_lhs =
     Pha\create_member_accessor($script, Pha\MEMBER_BINARY_LEFT_OPERAND);
   $get_binop_operator =
@@ -73,19 +75,32 @@ function count_expression_can_be_simplified_linter(
     return null;
   };
 
-  $get_error_text = ($parent, $call) ==> {
+  $get_error = ($parent, $call) ==> {
+    $replace_with = ($function_name) ==> Pha\patches($script, Pha\patch_node(
+      $parent,
+      Str\format(
+        '%s(%s)',
+        $function_name,
+        Pha\node_get_code($script, $get_argument_list($call)),
+      ),
+      shape('trivia' => Pha\RetainTrivia::BOTH),
+    ));
+
     if ($is_logical_not($parent)) {
-      return '!C\count(...) is equivalent to C\is_empty(...)';
+      return tuple(
+        '!C\count(...) is equivalent to C\is_empty(...)',
+        $replace_with('C\\is_empty'),
+      );
     }
 
     if (!$is_binop($parent)) {
-      return '';
+      return tuple('', null);
     }
 
     $cmp_kind = $classify_cmp_kind($get_binop_operator($parent));
 
     if ($cmp_kind is null) {
-      return '';
+      return tuple('', null);
     }
 
     // Need this because of yoda conditions `0 === C\count(...)`.
@@ -116,35 +131,60 @@ function count_expression_can_be_simplified_linter(
     if ($cmp === '0') {
       switch ($cmp_kind) {
         case Support\ComparisonKind::EQUALS:
-          return 'C\count(...) === 0 is equivalent to C\is_empty(...)';
+          return tuple(
+            'C\count(...) === 0 is equivalent to C\is_empty(...)',
+            $replace_with('C\\is_empty'),
+          );
+
         case Support\ComparisonKind::NOT_EQUALS:
-          return 'C\count(...) !== 0 is equivalent to !C\is_empty(...)';
+          return tuple(
+            'C\count(...) !== 0 is equivalent to !C\is_empty(...)',
+            $replace_with('!C\\is_empty'),
+          );
         case Support\ComparisonKind::LESS_THAN:
-          return 'C\count(...) < 0 is always false, counts are never negative';
+          return tuple(
+            'C\count(...) < 0 is always false, counts are never negative',
+            null,
+          );
         case Support\ComparisonKind::LESS_THAN_OR_EQUAL:
-          return 'C\count(...) <= 0 is equivalent to C\is_empty(...)';
+          return tuple(
+            'C\count(...) <= 0 is equivalent to C\is_empty(...)',
+            $replace_with('C\\is_empty'),
+          );
         case Support\ComparisonKind::GREATER_THAN:
-          return 'C\count(...) > 0 is equivalent to !C\is_empty(...)';
+          return tuple(
+            'C\count(...) > 0 is equivalent to !C\is_empty(...)',
+            $replace_with('!C\\is_empty'),
+          );
         case Support\ComparisonKind::GREATER_THAN_OR_EQUAL:
-          return 'C\count(...) >= 0 is always true, counts are never negative';
+          return tuple(
+            'C\count(...) >= 0 is always true, counts are never negative',
+            null,
+          );
       }
     }
 
     if ($cmp !== '1') {
-      return '';
+      return tuple('', null);
     }
 
     switch ($cmp_kind) {
       case Support\ComparisonKind::EQUALS:
       case Support\ComparisonKind::NOT_EQUALS:
-        return '';
+        return tuple('', null);
       case Support\ComparisonKind::LESS_THAN:
-        return 'C\count(...) < 1 is equivalent to C\is_empty(...)';
+        return tuple(
+          'C\count(...) < 1 is equivalent to C\is_empty(...)',
+          $replace_with('C\\is_empty'),
+        );
       case Support\ComparisonKind::LESS_THAN_OR_EQUAL:
       case Support\ComparisonKind::GREATER_THAN:
-        return '';
+        return tuple('', null);
       case Support\ComparisonKind::GREATER_THAN_OR_EQUAL:
-        return 'C\count(...) >= 1 is equivalent to !C\is_empty(...)';
+        return tuple(
+          'C\count(...) >= 1 is equivalent to !C\is_empty(...)',
+          $replace_with('!C\\is_empty'),
+        );
     }
   };
 
@@ -156,17 +196,18 @@ function count_expression_can_be_simplified_linter(
     |> Vec\map(
       $$,
       $c ==> Pha\syntax_get_parent($script, $c)
-        |> shape('node' => $$, 'text' => $get_error_text($$, $c)),
+        |> shape('node' => $$, 'error' => $get_error($$, $c)),
     )
-    |> Vec\filter($$, $e ==> $e['text'] !== '')
+    |> Vec\filter($$, $e ==> $e['error'][0] !== '')
     |> Vec\map(
       $$,
-      $e ==> LintError::create(
+      $e ==> LintError::createWithPatches(
         $script,
         $pragma_map,
         $e['node'],
         $linter,
-        Str\format('This expression can be simplified, %s.', $e['text']),
+        Str\format('This expression can be simplified, %s.', $e['error'][0]),
+        $e['error'][1],
       ),
     );
 }

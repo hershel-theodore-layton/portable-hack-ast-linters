@@ -1,26 +1,28 @@
-//##! 16 All errors
+//##! 17 All errors
 namespace Linters\Tests\CountExpressionCanBeSimplified;
 
 use namespace HH\Lib\C;
 
 function func1(): void {
-  $_ = C\count(vec[]) === 0;
-  $_ = C\count(vec[]) !== 0;
-  $_ = C\count(vec[]) < 0;
-  $_ = C\count(vec[]) <= 0;
-  $_ = C\count(vec[]) > 0;
-  $_ = C\count(vec[]) >= 0;
-  $_ = C\count(vec[]) < 1;
-  $_ = C\count(vec[]) >= 1;
+  $_ = C\is_empty(vec[]);
 
-  $_ = 0 === C\count(vec[]);
-  $_ = 0 !== C\count(vec[]);
-  $_ = 0 < C\count(vec[]);
+  $_ = C\is_empty(vec[]);
+  $_ = !C\is_empty(vec[]);
+  $_ = C\count(vec[]) < 0;
+  $_ = C\is_empty(vec[]);
+  $_ = !C\is_empty(vec[]);
+  $_ = C\count(vec[]) >= 0;
+  $_ = C\is_empty(vec[]);
+  $_ = !C\is_empty(vec[]);
+
+  $_ = C\is_empty(vec[]);
+  $_ = !C\is_empty(vec[]);
+  $_ = !C\is_empty(vec[]);
   $_ = 0 <= C\count(vec[]);
   $_ = 0 > C\count(vec[]);
-  $_ = 0 >= C\count(vec[]);
-  $_ = 1 > C\count(vec[]);
-  $_ = 1 <= C\count(vec[]);
+  $_ = C\is_empty(vec[]);
+  $_ = C\is_empty(vec[]);
+  $_ = !C\is_empty(vec[]);
 }
 
 //##! 1 All OK cases, plus one error, just to show that
@@ -28,7 +30,7 @@ function func1(): void {
 use function HH\Lib\C\count;
 
 function func2(): void {
-  $_ = count(vec[]) === 0;
+  $_ = C\is_empty(vec[]);
 
   $_ = count(vec[]) === 1;
   $_ = count(vec[]) !== 1;

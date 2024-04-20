@@ -192,7 +192,7 @@ async function run_async(): Awaitable<void> {
             $errors[] = Str\format(
               "The autofix for test %s:%d was not found in the autofix file.\n%s\n",
               $linter_name,
-              $test_count,
+              $test_number,
               $autofixed,
             );
           }
