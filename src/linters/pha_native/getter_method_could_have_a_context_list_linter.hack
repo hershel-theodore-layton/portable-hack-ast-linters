@@ -92,12 +92,13 @@ function getter_method_could_have_a_context_list_linter(
         'If you have a common false positive, please improve this heuristic.',
         Pha\patches(
           $script,
-          tuple(
+          Pha\patch_node(
             $method_decl_header
               |> $get_method_decl_header($$)
               |> Pha\as_syntax($$)
               |> $get_function_contexts($$),
             '[]',
+            shape('trivia' => Pha\RetainTrivia::BOTH),
           ),
         ),
       ),

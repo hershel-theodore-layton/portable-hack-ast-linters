@@ -51,7 +51,7 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
     |> Vec\map(
       $$,
       $call ==> $resolve_function_name($call)
-        |> LintError::create(
+        |> LintError::createWithPatches(
           $script,
           $pragma_map,
           $call,
@@ -63,6 +63,14 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
             $$,
             $simplified_call[$$],
             $simplified_call[$$],
+          ),
+          Pha\patches(
+            $script,
+            Pha\patch_node(
+              $get_call_receiver($call),
+              $simplified_call[$$],
+              shape('trivia' => Pha\RetainTrivia::BOTH),
+            ),
           ),
         ),
     );
