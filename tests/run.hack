@@ -187,9 +187,10 @@ async function run_async(): Awaitable<void> {
               continue;
             }
 
-            $autofixed =
-              Pha\patches_combine_without_conflict_resolution($patches)
-              |> Pha\patches_apply($$);
+            $autofixed = !C\is_empty($patches)
+              ? Pha\patches_combine_without_conflict_resolution($patches)
+                |> Pha\patches_apply($$)
+              : Pha\node_get_code($script, Pha\SCRIPT_NODE);
 
             if (!Str\contains($autofix, $autofixed)) {
               $errors[] = Str\format(

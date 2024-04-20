@@ -1,4 +1,4 @@
-//##! 3 Getters in three flavors.
+//##! with-fixes 3 Getters in three flavors.
 namespace Linters\Tests\GetterMethodCanBeMadePureLinter;
 
 final class C1 {
@@ -18,7 +18,7 @@ final class C1 {
   }
 }
 
-//##! 0 Adding explicit contexts (not just `[]`) supresses the lint error
+//##! with-fixes 0 Adding explicit contexts (not just `[]`) supresses the lint error
 
 final class C2 {
   private int $it = 42;
@@ -37,7 +37,7 @@ final class C2 {
   }
 }
 
-//##! 2 Simple type assertions
+//##! with-fixes 2 Simple type assertions
 
 final class C3 {
   private ?C1 $c;
@@ -51,7 +51,7 @@ final class C3 {
   }
 }
 
-//##! 0 False negative, type assertion with generic
+//##! with-fixes 0 False negative, type assertion with generic
 
 final class C4 {
   private ?vec<int> $vec;
@@ -61,7 +61,7 @@ final class C4 {
   }
 }
 
-//##! 0 Interfaces and abstract methods are not checked
+//##! with-fixes 0 Interfaces and abstract methods are not checked
 
 interface I1 {
   public function getIt(): int;
@@ -71,7 +71,7 @@ abstract class C5 {
   abstract public function getIt(): int;
 }
 
-//##! 0 Are they simple getters as an implementation detail
+//##! with-fixes 0 Are they simple getters as an implementation detail
 //      or are they simple getters in disguise, who knows?
 
 final class C6 {
