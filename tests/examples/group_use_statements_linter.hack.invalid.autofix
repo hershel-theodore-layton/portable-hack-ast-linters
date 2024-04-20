@@ -1,0 +1,46 @@
+//##! 1
+namespace Linters\Tests\GroupUseStatementsLinter;
+
+use namespace Letters\A;
+use namespace Letters\B;
+
+//##! 1
+use namespace Letters\{C, D};
+use namespace Letters\E;
+
+//##! 1
+use namespace Letters\{F, G};
+use namespace Letters\{H, I};
+
+//##! 0
+use type Letters\J;
+use function Letters\K;
+use const Letters\L;
+use namespace Letters\M;
+
+//##! 0 You are not forced to say `use namespace N, O;`.
+//     The default formatting for this indents the wrapped names.
+//      use namespace SomeLongNamespaceNumberOne,
+//        SomeLongNamespaceNumberTwo,
+//        SomeLongNamespaceNumberThree;
+use namespace N;
+use namespace O;
+
+//##! 0 If any use statement is missing a kind, this linter gives up.
+use namespace Letters\P;
+use namespace Letters\Q;
+use Letters\R;
+
+//##! 1 Testing the PSR use statement style
+use namespace Letters\{SubNamespace\S, T};
+use namespace Letters\U;
+
+//##! 0 The prefixes don't match
+use namespace Letters\V;
+use namespace Numbers\One;
+
+//##! 0 If you have multiple namespaces in a single file, this linter gives up.
+namespace ANamespaceBlock {
+  use namespace Letters\W;
+  use namespace Letters\X;
+}

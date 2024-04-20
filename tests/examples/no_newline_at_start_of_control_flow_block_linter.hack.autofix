@@ -1,0 +1,124 @@
+//##! 0 A class-likes and function-likes are not control flow blocks
+namespace Linters\Tests\NoNewlineAtStartOfControlFlowBlock;
+
+final class C1 {
+
+  public function __construct() {
+
+  }
+}
+
+function func1(): void {
+
+  $_ = () ==> {
+
+  };
+}
+
+//##! 4 empty loops 
+function func2(): void {
+  foreach (vec[] as $_) {
+
+  }
+  for (; ; ) {
+
+  }
+  while (true) {
+
+  }
+  do {
+
+  } while (true);
+}
+
+//##! 4 Non-empty control flow blocks
+function func3(): void {
+  foreach (vec[] as $_) {
+
+    $_ = 0;
+  }
+  for (; ; ) {
+
+    $_ = 0;
+  }
+  while (true) {
+
+    $_ = 0;
+  }
+  do {
+
+    $_ = 0;
+  } while (true);
+}
+
+//##! 7 Other control flow statements
+async function func4(): Awaitable<void> {
+  $awaitable = async {
+
+    return 4;
+  };
+
+  concurrent {
+
+    await $awaitable;
+    await $awaitable;
+  }
+
+  if (true) {
+
+    $_ = 0;
+  } else if (true) {
+
+    $_ = 0;
+  } else {
+
+    $_ = 0;
+  }
+
+  try {
+
+    throw new \Exception();
+  } catch (\Exception $_) {
+
+    $_ = 0;
+  }
+}
+
+//##! 0 Happy cases
+async function func5(): Awaitable<void> {
+  foreach (vec[] as $_) {
+    $_ = 0;
+  }
+  for (; ; ) {
+    $_ = 0;
+  }
+  while (true) {
+    $_ = 0;
+  }
+  do {
+    $_ = 0;
+  } while (true);
+
+  $awaitable = async {
+    return 4;
+  };
+
+  concurrent {
+    await $awaitable;
+    await $awaitable;
+  }
+
+  if (true) {
+    $_ = 0;
+  } else if (true) {
+    $_ = 0;
+  } else {
+    $_ = 0;
+  }
+
+  try {
+    throw new \Exception();
+  } catch (\Exception $_) {
+    $_ = 0;
+  }
+}

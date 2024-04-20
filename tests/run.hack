@@ -133,10 +133,8 @@ async function run_async(): Awaitable<void> {
           Pha\create_name_resolver($script, $syntax_index, $token_index);
         $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
-        $expected_errors = Regex\every_match(
-          $test,
-          re'/\#! (?<fix>with-fixes )?(?<err_cnt>\d+)\s/',
-        );
+        $expected_errors =
+          Regex\every_match($test, re'/\#! (?<err_cnt>\d+)\s/');
         if (C\count($expected_errors) !== 1) {
           $errors[] = "ERROR Failed to parse error count directive: \n".$test;
           continue;
@@ -177,29 +175,26 @@ async function run_async(): Awaitable<void> {
           $patches = Vec\map($lint_errors, $e ==> $e->getPatches())
             |> Vec\filter_nulls($$);
 
-          if ($expected['fix'] !== '') {
-            if ($autofix is null) {
-              $errors[] = Str\format(
-                "ERROR Expected an autofix file for %s, because test %d has a `with-fixes` modifier\n",
-                $linter_name,
-                $test_number,
-              );
-              continue;
-            }
+          if ($autofix is null) {
+            $errors[] = Str\format(
+              "ERROR Expected an autofix file for %s\n",
+              $linter_name,
+            );
+            continue;
+          }
 
-            $autofixed = !C\is_empty($patches)
-              ? Pha\patches_combine_without_conflict_resolution($patches)
-                |> Pha\patches_apply($$)
-              : Pha\node_get_code($script, Pha\SCRIPT_NODE);
+          $autofixed = !C\is_empty($patches)
+            ? Pha\patches_combine_without_conflict_resolution($patches)
+              |> Pha\patches_apply($$)
+            : Pha\node_get_code($script, Pha\SCRIPT_NODE);
 
-            if (!Str\contains($autofix, $autofixed)) {
-              $errors[] = Str\format(
-                "The autofix for test %s:%d was not found in the autofix file.\n%s\n",
-                $linter_name,
-                $test_count,
-                $autofixed,
-              );
-            }
+          if (!Str\contains($autofix, $autofixed)) {
+            $errors[] = Str\format(
+              "The autofix for test %s:%d was not found in the autofix file.\n%s\n",
+              $linter_name,
+              $test_count,
+              $autofixed,
+            );
           }
         } catch (Pha\PhaException $e) {
           $errors[] = Str\format(

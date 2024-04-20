@@ -1,0 +1,14 @@
+//##! 2
+namespace Linters\Tests\NoPHPEqualityLinter;
+
+function func1(): void {
+  0 == 0;
+  0 != 0;
+}
+
+//##! 0
+
+function func2(): void {
+  0 === 0;
+  0 !== 0;
+}
