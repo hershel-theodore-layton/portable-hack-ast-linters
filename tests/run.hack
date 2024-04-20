@@ -187,17 +187,9 @@ async function run_async(): Awaitable<void> {
               continue;
             }
 
-            if (C\count($patches) !== 1) {
-              $errors[] = Str\format(
-                "ERROR Expected 1 patch for test %s:%d, got %d\n",
-                $linter_name,
-                $test_number,
-                C\count($patches),
-              );
-              continue;
-            }
-
-            $autofixed = Pha\patches_apply(C\onlyx($patches));
+            $autofixed =
+              Pha\patches_combine_without_conflict_resolution($patches)
+              |> Pha\patches_apply($$);
 
             if (!Str\contains($autofix, $autofixed)) {
               $errors[] = Str\format(
