@@ -46,6 +46,7 @@ async function run_async(): Awaitable<void> {
     PhaLinters\use_statement_with_as_linter<>,
     PhaLinters\use_statement_with_leading_backslash_linter<>,
     PhaLinters\use_statement_without_kind_linter<>,
+    PhaLinters\variable_name_must_be_lowercase_linter<>,
     PhaLinters\whitespace_linter<>,
   ]
     |> Dict\from_values($$, fun_get_function<>)
