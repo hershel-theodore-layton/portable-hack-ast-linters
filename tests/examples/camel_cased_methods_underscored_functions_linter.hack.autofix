@@ -48,3 +48,31 @@ function a_UNTYPED(): void {}
 final class X4 {
   public function a__DO_NOT_USE(): void {}
 }
+
+//##! 0 allow methods that start with `test_` or `provide_`. I prefer test
+//    class methods to be written in snake case.
+
+abstract class TestFramework {}
+final class ProviderOfData implements \HH\MethodAttribute {
+  public function __construct(private string $methodName) {}
+}
+
+final class X5Test {
+  public function provide_bobbles(): vec<(int, int)> {
+    return vec[tuple(1, 2)];
+  }
+
+  <<ProviderOfData('provide_bobbles')>>
+  public function test_the_bobble(int $bob, int $ble): void {
+    invariant($bob * 2 === $ble, 'Test failed');
+  }
+
+  <<ProviderOfData('provide_bobbles')>>
+  public async function test_the_bobble_async(
+    int $bob,
+    int $ble,
+  ): Awaitable<void> {
+    await \HH\Asio\later();
+    invariant($bob * 2 === $ble, 'Test failed');
+  }
+}
