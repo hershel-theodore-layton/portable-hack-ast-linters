@@ -4,8 +4,8 @@
   "license": "MIT",
   "require": {
     "hhvm": "^4.102",
-    "hershel-theodore-layton/portable-hack-ast": "dev-master",
-    "hershel-theodore-layton/portable-hack-ast-extras": "dev-master",
+    "hershel-theodore-layton/portable-hack-ast": "dev-master || <1",
+    "hershel-theodore-layton/portable-hack-ast-extras": "dev-master || <1",
     "hershel-theodore-layton/pragma": "<1"
   },
   "require-dev": {
