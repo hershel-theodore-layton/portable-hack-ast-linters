@@ -11,7 +11,7 @@
   "require-dev": {
     "hhvm/hhvm-autoload": "^3.2",
     "hhvm/hsl": "^4",
-    "hhvm/hsl-experimetal": "^4"
+    "hhvm/hsl-experimental": "^4"
   },
   "scripts": {
     "post-install-cmd": [
