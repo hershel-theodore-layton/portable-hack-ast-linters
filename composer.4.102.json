@@ -9,7 +9,8 @@
     "hershel-theodore-layton/pragma": "<1"
   },
   "require-dev": {
-    "hhvm/hhvm-autoload": "^3.2"
+    "hhvm/hhvm-autoload": "^3.2",
+    "hhvm/hsl": "^4"
   },
   "scripts": {
     "post-install-cmd": [
