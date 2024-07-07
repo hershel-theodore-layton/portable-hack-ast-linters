@@ -1,7 +1,4 @@
 .var/
 .vscode/
 vendor/
-composer.lock
-**/*.hhast.parser-cache
-core
-www.pid
+composer*lock

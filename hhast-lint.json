@@ -1,9 +1,0 @@
-{
-  "roots": ["src/"],
-  "builtinLinters": "all",
-  "extraLinters": [
-    "Facebook\\HHAST\\NoEmptyStatementsLinter",
-    "Facebook\\HHAST\\FinalOrAbstractClassLinter",
-    "Facebook\\HHAST\\HHClientLinter"
-  ]
-}
