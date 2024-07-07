@@ -1,12 +1,9 @@
 #!/bin/sh
-echo "one"
 rm vendor/autoload.php vendor/composer/*.php
 
 # Processes the `requires:4.128` comments in .hhconfig.
 
 HHVM_VERSION_MAJOR=`hhvm --php -r "echo HHVM_VERSION_MAJOR;"`
-
-echo "two"
 if [ "$HHVM_VERSION_MAJOR" -ne "4" ]; then exit; fi
 
 # Some .hhconfig settings only work on hhvm version 4.128 and above.
@@ -28,8 +25,5 @@ NEXT=$(($HHVM_VERSION_MINOR + 1))
 FUTURE_VERSIONS=`for i in $(seq $NEXT 172); do echo "requires:4.$i"; done`
 FUTURE_VERSIONS=`echo $FUTURE_VERSIONS | sed "s/ /|/g"`
 
-echo "three"
 # Edit the file in place, sorry Mac users, your sed requires a `-i ''` here.
 sed -i -E "/$FUTURE_VERSIONS/q0" .hhconfig
-
-cat .hhconfig
