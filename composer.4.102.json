@@ -6,12 +6,12 @@
     "hhvm": "^4.102",
     "hershel-theodore-layton/portable-hack-ast": "dev-master || <1",
     "hershel-theodore-layton/portable-hack-ast-extras": "dev-master || <1",
-    "hershel-theodore-layton/pragma": "<1"
-  },
-  "require-dev": {
-    "hhvm/hhvm-autoload": "^3.2",
+    "hershel-theodore-layton/pragma": "<1",
     "hhvm/hsl": "^4",
     "hhvm/hsl-experimental": "^4"
+  },
+  "require-dev": {
+    "hhvm/hhvm-autoload": "^3.2"
   },
   "scripts": {
     "post-install-cmd": [
