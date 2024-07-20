@@ -26,10 +26,10 @@ function enforce_naming(
     Pha\create_syntax_matcher($script, Pha\KIND_FUNCTION_DECLARATION);
 
   $get_function_name =
-    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_NAME);
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_NAME)
+    |> Pha\returns_token($$);
 
   $get_function_name_as_text = $decl ==> $get_function_name($decl)
-    |> Pha\as_token($$)
     |> Pha\token_get_text($script, $$)
     |> C\reduce($allowed_suffixes, Str\strip_suffix<>, $$);
 

@@ -50,7 +50,7 @@ function namespace_private_use_clause_linter(
   if ($current_namespace is null) {
     $namespace_prefix = '';
   } else {
-    $name = Pha\as_syntax($current_namespace) |> $get_namespace_name($$);
+    $name = $get_namespace_name($current_namespace);
 
     if ($is_name($name)) {
       $namespace_prefix =

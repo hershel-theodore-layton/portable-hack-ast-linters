@@ -28,7 +28,8 @@ function namespace_private_symbol_linter(
     Pha\create_syntax_matcher($script, Pha\KIND_QUALIFIED_NAME);
 
   $get_namespace_header =
-    Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_HEADER);
+    Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_HEADER)
+    |> Pha\returns_syntax($$);
   $get_namespace_name =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_NAME);
 
@@ -66,7 +67,6 @@ function namespace_private_symbol_linter(
         }
 
         $namespace_prefix = $get_namespace_header($nearest_namespace)
-          |> Pha\as_syntax($$)
           |> $get_namespace_name($$)
           |> Pha\resolve_name($resolver, $script, $$)
           |> Str\split($$, '\\')

@@ -39,7 +39,8 @@ function group_use_statements_linter(
   $get_grouped_prefix =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_GROUP_USE_PREFIX);
   $get_clauses =
-    Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_CLAUSES);
+    Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_CLAUSES)
+    |> Pha\returns_syntax($$);
   $get_clause_name =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_NAME);
 
@@ -88,7 +89,6 @@ function group_use_statements_linter(
         $uses,
         $u ==> Pha\as_syntax($u)
           |> $get_clauses($$)
-          |> Pha\as_syntax($$)
           |> Pha\list_get_items_of_children($script, $$),
       )
         |> Vec\flatten($$)

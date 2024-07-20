@@ -23,11 +23,14 @@ function variable_name_must_be_lowercase_linter(
   $get_methodish_declaration_header = Pha\create_member_accessor(
     $script,
     Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
-  );
+  )
+    |> Pha\returns_syntax($$);
   $get_parameter_list =
-    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_PARAMETER_LIST);
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_PARAMETER_LIST)
+    |> Pha\returns_syntax($$);
   $get_parameter_name =
-    Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_NAME);
+    Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_NAME)
+    |> Pha\returns_token($$);
   $get_parameter_visibility =
     Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_VISIBILITY);
 
@@ -57,15 +60,12 @@ function variable_name_must_be_lowercase_linter(
 
       // __construct(private typename $camelCase) { validate($camelCase); }
       return $get_methodish_declaration_header($method_decl)
-        |> Pha\as_syntax($$)
         |> $get_parameter_list($$)
-        |> Pha\as_syntax($$)
         |> Pha\list_get_items_of_children($script, $$)
         |> !C\any($$, $param ==> {
           $param = Pha\as_syntax($param);
-          $param_name = $get_parameter_name($param)
-            |> Pha\as_token($$)
-            |> Pha\token_get_text($script, $$);
+          $param_name =
+            $get_parameter_name($param) |> Pha\token_get_text($script, $$);
           return $param_name === $var_name &&
             !Pha\is_missing($get_parameter_visibility($param));
         });

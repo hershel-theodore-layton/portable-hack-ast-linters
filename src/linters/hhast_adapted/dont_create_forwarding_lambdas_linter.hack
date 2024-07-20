@@ -25,7 +25,6 @@ function dont_create_forwarding_lambdas_linter(
   $is_function_call_expression =
     Pha\create_syntax_matcher($script, Pha\KIND_FUNCTION_CALL_EXPRESSION);
   $is_inout = Pha\create_token_matcher($script, Pha\KIND_INOUT);
-  $is_missing = Pha\create_syntax_matcher($script, Pha\KIND_MISSING);
   $is_name_or_var = Pha\create_matcher(
     $script,
     vec[Pha\KIND_QUALIFIED_NAME, Pha\KIND_VARIABLE_SYNTAX],
@@ -42,7 +41,8 @@ function dont_create_forwarding_lambdas_linter(
     Pha\create_syntax_matcher($script, Pha\KIND_VARIABLE_SYNTAX);
 
   $get_argument_list =
-    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST);
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST)
+    |> Pha\returns_syntax($$);
   $get_function_receiver =
     Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_RECEIVER);
   $get_lambda_async =
@@ -50,7 +50,8 @@ function dont_create_forwarding_lambdas_linter(
   $get_lambda_body =
     Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_BODY);
   $get_lambda_parameters =
-    Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_PARAMETERS);
+    Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_PARAMETERS)
+    |> Pha\returns_syntax($$);
   $get_lambda_return_type =
     Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_TYPE);
   $get_lambda_signature =
@@ -71,8 +72,8 @@ function dont_create_forwarding_lambdas_linter(
     Pha\create_member_accessor($script, Pha\MEMBER_SCOPE_RESOLUTION_QUALIFIER);
 
   $is_typed_lambda = ($sig, $parameters) ==>
-    C\any($parameters, $p ==> !$is_missing($get_parameter_type($p))) ||
-    !$is_missing($get_lambda_return_type($sig));
+    C\any($parameters, $p ==> !Pha\is_missing($get_parameter_type($p))) ||
+    !Pha\is_missing($get_lambda_return_type($sig));
 
   $convert_parameters = $parameters ==> Vec\map(
     $parameters,
@@ -85,11 +86,11 @@ function dont_create_forwarding_lambdas_linter(
         |> $is_dot_dot_dot($$)
           ? Support\CallingCovention::VARIADIC
           : (
-              !$is_missing($get_parameter_call_convention($p))
+              !Pha\is_missing($get_parameter_call_convention($p))
                 ? Support\CallingCovention::INOUT
                 : Support\CallingCovention::PLAIN
             ),
-      'has_default' => !$is_missing($get_parameter_default_value($p)),
+      'has_default' => !Pha\is_missing($get_parameter_default_value($p)),
     ),
   );
 
@@ -109,7 +110,7 @@ function dont_create_forwarding_lambdas_linter(
         )
       )
     ) {
-      return $get_argument_list($call) |> Pha\as_syntax($$);
+      return $get_argument_list($call);
     }
 
     return Pha\NIL;
@@ -124,7 +125,7 @@ function dont_create_forwarding_lambdas_linter(
 
     $body = Pha\as_syntax($body);
 
-    if ($is_missing($get_lambda_async($lambda))) {
+    if (Pha\is_missing($get_lambda_async($lambda))) {
       return $extract_qualifying_argument_list($body);
     }
 
@@ -151,7 +152,6 @@ function dont_create_forwarding_lambdas_linter(
 
     $sig = Pha\as_syntax($sig);
     $parameters = $get_lambda_parameters($sig)
-      |> Pha\as_syntax($$)
       |> Pha\list_get_items_of_children($script, $$)
       |> Vec\map($$, Pha\as_syntax<>);
 

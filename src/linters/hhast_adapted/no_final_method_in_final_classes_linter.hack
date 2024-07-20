@@ -22,7 +22,8 @@ function no_final_method_in_final_classes_linter(
   $get_method_function_decl = Pha\create_member_accessor(
     $script,
     Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
-  );
+  )
+    |> Pha\returns_syntax($$);
   $get_function_modifiers =
     Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_MODIFIERS);
   $get_function_name =
@@ -37,7 +38,6 @@ function no_final_method_in_final_classes_linter(
       $$,
       $method ==> (
         $get_method_function_decl($method)
-        |> Pha\as_syntax($$)
         |> $get_function_modifiers($$)
         |> $any_child_is_final($$)
       ) &&
@@ -53,9 +53,7 @@ function no_final_method_in_final_classes_linter(
       $f ==> LintError::create(
         $script,
         $pragma_map,
-        $get_method_function_decl($f)
-          |> Pha\as_syntax($$)
-          |> $get_function_name($$),
+        $get_method_function_decl($f) |> $get_function_name($$),
         $linter,
         'Remove the final keyword. The surrounding class is already final.',
       ),

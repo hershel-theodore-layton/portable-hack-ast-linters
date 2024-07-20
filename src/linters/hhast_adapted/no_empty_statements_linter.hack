@@ -79,9 +79,7 @@ function no_empty_statements_linter(
 
   $expression_is_empty = $node ==> {
     while ($is_parenthesized_expression($node)) {
-      $node = Pha\as_syntax($node)
-        |> $get_parenthesized_expression_expression($$)
-        |> Pha\as_syntax($$);
+      $node = $get_parenthesized_expression_expression(Pha\as_syntax($node));
     }
 
     return $is_always_empty_expression($node) ||
@@ -91,7 +89,6 @@ function no_empty_statements_linter(
           $node
           |> Pha\as_syntax($$)
           |> $get_binop_operator($$)
-          |> Pha\as_token($$)
           |> !$is_side_effecty_operator($$)
         )
       );

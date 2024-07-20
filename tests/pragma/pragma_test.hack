@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters\Tests;
 
-use namespace HH\Lib\{C, Dict, File, Math, Regex, Str, Vec};
+use namespace HH\Lib\{C, Dict, File, Str, Vec};
 use namespace HTL\{Pha, PhaLinters};
 use function HH\fun_get_function;
 

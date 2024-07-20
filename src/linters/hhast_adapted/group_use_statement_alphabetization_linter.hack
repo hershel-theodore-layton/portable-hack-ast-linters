@@ -14,13 +14,13 @@ function group_use_statement_alphabetization_linter(
   $linter = __FUNCTION__;
 
   $get_clauses =
-    Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_GROUP_USE_CLAUSES);
+    Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_GROUP_USE_CLAUSES)
+    |> Pha\returns_syntax($$);
 
   $get_use_name =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_NAME);
 
   $get_uses_to_be_sorted = $group_use ==> $get_clauses($group_use)
-    |> Pha\as_syntax($$)
     |> Pha\list_get_items_of_children($script, $$);
 
   return Pha\index_get_nodes_by_kind(

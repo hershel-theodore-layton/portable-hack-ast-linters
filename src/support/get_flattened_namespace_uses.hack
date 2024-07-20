@@ -26,7 +26,8 @@ function get_flattened_namespace_uses(
     $script,
     Pha\MEMBER_NAMESPACE_USE_CLAUSES,
     Pha\MEMBER_NAMESPACE_GROUP_USE_CLAUSES,
-  );
+  )
+    |> Pha\returns_syntax($$);
   $get_clause_name =
     Pha\create_member_accessor($script, Pha\MEMBER_NAMESPACE_USE_NAME);
 
@@ -56,7 +57,6 @@ function get_flattened_namespace_uses(
         $uses,
         $u ==> Pha\as_syntax($u)
           |> $get_clauses($$)
-          |> Pha\as_syntax($$)
           |> Pha\list_get_items_of_children($script, $$),
       )
         |> Vec\flatten($$)
@@ -72,7 +72,6 @@ function get_flattened_namespace_uses(
       $v ==> Vec\map($v, $u ==> {
         $prefix = $parse_group_prefix($u);
         return $get_clauses($u)
-          |> Pha\as_syntax($$)
           |> Pha\list_get_items_of_children($script, $$)
           |> Vec\map(
             $$,

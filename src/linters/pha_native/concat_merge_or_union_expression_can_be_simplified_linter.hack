@@ -14,7 +14,8 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
   $linter = __FUNCTION__;
 
   $get_argument_list =
-    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST);
+    Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST)
+    |> Pha\returns_syntax($$);
   $get_call_receiver =
     Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_CALL_RECEIVER);
 
@@ -45,7 +46,7 @@ function concat_merge_or_union_expression_can_be_simplified_linter(
       }
 
       return $get_argument_list($call)
-        |> Pha\list_get_items_of_children($script, Pha\as_syntax($$))
+        |> Pha\list_get_items_of_children($script, $$)
         |> C\count($$) === 1 && !$is_decorated_expression($$[0]);
     })
     |> Vec\map(

@@ -22,7 +22,8 @@ function getter_method_could_have_a_context_list_linter(
   $get_method_decl_header = Pha\create_member_accessor(
     $script,
     Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
-  );
+  )
+    |> Pha\returns_syntax($$);
   $get_method_body =
     Pha\create_member_accessor($script, Pha\MEMBER_METHODISH_FUNCTION_BODY);
   $get_return_expression =
@@ -30,16 +31,15 @@ function getter_method_could_have_a_context_list_linter(
 
   $is_compound_statement =
     Pha\create_syntax_matcher($script, Pha\KIND_COMPOUND_STATEMENT);
-  $is_missing = Pha\create_syntax_matcher($script, Pha\KIND_MISSING);
   $is_return_statement =
     Pha\create_syntax_matcher($script, Pha\KIND_RETURN_STATEMENT);
 
   return
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_METHODISH_DECLARATION)
     |> Vec\filter($$, $m ==> {
-      $header = $get_method_decl_header($m) |> Pha\as_syntax($$);
+      $header = $get_method_decl_header($m);
 
-      if (!$is_missing($get_function_contexts($header))) {
+      if (!Pha\is_missing($get_function_contexts($header))) {
         return false;
       }
 
@@ -95,7 +95,6 @@ function getter_method_could_have_a_context_list_linter(
           Pha\patch_node(
             $method_decl_header
               |> $get_method_decl_header($$)
-              |> Pha\as_syntax($$)
               |> $get_function_contexts($$),
             '[]',
             shape('trivia' => Pha\RetainTrivia::BOTH),

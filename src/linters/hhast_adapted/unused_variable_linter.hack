@@ -59,7 +59,8 @@ function unused_variable_linter(
   $get_method_decl_header = Pha\create_member_accessor(
     $script,
     Pha\MEMBER_METHODISH_FUNCTION_DECL_HEADER,
-  );
+  )
+    |> Pha\returns_syntax($$);
   $get_func_decl_header_modifiers =
     Pha\create_member_accessor($script, Pha\MEMBER_FUNCTION_MODIFIERS);
   $get_lambda_signature =
@@ -77,12 +78,12 @@ function unused_variable_linter(
   );
 
   $is_assignment_expression = $node ==> $is_binary_expression($node) &&
-    $is_assignment_operator($get_binop_operator($node) |> Pha\as_token($$));
+    $is_assignment_operator($get_binop_operator($node));
 
   $is_promoted_contructor_parameter = (Pha\Token $token) ==>
     Pha\node_get_syntax_ancestors($script, $token)
     |> C\find($$, $is_parameter_declaration)
-    |> $$ is nonnull && Pha\is_token($get_parameter_visibility($$));
+    |> $$ is nonnull && !Pha\is_missing($get_parameter_visibility($$));
 
   // Assignments to members are not local to the function.
   // This assignment should be classified as a use of `$v`: `$v->prop = 0`.
@@ -96,11 +97,11 @@ function unused_variable_linter(
   $inout_scopes = Pha\index_get_nodes_by_kind($token_index, Pha\KIND_INOUT)
     |> Vec\map(
       $$,
-      $i ==> Pha\node_get_parent($script, $i)
+      $i ==> Pha\token_get_parent($script, $i)
         |> !$is_parameter_declaration($$)
           ? null
           : shape(
-              'name' => $get_parameter_name(Pha\as_syntax($$))
+              'name' => $get_parameter_name($$)
                 |> Pha\node_get_code_compressed($script, $$),
               'scope' =>
                 C\findx(Pha\node_get_ancestors($script, $$), $is_scope),
@@ -232,7 +233,6 @@ function unused_variable_linter(
     return $is_interface($get_class_keyword($classish)) ||
       C\any(
         $get_method_decl_header($owner)
-          |> Pha\as_syntax($$)
           |> $get_func_decl_header_modifiers($$)
           |> Pha\node_get_children($script, $$),
         $is_abstract,
