@@ -13,7 +13,11 @@ namespace HTL\PhaLinters\Tests;
 
 use namespace HH\Lib\{File, IO, Str, Vec};
 use namespace HTL\{Pha, PhaLinters};
+use type HTL\Pragma\Pragmas;
+use function HTL\Pragma\pragma;
 use function glob, realpath;
+
+<<file: Pragmas(vec['PhaLinters', 'fixme:license_header'])>>
 
 type TLinter = (function(
   Pha\Script,
@@ -59,6 +63,7 @@ async function lint_async(): Awaitable<void> {
     if ($has_errors) {
       // await-in-a-loop, yield errors often and early.
       // The developer is waiting for this output!
+      pragma('PhaLinters', 'fixme:dont_await_in_a_loop');
       await $stdout->writeAllAsync($error_text);
     }
   }
@@ -92,6 +97,7 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\getter_method_could_have_a_context_list_linter<>,
     PhaLinters\group_use_statement_alphabetization_linter<>,
     PhaLinters\group_use_statements_linter<>,
+    PhaLinters\lambda_parameter_list_parentheses_can_be_removed_linter<>,
     PhaLinters\must_use_braces_for_control_flow_linter<>,
     PhaLinters\namespace_private_symbol_linter<>,
     PhaLinters\namespace_private_use_clause_linter<>,
