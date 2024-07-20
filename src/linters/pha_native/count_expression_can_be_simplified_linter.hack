@@ -76,7 +76,7 @@ function count_expression_can_be_simplified_linter(
   };
 
   $get_error = ($parent, $call) ==> {
-    $replace_with = ($function_name) ==> Pha\patches($script, Pha\patch_node(
+    $replace_with = $function_name ==> Pha\patches($script, Pha\patch_node(
       $parent,
       Str\format(
         '%s(%s)',

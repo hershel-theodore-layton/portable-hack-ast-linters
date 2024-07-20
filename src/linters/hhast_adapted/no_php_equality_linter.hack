@@ -22,7 +22,7 @@ function no_php_equality_linter(
   $get_operator =
     Pha\create_member_accessor($script, Pha\MEMBER_BINARY_OPERATOR);
 
-  $binop_is_php_equals = ($binop) ==>
+  $binop_is_php_equals = $binop ==>
     $get_operator($binop) |> $is_php_equals($$);
 
   return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_BINARY_EXPRESSION)

@@ -29,7 +29,7 @@ function must_use_braces_for_control_flow_linter(
     Pha\MEMBER_WHILE_BODY,
   );
 
-  $is_braceless = ($node) ==>
+  $is_braceless = $node ==>
     $get_body($node) |> !$is_compound_statement_or_if_statement($$);
 
   return Vec\concat(

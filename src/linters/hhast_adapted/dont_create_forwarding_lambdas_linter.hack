@@ -116,7 +116,7 @@ function dont_create_forwarding_lambdas_linter(
     return Pha\NIL;
   };
 
-  $get_argument_list = ($lambda) ==> {
+  $get_argument_list = $lambda ==> {
     $body = $get_lambda_body($lambda);
 
     if (!Pha\is_syntax($body)) {
@@ -166,7 +166,7 @@ function dont_create_forwarding_lambdas_linter(
     return $convert_parameters($parameters);
   };
 
-  $get_arguments = ($argument_list) ==> Vec\map(
+  $get_arguments = $argument_list ==> Vec\map(
     Pha\list_get_items_of_children($script, $argument_list),
     $a ==> {
       $first_token = Support\get_first_token($script, $a);
