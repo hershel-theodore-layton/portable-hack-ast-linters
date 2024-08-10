@@ -1,0 +1,19 @@
+//##! 0 no digest directive
+namespace Linters\Tests\GeneratedFileMayNotBeModifiedManuallyLinter;
+
+function func1(): void {}
+
+//##! 1 incorrect digest directive
+use type HTL\Pragma\Pragmas;
+
+<<file: Pragmas(vec['PhaLinters', 'digest:01234012340123401234'])>>
+
+function func2(): void {}
+
+//##! 0 correct digest directive
+
+use type HTL\Pragma\Pragmas;
+
+<<file: Pragmas(vec['PhaLinters', 'digest:919df0675ebaa63123df'])>>
+
+function func3(): void {}

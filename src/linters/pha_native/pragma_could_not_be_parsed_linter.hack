@@ -16,7 +16,7 @@ function pragma_could_not_be_parsed_linter(
   return $pragma_map->getAllPragmas()
     |> Vec\filter(
       $$,
-      $p ==> $p[2][0]
+      $p ==> idx($p[2], 0, '')
         |> Str\trim($$, '"\'')
         |> $$ === 'PhaLinters' || $$ === 'HTL\PhaLinters',
     )
@@ -24,7 +24,12 @@ function pragma_could_not_be_parsed_linter(
       $$,
       $t ==> Vec\drop($t[2], 1)
         |> Vec\map($$, $str ==> Str\trim($str, '"\''))
-        |> C\find($$, $str ==> !Str\starts_with($str, 'fixme:')) is nonnull,
+        |> C\find(
+          $$,
+          $str ==> !(
+            Str\starts_with($str, 'digest:') || Str\starts_with($str, 'fixme:')
+          ),
+        ) is nonnull,
     )
     |> Vec\map(
       $$,
@@ -33,7 +38,7 @@ function pragma_could_not_be_parsed_linter(
         $pragma_map,
         $p[0],
         $linter,
-        'Your version of PhaLinters only supports fixme:linter_name',
+        'Your version of PhaLinters only supports digest:hash and fixme:linter_name',
       ),
     );
 
