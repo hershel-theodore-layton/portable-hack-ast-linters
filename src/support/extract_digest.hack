@@ -8,7 +8,12 @@ use function sha1;
 function extract_digest(
   Pha\Script $script,
   Pha\PragmaMap $pragma_map,
-)[]: ?shape('pragma' => Pha\Syntax, 'embedded' => string, 'hashed' => string) {
+)[]: ?shape(
+  'pragma' => Pha\Syntax,
+  'embedded' => string,
+  'hashed' => string,
+  // @closed-shape
+) {
   list($pragma, $digest) = $pragma_map->getAllPragmas()
     |> C\find(
       $$,

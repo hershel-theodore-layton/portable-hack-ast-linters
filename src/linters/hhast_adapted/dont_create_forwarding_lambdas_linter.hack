@@ -10,8 +10,10 @@ function dont_create_forwarding_lambdas_linter(
   Pha\TokenIndex $_,
   Pha\Resolver $_,
   Pha\PragmaMap $pragma_map,
-  shape(?'no_error_for_lambdas_with_typed_parameters_or_return' => bool)
-    $options = shape(),
+  shape(
+    ?'no_error_for_lambdas_with_typed_parameters_or_return' => bool,
+    // @closed-shape
+  ) $options = shape(),
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
