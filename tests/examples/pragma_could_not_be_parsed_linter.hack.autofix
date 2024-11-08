@@ -1,4 +1,4 @@
-//##! 3
+//##! 6
 namespace Linters\Tests\PragmaCouldNotBeParsedLinter;
 
 use type HTL\Pragma\Pragmas;
