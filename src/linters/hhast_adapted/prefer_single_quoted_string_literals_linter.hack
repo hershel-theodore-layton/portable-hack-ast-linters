@@ -24,6 +24,7 @@ function prefer_single_quoted_string_literals_linter(
     '\\v', // vertical tab
     '\\x', // hex
     "'", // single quote,
+    '\$', // anti-variable interpolation
     '\\0', '\\1', '\\2', '\\3', '\\4', '\\5', '\\6', '\\7' // octal
   ];
 
@@ -31,18 +32,36 @@ function prefer_single_quoted_string_literals_linter(
     $token_index,
     Pha\KIND_DOUBLE_QUOTED_STRING_LITERAL,
   )
-    |> Vec\filter($$, $t ==> {
-      $text = Pha\token_get_text($script, $t);
-      return !C\any($escape_sequences, $e ==> Str\contains($text, $e));
-    })
     |> Vec\map(
       $$,
-      $t ==> LintError::create(
+      $t ==> shape(
+        'node' => $t,
+        'contents' => Pha\token_get_text($script, $t)
+          |> Str\strip_prefix($$, '"')
+          |> Str\strip_suffix($$, '"'),
+      ),
+    )
+    |> Vec\filter(
+      $$,
+      $shape ==>
+        !C\any($escape_sequences, $e ==> Str\contains($shape['contents'], $e)),
+    )
+    |> Vec\map(
+      $$,
+      $shape ==> LintError::createWithPatches(
         $script,
         $pragma_map,
-        $t,
+        $shape['node'],
         $linter,
         'This could be a single quoted string.',
+        Pha\patches(
+          $script,
+          Pha\patch_node(
+            $shape['node'],
+            "'".$shape['contents']."'",
+            shape('trivia' => Pha\RetainTrivia::BOTH),
+          ),
+        ),
       ),
     );
 }
