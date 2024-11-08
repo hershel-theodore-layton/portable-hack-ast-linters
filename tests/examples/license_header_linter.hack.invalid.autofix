@@ -12,3 +12,8 @@ function func1(): void {}
 /* Example License Text */
 
 function func2(): void {}
+
+// Alternatively, on older hhvm versions, where #! is a comment... 
+//#/* Example License Text */
+#! 1 Missing license header
+function func1(): void {}
