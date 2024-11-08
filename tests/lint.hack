@@ -136,6 +136,13 @@ function get_linters()[]: vec<TLinter> {
       $pragma_map,
       $known_pragma_prefixes,
     );
+  $linters[] = ($script, $syntax_index, $_, $_, $pragma_map) ==>
+    PhaLinters\shape_type_additional_field_intent_should_be_explicit_linter(
+      $script,
+      $syntax_index,
+      $pragma_map,
+      '// @closed-shape',
+    );
 
   return $linters;
 }

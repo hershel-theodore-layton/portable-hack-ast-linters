@@ -1,0 +1,51 @@
+//##! 0 Open shapes
+namespace Linters\Tests\ShapeTypeAdditionalFieldIntentShouldBeExplicit;
+
+type A = shape(...);
+type B = shape('b' => int, ...);
+type C = shape(?'c' => int, ...);
+type D = shape(
+  'multiline' => int,
+  'shape' => int,
+  'with' => int,
+  'many' => int,
+  'keys' => int,
+  ...
+);
+
+//##! 0 Using the configured `/*_*/` pseudo syntax
+
+type E = shape(/*_*/);
+type F = shape('f' => int /*_*/);
+type G = shape(?'g' => int /*_*/);
+type H = shape(
+  'multiline' => int,
+  'shape' => int,
+  'with' => int,
+  'many' => int,
+  'keys' => int,
+  /*_*/
+);
+
+//##! 4 implicitly closed
+
+type I = shape(/*_*/
+);
+type J = shape('j' => int/*_*/
+);
+type K = shape(?'k' => int/*_*/
+);
+type L = shape(
+  'multiline' => int,
+  'shape' => int,
+  'with' => int,
+  'many' => int,
+  'keys' => int,
+/*_*/
+);
+
+//##! 2 incorrect pseudo syntax use
+type M = shape(/*_*/ 'm' => int/*_*/
+);
+type N = shape('n' => int /*@@*//*_*/
+);

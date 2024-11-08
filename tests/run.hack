@@ -70,6 +70,19 @@ async function run_async(): Awaitable<void> {
       $map,
       keyset['known_prefix'],
     );
+  $linters['shape_type_additional_field_intent_should_be_explicit_linter'] = (
+    $script,
+    $syntax_index,
+    $_,
+    $_,
+    $pragma_map,
+  )[] ==>
+    PhaLinters\shape_type_additional_field_intent_should_be_explicit_linter(
+      $script,
+      $syntax_index,
+      $pragma_map,
+      '/*_*/',
+    );
 
   // Some tests change their behavior on more recent versions of hhvm.
   // For example, no_elseif_linter<>, since `elseif (expression) {}` will be
