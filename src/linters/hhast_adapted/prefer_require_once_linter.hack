@@ -24,7 +24,7 @@ function prefer_require_once_linter(
     |> Vec\filter($$, $require_token ==> !$is_require_once($require_token))
     |> Vec\map(
       $$,
-      $n ==> LintError::create(
+      $n ==> LintError::createWithPatches(
         $script,
         $pragma_map,
         Pha\node_get_parent($script, $n),
@@ -32,6 +32,14 @@ function prefer_require_once_linter(
         Str\format(
           'Use require_once instead of %s.',
           Pha\token_get_text($script, $n),
+        ),
+        Pha\patches(
+          $script,
+          Pha\patch_node(
+            $n,
+            'require_once',
+            shape('trivia' => Pha\RetainTrivia::BOTH),
+          ),
         ),
       ),
     );

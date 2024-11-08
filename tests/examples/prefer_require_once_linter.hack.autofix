@@ -1,9 +1,9 @@
 //##! 3
 namespace Linters\Tests\PreferRequireOnceLinter;
 
-include '';
-include_once '';
-require '';
+require_once '';
+require_once '';
+require_once '';
 
 //##! 0
 
