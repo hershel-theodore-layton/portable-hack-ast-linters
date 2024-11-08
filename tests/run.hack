@@ -213,6 +213,11 @@ async function run_async(): Awaitable<void> {
               $test_number,
               $autofixed,
             );
+            $errors[] = Vec\map(
+              Pha\node_get_descendants($script, Pha\SCRIPT_NODE),
+              $n ==> Pha\node_get_kind($script, $n),
+            )
+              |> Str\join($$, ', ');
           }
         } catch (Pha\PhaException $e) {
           $errors[] = Str\format(
