@@ -268,12 +268,19 @@ function unused_variable_linter(
   return Vec\filter($assignments, $is_unused)
     |> Vec\map(
       $$,
-      $a ==> LintError::create(
+      $a ==> LintError::createWithPatches(
         $script,
         $pragma_map,
         Pha\token_get_parent($script, $a['var']),
         $linter,
         'This variable is unused.',
+        Pha\patches($script, Pha\patch_node(
+          $a['var'],
+          Pha\token_get_text($script, $a['var'])
+            |> Str\strip_prefix($$, '$')
+            |> '$_'.$$,
+          shape('trivia' => Pha\RetainTrivia::BOTH),
+        )),
       ),
     );
 }

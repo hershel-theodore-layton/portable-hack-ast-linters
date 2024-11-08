@@ -1,13 +1,13 @@
 //##! 1
 namespace Linters\Tests\UnusedVariableLinter;
 
-function example(mixed ...$args): void {}
+function example(mixed ...$_args): void {}
 
 //##! 2 Only ever assigned
 
 function func1(): void {
-  $b = 0;
-  $b += 1;
+  $_b = 0;
+  $_b += 1;
 }
 
 //##! 1 Shadowing in lambda
@@ -16,7 +16,7 @@ function func2(): void {
   $a = '';
 
   $_ = () ==> {
-    $a = 3;
+    $_a = 3;
   };
 
   example($a);
@@ -38,7 +38,7 @@ function func3(): void {
 //##! 1 Shadowing lambda parameter
 
 function func4(): void {
-  $a = '';
+  $_a = '';
 
   $_ = $a ==> $a;
 }
@@ -46,7 +46,7 @@ function func4(): void {
 //##! 1 Constructor property promotion
 
 class X1 {
-  public function __construct(public int $used, int $unused) {}
+  public function __construct(public int $used, int $_unused) {}
 }
 
 //##! 0 Abstract method arguments don't count
@@ -81,7 +81,7 @@ function func6(): void {
 
 //##! 1 inout parameters are used in write-only positions
 
-function func7(inout vec<int> $items, inout vec<int> $unused): void {
+function func7(inout vec<int> $items, inout vec<int> $_unused): void {
   $items[] = 2;
   $_ = (inout vec<int> $counter) ==> {
     $counter[] = 2;
@@ -91,11 +91,11 @@ function func7(inout vec<int> $items, inout vec<int> $unused): void {
 //##! 5 Pre and post increment are not expressions in hhvm 4.38 and above
 //      For this reason, we can treat them as assignments (not as a use).
 
-function func8(int $unused, inout int $used): void {
-  ++$unused;
-  $unused++;
-  --$unused;
-  $unused--;
+function func8(int $_unused, inout int $used): void {
+  ++$_unused;
+  $_unused++;
+  --$_unused;
+  $_unused--;
 
   ++$used;
   $used++;
