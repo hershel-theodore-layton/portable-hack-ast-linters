@@ -2,7 +2,7 @@
 namespace Linters\Tests\DontDiscardNewExpressionsLinter;
 
 function func1(): void {
-  new \Exception();
+  $_ = new \Exception();
 }
 
 //##! 0

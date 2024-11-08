@@ -29,12 +29,18 @@ function dont_discard_new_expressions_linter(
     )
     |> Vec\map(
       $$,
-      $stmt ==> LintError::create(
+      $stmt ==> LintError::createWithPatches(
         $script,
         $pragma_map,
         $stmt,
         $linter,
         'You are ignoring the new object. Please use it or assign it to `$_`.',
+        Pha\patches($script, Pha\patch_node(
+          $stmt,
+          '$_ = '.
+          Pha\node_get_code_without_leading_or_trailing_trivia($script, $stmt),
+          shape('trivia' => Pha\RetainTrivia::BOTH),
+        )),
       ),
     );
 }
