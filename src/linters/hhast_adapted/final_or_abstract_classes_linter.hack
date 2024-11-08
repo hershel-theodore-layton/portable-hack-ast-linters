@@ -21,7 +21,7 @@ function final_or_abstract_classes_linter(
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_NAME);
   $get_class_keyword =
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_KEYWORD);
-  $get_method_modifiers =
+  $get_classish_modifiers =
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_MODIFIERS);
 
   return
@@ -30,19 +30,25 @@ function final_or_abstract_classes_linter(
       $$,
       $c ==> $is_class($get_class_keyword($c)) &&
         (
-          $get_method_modifiers($c)
+          $get_classish_modifiers($c)
           |> Pha\node_get_children($script, $$)
           |> !C\any($$, $is_abstract_or_final)
         ),
     )
     |> Vec\map(
       $$,
-      $c ==> LintError::create(
+      $c ==> LintError::createWithPatches(
         $script,
         $pragma_map,
         $get_class_name($c),
         $linter,
         'Classes should be abstract or final.',
+        Pha\patches($script, Pha\patch_node(
+          $c,
+          'final '.
+          Pha\node_get_code_without_leading_or_trailing_trivia($script, $c),
+          shape('trivia' => Pha\RetainTrivia::BOTH),
+        )),
       ),
     );
 }

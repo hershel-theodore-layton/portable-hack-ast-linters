@@ -1,7 +1,7 @@
 //##! 1
 namespace Linters\Tests\FinalOrAbstractClassesLinter;
 
-class X1 {}
+final class X1 {}
 
 //##! 0
 
