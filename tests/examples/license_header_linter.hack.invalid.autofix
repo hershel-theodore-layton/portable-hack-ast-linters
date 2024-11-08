@@ -1,10 +1,11 @@
 //##! 1 Wrong license header
-
+<?hh
+/* Example License Text */
 /* Wrong license header */
 namespace Linters\Tests\LicenseHeaderLinter;
 
 //##! 1 Missing license header
-
+/* Example License Text */
 function func1(): void {}
 
 //##! 0 Correct license header
