@@ -1,9 +1,9 @@
 //##! 3
 namespace Linters\Tests\GroupUseStatementAlphabetizationLinter;
 
-use namespace One\{Two, Three};
-use namespace \{Four, Five};
-use namespace \{One\Six, One\Seven};
+use namespace One\{Three, Two};
+use namespace \{Five, Four};
+use namespace \{/*1*/One/*b*/\Seven/*2*/, /*3*/One/*a*/\Six/*4*/};
 
 //##! 0
 use namespace One\{_Three, _Two};
