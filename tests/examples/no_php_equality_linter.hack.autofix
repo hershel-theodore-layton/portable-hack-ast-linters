@@ -2,8 +2,8 @@
 namespace Linters\Tests\NoPHPEqualityLinter;
 
 function func1(): void {
-  0 == 0;
-  0 != 0;
+  0 === 0;
+  0 !== 0;
 }
 
 //##! 0
