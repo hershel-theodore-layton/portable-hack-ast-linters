@@ -10,6 +10,6 @@ function func1(): void {
 //##! 1
 function func2(): void {
   if (true) {
-  } elseif (true) {
+  } else if (true) {
   }
 }
