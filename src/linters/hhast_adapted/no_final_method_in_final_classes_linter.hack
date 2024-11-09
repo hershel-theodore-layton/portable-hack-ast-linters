@@ -50,12 +50,24 @@ function no_final_method_in_final_classes_linter(
     )
     |> Vec\map(
       $$,
-      $f ==> LintError::create(
+      $f ==> LintError::createWithPatches(
         $script,
         $pragma_map,
         $get_method_function_decl($f) |> $get_function_name($$),
         $linter,
         'Remove the final keyword. The surrounding class is already final.',
+        Pha\patches(
+          $script,
+          $get_method_function_decl($f)
+            |> $get_function_modifiers($$)
+            |> Pha\node_get_children($script, $$)
+            |> C\findx($$, $is_final)
+            |> Pha\patch_node(
+              $$,
+              '',
+              shape('trivia' => Pha\RetainTrivia::LEADING),
+            ),
+        ),
       ),
     );
 }
