@@ -169,14 +169,13 @@ async function run_async(): Awaitable<void> {
             $pragma_map,
           );
           $err_cnt = Str\to_int($expected['err_cnt']) as nonnull;
-          if (
-            \HHVM_VERSION_ID >=
-              idx(
-                $tests_that_should_have_zero_errrors_on_hhvm_version,
-                $linter_name,
-                Math\INT64_MAX,
-              )
-          ) {
+          $should_be_a_noop = \HHVM_VERSION_ID >=
+            idx(
+              $tests_that_should_have_zero_errrors_on_hhvm_version,
+              $linter_name,
+              Math\INT64_MAX,
+            );
+          if ($should_be_a_noop) {
             $err_cnt = 0;
           }
 
@@ -206,7 +205,7 @@ async function run_async(): Awaitable<void> {
               |> Pha\patches_apply($$)
             : Pha\node_get_code($script, Pha\SCRIPT_NODE);
 
-          if (!Str\contains($autofix, $autofixed)) {
+          if (!Str\contains($autofix, $autofixed) && !$should_be_a_noop) {
             $errors[] = Str\format(
               "The autofix for test %s:%d was not found in the autofix file.\n%s\n",
               $linter_name,
