@@ -43,12 +43,18 @@ function must_use_braces_for_control_flow_linter(
     |> Vec\filter($$, $is_braceless)
     |> Vec\map(
       $$,
-      $n ==> LintError::create(
+      $n ==> LintError::createWithPatches(
         $script,
         $pragma_map,
         $n,
         $linter,
         'Use curly braces {} for control flow.',
+        Pha\patches($script, Pha\patch_node(
+          $get_body($n),
+          $get_body($n)
+            |> Pha\node_get_code($script, $$)
+            |> "{\n ".$$.'}',
+        )),
       ),
     );
 }

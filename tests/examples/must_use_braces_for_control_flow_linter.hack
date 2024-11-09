@@ -2,15 +2,22 @@
 namespace Linters\Tests\MustUseBracesForControlFlowLinter;
 
 function func1(): void {
-  if (true)
+  if (true) // hackfmt must undo the brace style
     echo 4;
-  else
-    while (true)
-      foreach ($a as $b)
-        for (; ; )
-          do
-            echo 5;
-          while (true);
+  else // we must insert an extra newline
+    echo 5;
+
+  while (true) // because of single line comments
+    echo 6;
+
+  foreach ($a as $b) // which could consume the opening curly
+    echo 7;
+
+  for(; ;) echo 8;
+
+  do // and break the nesting
+    return;
+  while (true);
 }
 
 //##! 0
