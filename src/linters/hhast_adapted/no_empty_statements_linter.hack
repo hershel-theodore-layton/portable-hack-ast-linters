@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters;
 
-use namespace HH\Lib\Vec;
+use namespace HH\Lib\{Str, Vec};
 use namespace HTL\Pha;
 
 function no_empty_statements_linter(
@@ -100,13 +100,22 @@ function no_empty_statements_linter(
     |> Vec\filter($$, $expression_is_empty)
     |> Vec\map(
       $$,
-      $expr ==> LintError::create(
+      $expr ==> LintError::createWithPatches(
         $script,
         $pragma_map,
         $expr,
         $linter,
         'You are not using the result of this expression. '.
         'You can silence this warning by assigning it to `$_`.',
+        Pha\node_get_code_without_leading_or_trailing_trivia($script, $expr)
+          // a `;` is an empty statement, but `$_ = ;` is not a valid statement.
+          |> Str\trim($$) !== ''
+            ? Pha\patches($script, Pha\patch_node(
+              $expr,
+              '$_ = '.$$,
+              shape('trivia' => Pha\RetainTrivia::BOTH),
+            ))
+            : null,
       ),
     );
 }
