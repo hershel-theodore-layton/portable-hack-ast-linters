@@ -35,7 +35,7 @@ function unused_pipe_variable_linter(
     )
     |> Vec\map(
       $$,
-      $n ==> LintError::create(
+      $n ==> LintError::createWithoutPatches(
         $script,
         $pragma_map,
         $n,
