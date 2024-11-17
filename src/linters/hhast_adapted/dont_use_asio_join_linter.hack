@@ -30,7 +30,7 @@ function dont_use_asio_join_linter(
     )
     |> Vec\map(
       $$,
-      $n ==> LintError::create(
+      $n ==> LintError::createWithoutPatches(
         $script,
         $pragma_map,
         $n,
