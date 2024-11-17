@@ -105,7 +105,7 @@ function dont_await_in_a_loop_linter(
   )
     |> Vec\map(
       $$,
-      $await_token ==> LintError::create(
+      $await_token ==> LintError::createWithoutPatches(
         $script,
         $pragma_map,
         // Blame the whole expression, not just the token.
