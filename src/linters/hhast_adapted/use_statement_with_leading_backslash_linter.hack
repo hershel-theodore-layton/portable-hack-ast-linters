@@ -13,10 +13,9 @@ function use_statement_with_leading_backslash_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  $has_leading_backslash = $node ==> Pha\node_get_descendants($script, $node)
-    |> C\find($$, Pha\is_token<>) ?? Pha\NIL
-    |> Pha\token_get_text($script, Pha\as_token_or_nil($$)) === '\\';
+  $is_backslash = Pha\create_token_matcher($script, Pha\KIND_BACKSLASH);
 
+  $get_leading_backslash = $node ==> Support\get_first_token($script, $node);
   $get_prefix = Pha\create_member_accessor(
     $script,
     Pha\MEMBER_NAMESPACE_USE_NAME,
@@ -30,17 +29,26 @@ function use_statement_with_leading_backslash_linter(
     ),
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_NAMESPACE_USE_CLAUSE),
   )
-    |> Vec\map($$, $get_prefix)
-    |> Vec\filter($$, $has_leading_backslash)
+    |> Vec\map($$, $n ==> $get_prefix($n) |> $get_leading_backslash($$))
+    |> Vec\filter($$, $is_backslash)
     |> Vec\map(
       $$,
-      $n ==> LintError::create(
-        $script,
-        $pragma_map,
-        Pha\node_get_parent($script, $n),
-        $linter,
-        'The leading backslashes in use declarations do not have an effect. '.
-        'You may remove them.',
-      ),
+      $n ==> Pha\as_nonnil($n)
+        |> LintError::createWithPatches(
+          $script,
+          $pragma_map,
+          $$,
+          $linter,
+          'The leading backslashes in use declarations do not have an effect. '.
+          'You may remove them.',
+          Pha\patches(
+            $script,
+            Pha\patch_node(
+              $$,
+              '',
+              shape('trivia' => Pha\RetainTrivia::LEADING),
+            ),
+          ),
+        ),
     );
 }
