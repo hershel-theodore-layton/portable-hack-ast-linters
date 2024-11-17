@@ -26,7 +26,7 @@ function unreachable_code_linter(
     |> Vec\filter($$, $creates_unreachable_code)
     |> Vec\map(
       $$,
-      $n ==> LintError::create(
+      $n ==> LintError::createWithoutPatches(
         $script,
         $pragma_map,
         $n,
