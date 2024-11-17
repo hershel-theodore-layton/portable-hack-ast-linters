@@ -35,7 +35,7 @@ function use_statement_without_kind_linter(
     |> Vec\filter($$, $kind_is_missing)
     |> Vec\map(
       $$,
-      $n ==> LintError::create(
+      $n ==> LintError::createWithoutPatches(
         $script,
         $pragma_map,
         $n,
