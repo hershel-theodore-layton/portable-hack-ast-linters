@@ -68,14 +68,8 @@ async function lint_async(): Awaitable<void> {
     }
   }
 
-  if ($ok) {
-    await $stdout->writeAllAsync(Str\format(
-      "Memory peak usage: %g MiB\n",
-      \memory_get_peak_usage(true) / (1024 * 1024),
-    ));
-  }
-
   await $stdout->writeAllAsync($ok ? "No errors!\n" : "Get fixin'!\n");
+
   exit($ok ? 0 : 1);
 }
 
@@ -142,7 +136,7 @@ function get_linters()[]: vec<TLinter> {
       $script,
       $syntax_index,
       $pragma_map,
-      '// @closed-shape',
+      '/*_*/',
     );
 
   return $linters;
