@@ -10,5 +10,5 @@ type TUnusedVariableLinterUsage = shape(
   'scopes' => vec<Pha\Syntax>,
   'var' => Pha\Token,
   'var_name' => string,
-  // @closed-shape
+  /*_*/
 );

@@ -12,7 +12,7 @@ function extract_digest(
   'pragma' => Pha\Syntax,
   'embedded' => string,
   'hashed' => string,
-  // @closed-shape
+  /*_*/
 ) {
   list($pragma, $digest) = $pragma_map->getAllPragmas()
     |> C\find(
