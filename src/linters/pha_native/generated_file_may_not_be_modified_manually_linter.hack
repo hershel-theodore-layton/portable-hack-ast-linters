@@ -16,7 +16,7 @@ function generated_file_may_not_be_modified_manually_linter(
 
   return $digest is null || $digest['embedded'] === $digest['hashed']
     ? vec[]
-    : vec[LintError::create(
+    : vec[LintError::createWithoutPatches(
       $script,
       $pragma_map,
       Pha\SCRIPT_NODE,
