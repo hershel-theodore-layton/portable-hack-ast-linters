@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters;
 
-use namespace HH\Lib\{C, Vec};
+use namespace HH\Lib\Vec;
 use namespace HTL\Pha;
 
 function use_statement_with_leading_backslash_linter(
