@@ -77,7 +77,7 @@ function namespace_private_symbol_linter(
     )
     |> Vec\map(
       $$,
-      $n ==> LintError::create(
+      $n ==> LintError::createWithoutPatches(
         $script,
         $pragma_map,
         $n,

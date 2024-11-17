@@ -83,7 +83,7 @@ function namespace_private_use_clause_linter(
     })
     |> Vec\map(
       $$,
-      $v ==> LintError::create(
+      $v ==> LintError::createWithoutPatches(
         $script,
         $pragma_map,
         $v[0],
