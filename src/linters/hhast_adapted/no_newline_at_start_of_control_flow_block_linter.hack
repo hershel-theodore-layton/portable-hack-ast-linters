@@ -36,21 +36,23 @@ function no_newline_at_start_of_control_flow_block_linter(
       $$,
       $stmt ==> Pha\node_get_parent($script, $stmt) |> !$is_function_body($$),
     )
-    |> Vec\map($$, $get_first_statement_or_closing_curly)
-    |> Vec\filter(
-      $$,
-      $stmt ==> Support\get_first_token($script, $stmt)
-        |> Pha\node_get_first_child($script, $$)
-        |> $is_eol($$),
-    )
     |> Vec\map(
       $$,
-      $stmt ==> LintError::create(
+      $stmt ==> $get_first_statement_or_closing_curly($stmt)
+        |> Support\get_first_token($script, $$)
+        |> Pha\node_get_first_child($script, $$),
+    )
+    |> Vec\filter($$, $is_eol)
+    |> Vec\map($$, Pha\as_nonnil<>)
+    |> Vec\map(
+      $$,
+      $eol ==> LintError::createWithPatches(
         $script,
         $pragma_map,
-        Pha\as_nonnil($stmt),
+        Pha\as_nonnil($eol),
         $linter,
         'Control flow blocks may not start with an empty line.',
+        Pha\patches($script, Pha\patch_node($eol, '')),
       ),
     );
 }
