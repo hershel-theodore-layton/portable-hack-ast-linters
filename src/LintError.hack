@@ -52,6 +52,27 @@ final class LintError {
     );
   }
 
+  /**
+   * Identical to `::create()`, but indicates that the option to add patches
+   * was considered and not taken, instead of not being implemented (just yet).
+   */
+  public static function createWithoutPatches(
+    Pha\Script $script,
+    Pha\PragmaMap $pragma_map,
+    Pha\Node $blamed_node,
+    string $linter_name,
+    string $description,
+  )[]: this {
+    return static::createWithPatches(
+      $script,
+      $pragma_map,
+      $blamed_node,
+      $linter_name,
+      $description,
+      null,
+    );
+  }
+
   public function getBlamedNode()[]: Pha\Node {
     return $this->blamedNode;
   }
