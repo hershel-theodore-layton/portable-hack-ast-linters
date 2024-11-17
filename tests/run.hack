@@ -6,7 +6,7 @@ use namespace HTL\{Pha, PhaLinters};
 use function HH\fun_get_function;
 
 <<__EntryPoint>>
-async function run_async(): Awaitable<void> {
+async function run_async()[defaults]: Awaitable<void> {
   require_once __DIR__.'/../vendor/autoload.hack';
   \Facebook\AutoloadMap\initialize();
 

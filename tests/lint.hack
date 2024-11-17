@@ -30,7 +30,7 @@ type TLinter = (function(
 // This entrypoint can be run from a cli or a web-server.
 // For the best performance results, run this in a web-server in repo-auth mode.
 <<__EntryPoint>>
-async function lint_async(): Awaitable<void> {
+async function lint_async()[defaults]: Awaitable<void> {
   require_once __DIR__.'/../vendor/autoload.hack';
   \Facebook\AutoloadMap\initialize();
 
@@ -142,8 +142,11 @@ function get_linters()[]: vec<TLinter> {
   return $linters;
 }
 
-function get_files_async(
-): Awaitable<vec<shape('path' => string, 'contents' => string)>> {
+function get_files_async()[defaults]: Awaitable<vec<shape(
+  'path' => string,
+  'contents' => string,
+  /*_*/
+)>> {
   $base_dir = __DIR__.'/../src/';
   return Vec\concat(
     glob($base_dir.'*.hack'),
