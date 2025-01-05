@@ -17,6 +17,7 @@ async function run_async()[defaults]: Awaitable<void> {
     PhaLinters\camel_cased_methods_underscored_functions_linter<>,
     PhaLinters\concat_merge_or_union_expression_can_be_simplified_linter<>,
     PhaLinters\context_list_must_be_explicit_linter<>,
+    PhaLinters\context_list_must_be_explicit_on_io_functions_linter<>,
     PhaLinters\count_expression_can_be_simplified_linter<>,
     PhaLinters\dont_await_in_a_loop_linter<>,
     PhaLinters\dont_create_forwarding_lambdas_linter<>,
