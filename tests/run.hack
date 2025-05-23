@@ -1,14 +1,18 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters\Tests;
 
+use namespace HH;
 use namespace HH\Lib\{C, Dict, File, Math, OS, Regex, Str, Vec};
 use namespace HTL\{Pha, PhaLinters};
 use function HH\fun_get_function;
 
 <<__EntryPoint>>
 async function run_async()[defaults]: Awaitable<void> {
-  require_once __DIR__.'/../vendor/autoload.hack';
-  \Facebook\AutoloadMap\initialize();
+  $autoloader = __DIR__.'/../vendor/autoload.hack';
+  if (HH\could_include($autoloader)) {
+    require_once $autoloader;
+    HH\dynamic_fun('Facebook\AutoloadMap\initialize')();
+  }
 
   await pragma_test_async();
 
