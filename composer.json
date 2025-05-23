@@ -8,9 +8,7 @@
     "hershel-theodore-layton/portable-hack-ast-extras": "dev-master || <1",
     "hershel-theodore-layton/pragma": "<1"
   },
-  "require-dev": {
-    "hhvm/hhvm-autoload": "^3.2"
-  },
+  "require-dev": {},
   "scripts": {
     "post-install-cmd": [
       ".github/workflows/prepare-environment.sh"

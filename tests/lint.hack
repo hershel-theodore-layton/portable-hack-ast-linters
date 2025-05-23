@@ -11,6 +11,7 @@
 
 namespace HTL\PhaLinters\Tests;
 
+use namespace HH;
 use namespace HH\Lib\{File, IO, Str, Vec};
 use namespace HTL\{Pha, PhaLinters};
 use type HTL\Pragma\Pragmas;
@@ -31,8 +32,11 @@ type TLinter = (function(
 // For the best performance results, run this in a web-server in repo-auth mode.
 <<__EntryPoint>>
 async function lint_async()[defaults]: Awaitable<void> {
-  require_once __DIR__.'/../vendor/autoload.hack';
-  \Facebook\AutoloadMap\initialize();
+  $autoloader = __DIR__.'/../vendor/autoload.hack';
+  if (HH\could_include($autoloader)) {
+    require_once $autoloader;
+    HH\dynamic_fun('Facebook\AutoloadMap\initialize')();
+  }
 
   $linters = get_linters();
   $files = await get_files_async();

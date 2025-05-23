@@ -9,7 +9,6 @@
     "hershel-theodore-layton/pragma": "<1"
   },
   "require-dev": {
-    "hhvm/hhvm-autoload": "^3.2",
     "hershel-theodore-layton/portable-hack-ast-linters-server": "<1"
   },
   "scripts": {
