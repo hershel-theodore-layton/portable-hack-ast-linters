@@ -14,7 +14,7 @@ function get_previous_token(
   $family = Pha\as_nonnil($node)
     |> Pha\node_get_parent($script, $$)
     |> Pha\node_get_descendants($script, $$);
-  
+
   $previous_token = Pha\NIL_TOKEN;
   foreach ($family as $f) {
     if ($f === $node) {
