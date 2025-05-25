@@ -1,7 +1,6 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters\Support;
 
-use namespace HH\Lib\C;
 use namespace HTL\Pha;
 
 function get_previous_token(
