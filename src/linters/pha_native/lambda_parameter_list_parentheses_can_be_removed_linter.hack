@@ -15,6 +15,7 @@ function lambda_parameter_list_parentheses_can_be_removed_linter(
 
   $is_decorated_expression =
     Pha\create_syntax_matcher($script, Pha\KIND_DECORATED_EXPRESSION);
+  $is_dot_dot_dot = Pha\create_token_matcher($script, Pha\KIND_DOT_DOT_DOT);
 
   $get_colon = Pha\create_member_accessor($script, Pha\MEMBER_LAMBDA_COLON);
   $get_contexts =
@@ -63,6 +64,15 @@ function lambda_parameter_list_parentheses_can_be_removed_linter(
       }
 
       if ($get_parameter_name($param) |> $is_decorated_expression($$)) {
+        return false;
+      }
+
+      if (
+        $get_parameter_name($param)
+        |> Support\get_last_token($script, $$)
+        |> Support\get_previous_token($script, $$)
+        |> $is_dot_dot_dot($$)
+      ) {
         return false;
       }
 

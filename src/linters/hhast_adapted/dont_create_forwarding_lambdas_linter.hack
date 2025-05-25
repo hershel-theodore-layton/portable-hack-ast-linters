@@ -84,7 +84,8 @@ function dont_create_forwarding_lambdas_linter(
         |> Support\get_last_token($script, $$)
         |> Pha\token_get_text($script, $$),
       'call_conv' => $get_parameter_name($p)
-        |> Support\get_first_token($script, $$)
+        |> Support\get_last_token($script, $$)
+        |> Support\get_previous_token($script, $$)
         |> $is_dot_dot_dot($$)
           ? Support\CallingCovention::VARIADIC
           : (
@@ -118,7 +119,7 @@ function dont_create_forwarding_lambdas_linter(
     return Pha\NIL;
   };
 
-  $get_argument_list = $lambda ==> {
+  $get_lambda_argument_list = $lambda ==> {
     $body = $get_lambda_body($lambda);
 
     if (!Pha\is_syntax($body)) {
@@ -194,7 +195,7 @@ function dont_create_forwarding_lambdas_linter(
 
   return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_LAMBDA_EXPRESSION)
     |> Vec\filter($$, $lambda ==> {
-      $argument_list = $get_argument_list($lambda);
+      $argument_list = $get_lambda_argument_list($lambda);
 
       if ($argument_list === Pha\NIL) {
         return false;
