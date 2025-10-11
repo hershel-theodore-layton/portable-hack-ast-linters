@@ -36,6 +36,7 @@ jobs:
           skip_lint: true
           skip_tests: true
           lint_engine: pha
+          typecheck_engine: hh_server
       - name: Run tests
         shell: bash
         run: hhvm ${{ startsWith(matrix.hhvm, '4') && '-dhhvm.autoload.enabled=true -dhhvm.autoload.db.path=.var/facts.db' || '' }} tests/run.hack
