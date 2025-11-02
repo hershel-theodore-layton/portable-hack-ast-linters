@@ -156,23 +156,23 @@ function get_files_async()[defaults]: Awaitable<vec<shape(
 )>> {
   $base_dir = __DIR__.'/../src/';
   return Vec\concat(
-    glob($base_dir.'*.hack'),
-    glob($base_dir.'*/*.hack'),
-    glob($base_dir.'*/*/*.hack'),
-    glob($base_dir.'*/*/*/*.hack'),
-    glob($base_dir.'*/*/*/*/*.hack'),
-    glob($base_dir.'*/*/*/*/*/*.hack'),
-    glob($base_dir.'*/*/*/*/*/*/*.hack'),
-    glob($base_dir.'*/*/*/*/*/*/*/*.hack'),
+    glob($base_dir.'*.hack') as vec<_>,
+    glob($base_dir.'*/*.hack') as vec<_>,
+    glob($base_dir.'*/*/*.hack') as vec<_>,
+    glob($base_dir.'*/*/*/*.hack') as vec<_>,
+    glob($base_dir.'*/*/*/*/*.hack') as vec<_>,
+    glob($base_dir.'*/*/*/*/*/*.hack') as vec<_>,
+    glob($base_dir.'*/*/*/*/*/*/*.hack') as vec<_>,
+    glob($base_dir.'*/*/*/*/*/*/*/*.hack') as vec<_>,
   )
     |> Vec\map_async(
       $$,
       async $path ==> {
-        $file = File\open_read_only($path);
+        $file = File\open_read_only($path as string);
         using $file->closeWhenDisposed();
         using $file->tryLockx(File\LockType::SHARED);
         return shape(
-          'path' => realpath($path),
+          'path' => realpath($path) as string,
           'contents' => await $file->readAllAsync(),
         );
       },

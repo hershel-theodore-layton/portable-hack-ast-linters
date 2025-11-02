@@ -102,11 +102,12 @@ async function run_async()[defaults]: Awaitable<void> {
 
   $test_groups = await Vec\map_async(
     Vec\concat(
-      \glob(__DIR__.'/examples/*.hack'),
-      \glob(__DIR__.'/examples/*.hack.invalid'),
+      \glob(__DIR__.'/examples/*.hack') as vec<_>,
+      \glob(__DIR__.'/examples/*.hack.invalid') as vec<_>,
     ),
     async $p ==> {
-      $name = Regex\first_match($p, re'#/(\w+)\.hack#') |> $$[1] ?? 'ERROR';
+      $name =
+        Regex\first_match($p as string, re'#/(\w+)\.hack#') |> $$[1] ?? 'ERROR';
       $linter = idx($linters, $name);
 
       if ($linter is null) {
@@ -239,7 +240,7 @@ async function run_async()[defaults]: Awaitable<void> {
 
   echo Str\format(
     "Running these tests took: %g MB of RAM\n",
-    \memory_get_peak_usage(true) / 1000000.,
+    \memory_get_peak_usage(true) as num / 1000000.,
   );
 
   exit(C\is_empty($errors) ? 0 : 1);

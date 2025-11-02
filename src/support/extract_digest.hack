@@ -37,7 +37,7 @@ function extract_digest(
 
   return Pha\node_get_code($script, Pha\SCRIPT_NODE)
     |> Str\replace($$, $digest, '')
-    |> sha1($$)
+    |> sha1($$) as string
     |> Str\slice($$, 0, 20)
     |> shape('pragma' => $pragma, 'embedded' => $digest, 'hashed' => $$);
 }

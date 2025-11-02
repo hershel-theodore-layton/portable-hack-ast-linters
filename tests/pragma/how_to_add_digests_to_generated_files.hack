@@ -14,7 +14,7 @@ use type HTL\Pragma\Pragmas;
 function how_to_add_digests_to_generated_files()[defaults]: void {
   $source = \file_get_contents(__FILE__);
   $ctx = Pha\create_context();
-  list($script, $ctx) = Pha\parse($source, $ctx);
+  list($script, $ctx) = Pha\parse($source as string, $ctx);
   $syntax_index = Pha\create_syntax_kind_index($script);
   $pragma_map = Pha\create_pragma_map($script, $syntax_index);
   $signed = PhaLinters\Support\insert_digest($script, $pragma_map);
