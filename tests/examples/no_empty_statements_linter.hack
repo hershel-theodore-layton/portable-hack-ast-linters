@@ -4,7 +4,7 @@ namespace Linters\Tests\NoEmptyStatementsLinter;
 ;
 
 //##! 15
-function func1(): void {
+function func1(?int $maybe_null): void {
   0 & 0;
   0 | 0;
   0 ^ 0;
@@ -16,7 +16,7 @@ function func1(): void {
   0 - 0;
   0 % 0;
   0 + 0;
-  0 ?? 0;
+  $maybe_null ?? 0;
   0 / 0;
   0 * 0;
   0 ** 0;
