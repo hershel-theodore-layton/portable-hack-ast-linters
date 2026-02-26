@@ -5,6 +5,7 @@ use namespace HTL\Pha;
 
 type TUnusedVariableLinterAfterShadowing = shape(
   'is_assignment' => bool,
+  'disposable_assignment' => ?Pha\Syntax,
   'owners' => vec<Pha\Syntax>,
   'var' => Pha\Token,
   'var_name' => string,

@@ -102,3 +102,48 @@ function func8(int $unused, inout int $used): void {
   --$used;
   $used++;
 }
+
+//##! 8 Special autofix, when dealing with unused `using` disposables, it is
+//      preferred to delete the variable, instead of using an underscore.
+
+final class DisposeMe implements \IDisposable {
+  public function __construct(mixed $_ = null) {}
+  public function __dispose(): void {}
+}
+final class DisposeMeAsync implements \IAsyncDisposable {
+  public async function __disposeAsync()[]: Awaitable<void> {}
+}
+
+function func9(): void {
+  using $dispose_me_1 = new DisposeMe();
+  using ($dispose_me_2 = new DisposeMe()) {
+  }
+  using ($dispose_me_3 = new DisposeMe(), $disposeme_4 = new DisposeMe()) {
+  }
+  using (new DisposeMe()) {
+  }
+}
+
+async function func10_async(): Awaitable<void> {
+  await using /*a*/ $dispose_me_5/*b*/ = /*c*/ new DisposeMeAsync();
+  await using ($dispose_me_6 = new DisposeMeAsync()) {
+  }
+  await using (
+    /*d*/$dispose_me_7 /*e*/ = /*f*/ new DisposeMeAsync(),
+    /*g*/$dispose_me_8 /*h*/ = /*i*/ new DisposeMeAsync()
+  ) {
+  }
+}
+
+//##! 2 Variables that are not in the dispose positions should still be
+//      given an underscore, instead of being deleted.
+
+function func11(): void {
+  using (
+    new DisposeMe(() ==> {
+      $unused = 0;
+    })
+  ) {
+    $unused = 0;
+  }
+}

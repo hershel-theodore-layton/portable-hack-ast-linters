@@ -5,6 +5,7 @@ use namespace HTL\Pha;
 
 type TUnusedVariableLinterUsage = shape(
   'is_assignment' => bool,
+  'disposable_assignment' => ?Pha\Syntax,
   'param_of_func' => Pha\NillableSyntax,
   'param_of_lambda' => Pha\NillableSyntax,
   'scopes' => vec<Pha\Syntax>,

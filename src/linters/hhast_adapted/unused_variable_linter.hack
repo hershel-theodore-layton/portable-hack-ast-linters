@@ -35,6 +35,7 @@ function unused_variable_linter(
   $is_member_selection_expression =
     $build_matcher(Pha\KIND_MEMBER_SELECTION_EXPRESSION);
   $is_methodish_declaration = $build_matcher(Pha\KIND_METHODISH_DECLARATION);
+  $is_node_list = $build_matcher(Pha\KIND_NODE_LIST);
   $is_parameter_declaration = $build_matcher(Pha\KIND_PARAMETER_DECLARATION);
   $is_plus_plus_or_minus_minus =
     Pha\create_token_matcher($script, Pha\KIND_PLUS_PLUS, Pha\KIND_MINUS_MINUS);
@@ -47,9 +48,18 @@ function unused_variable_linter(
     Pha\KIND_PREFIX_UNARY_EXPRESSION,
     Pha\KIND_POSTFIX_UNARY_EXPRESSION,
   );
+  $is_using_statement = $build_matcher(
+    Pha\KIND_USING_STATEMENT_BLOCK_SCOPED,
+    Pha\KIND_USING_STATEMENT_FUNCTION_SCOPED,
+  );
 
+  $get_binop_lhs =
+    Pha\create_member_accessor($script, Pha\MEMBER_BINARY_LEFT_OPERAND)
+    |> Pha\returns_syntax($$);
   $get_binop_operator =
     Pha\create_member_accessor($script, Pha\MEMBER_BINARY_OPERATOR);
+  $get_binop_rhs =
+    Pha\create_member_accessor($script, Pha\MEMBER_BINARY_RIGHT_OPERAND);
   $get_class_keyword =
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_KEYWORD);
   $get_foreach_key =
@@ -76,6 +86,14 @@ function unused_variable_linter(
     Pha\MEMBER_PREFIX_UNARY_OPERATOR,
     Pha\MEMBER_POSTFIX_UNARY_OPERATOR,
   );
+  $get_using_expressions = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_USING_BLOCK_EXPRESSIONS,
+    Pha\MEMBER_USING_FUNCTION_EXPRESSION,
+  )
+    |> Pha\returns_syntax($$);
+  $get_variable_token =
+    Pha\create_member_accessor($script, Pha\MEMBER_VARIABLE_EXPRESSION);
 
   $is_assignment_expression = $node ==> $is_binary_expression($node) &&
     $is_assignment_operator($get_binop_operator($node));
@@ -114,6 +132,7 @@ function unused_variable_linter(
   $classify_use = ($variable): ?Support\TUnusedVariableLinterUsage ==> {
     $ret = shape(
       'is_assignment' => false,
+      'disposable_assignment' => null,
       'param_of_func' => Pha\NIL,
       'param_of_lambda' => Pha\NIL,
       'scopes' => vec[],
@@ -151,6 +170,17 @@ function unused_variable_linter(
     foreach (Pha\node_get_syntax_ancestors($script, $variable) as $node) {
       if ($assigns_to_var_local($node)) {
         $ret['is_assignment'] = true;
+      } else if ($is_using_statement($node)) {
+        $ret['disposable_assignment'] ??= $get_using_expressions($node)
+          |> $is_node_list($$)
+            ? Pha\list_get_items_of_children($script, $$)
+            : vec[$$]
+          |> Vec\filter($$, $is_binary_expression)
+          |> Vec\map($$, Pha\as_syntax<>)
+          |> C\find(
+            $$,
+            $x ==> $get_binop_lhs($x) |> $get_variable_token($$) === $variable,
+          );
       } else if ($is_decl_header($node)) {
         // Very uncommon, let's ignore it. Nasty oversight
         // `function foo((function(int): int) $lambda = $a ==> $a)`.
@@ -206,6 +236,7 @@ function unused_variable_linter(
         'is_assignment' => $u['is_assignment'] ||
           $u['param_of_func'] !== Pha\NIL ||
           $u['param_of_lambda'] !== Pha\NIL,
+        'disposable_assignment' => $u['disposable_assignment'],
         'owners' => C\find(
           $lambda_params,
           $l ==> $l['var_name'] === $u['var_name'] &&
@@ -273,14 +304,26 @@ function unused_variable_linter(
         $pragma_map,
         Pha\token_get_parent($script, $a['var']),
         $linter,
-        'This variable is unused.',
-        Pha\patches($script, Pha\patch_node(
-          $a['var'],
-          Pha\token_get_text($script, $a['var'])
-            |> Str\strip_prefix($$, '$')
-            |> '$_'.$$,
-          shape('trivia' => Pha\RetainTrivia::BOTH),
-        )),
+        'This variable is unused.'.
+        (
+          $a['disposable_assignment'] is nonnull
+            ? ' Did you know that naming your `using` variables is optional?'
+            : ''
+        ),
+        $a['disposable_assignment']
+          |> $$ is nonnull
+            ? Pha\patches($script, Pha\patch_node(
+              $$,
+              Pha\node_get_code($script, $get_binop_rhs($$)),
+              shape('trivia' => Pha\RetainTrivia::LEADING),
+            ))
+            : Pha\patches($script, Pha\patch_node(
+              $a['var'],
+              Pha\token_get_text($script, $a['var'])
+                |> Str\strip_prefix($$, '$')
+                |> '$_'.$$,
+              shape('trivia' => Pha\RetainTrivia::BOTH),
+            )),
       ),
     );
 }
