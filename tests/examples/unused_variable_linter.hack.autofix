@@ -131,7 +131,6 @@ async function func10_async(): Awaitable<void> {
   await using (
     /*d*/new DisposeMeAsync(),
     /*g*/new DisposeMeAsync()
-
   ) {
   }
 }
