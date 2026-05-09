@@ -23,6 +23,7 @@ async function run_async()[defaults]: Awaitable<void> {
     PhaLinters\context_list_must_be_explicit_linter<>,
     PhaLinters\context_list_must_be_explicit_on_io_functions_linter<>,
     PhaLinters\count_expression_can_be_simplified_linter<>,
+    PhaLinters\dict_literal_keys_must_be_unique_linter<>,
     PhaLinters\dont_await_in_a_loop_linter<>,
     PhaLinters\dont_create_forwarding_lambdas_linter<>,
     PhaLinters\dont_discard_new_expressions_linter<>,
