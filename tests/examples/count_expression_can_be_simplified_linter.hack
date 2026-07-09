@@ -1,10 +1,11 @@
-//##! 17 All errors
+//##! 16 All errors
 namespace Linters\Tests\CountExpressionCanBeSimplified;
 
 use namespace HH\Lib\C;
 
 function func1(): void {
-  $_ = !C\count(vec[]);
+  // an error on hhvm 26.06.05, negation of an int is not allowed
+  // $_ = !C\count(vec[]);
 
   $_ = C\count(vec[]) === 0;
   $_ = C\count(vec[]) !== 0;
