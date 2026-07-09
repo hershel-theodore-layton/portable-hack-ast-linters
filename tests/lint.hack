@@ -35,7 +35,7 @@ async function lint_async()[defaults]: Awaitable<void> {
   $autoloader = __DIR__.'/../vendor/autoload.hack';
   if (HH\could_include($autoloader)) {
     require_once $autoloader;
-    HH\dynamic_fun('Facebook\AutoloadMap\initialize')();
+    new \ReflectionFunction('Facebook\AutoloadMap\initialize') |> $$->invoke();
   }
 
   $linters = get_linters();
