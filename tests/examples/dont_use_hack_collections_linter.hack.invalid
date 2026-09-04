@@ -1,0 +1,140 @@
+//##! 7 Auto-imported collection types in a namespace
+namespace Linters\Tests\DontUseHackCollections;
+
+type AllCollections = (
+  Vector<int>,
+  ImmVector<int>,
+  Map<string, int>,
+  ImmMap<string, int>,
+  Set<int>,
+  ImmSet<int>,
+  Pair<int, string>,
+);
+
+//##! 7 Fully qualified collection types
+type QualifiedCollections = (
+  \HH\Vector<int>,
+  \HH\ImmVector<int>,
+  \HH\Map<string, int>,
+  \HH\ImmMap<string, int>,
+  \HH\Set<int>,
+  \HH\ImmSet<int>,
+  \HH\Pair<int, string>,
+);
+
+//##! 7 Collection literals in a namespace
+namespace Linters\Tests\DontUseHackCollections;
+function literals(): void {
+  $_ = Vector {1};
+  $_ = ImmVector {1};
+  $_ = Map {'a' => 1};
+  $_ = ImmMap {'a' => 1};
+  $_ = Set {1};
+  $_ = ImmSet {1};
+  $_ = Pair {1, 'a'};
+}
+
+//##! 5 Construction, static calls, class names, and nested generics
+function references(): void {
+  $_ = new Vector<int>();
+  $_ = Map::fromItems(vec[]);
+  $_ = Pair::class;
+  $_ = new Vector<Map<string, int>>();
+}
+
+//##! 2 References through aliased imports
+namespace Linters\Tests\DontUseHackCollections;
+use type HH\Vector as LegacyVector;
+use type HH\Pair as LegacyPair;
+type AliasedCollections = (LegacyVector<int>, LegacyPair<int, string>);
+
+//##! 2 References through group imports
+namespace Linters\Tests\DontUseHackCollections;
+use type HH\{Map as LegacyMap, ImmSet as LegacySet};
+type GroupedCollections = (LegacyMap<string, int>, LegacySet<int>);
+
+//##! 2 Namespace aliases
+namespace Linters\Tests\DontUseHackCollections;
+use namespace HH as Runtime;
+type NamespaceCollections = (Runtime\Vector<int>, Runtime\Pair<int, int>);
+
+//##! 15 Collection interfaces from collections/interfaces.hhi
+type CollectionInterfaces = (
+  \ConstCollection<int>,
+  \OutputCollection<int>,
+  \HH\Collection<int>,
+  \ConstSetAccess<int>,
+  \SetAccess<int>,
+  \ConstIndexAccess<int, string>,
+  \IndexAccess<int, string>,
+  \ConstMapAccess<int, string>,
+  \MapAccess<int, string>,
+  \ConstVector<int>,
+  \MutableVector<int>,
+  \ConstMap<int, string>,
+  \MutableMap<int, string>,
+  \ConstSet<int>,
+  \MutableSet<int>,
+);
+
+//##! 4 Collection iterators
+type CollectionIterators = (
+  \VectorIterator<int>,
+  \MapIterator<string, int>,
+  \SetIterator<int>,
+  \PairIterator,
+);
+
+//##! 3 Type tests, assertions, and nullable types
+function assertions(mixed $value): ?Vector<int> {
+  $_ = $value is Pair<_, _>;
+  return $value as ?Vector<int>;
+}
+
+//##! 0 Hack arrays and general container interfaces
+type AllowedContainers = (
+  vec<int>,
+  dict<string, int>,
+  keyset<int>,
+  Container<int>,
+  KeyedContainer<string, int>,
+  Traversable<int>,
+  KeyedTraversable<string, int>,
+);
+function arrays(): void {
+  $_ = vec[1];
+  $_ = dict['a' => 1];
+  $_ = keyset[1];
+  $_ = tuple(1, 'a');
+}
+
+//##! 0 Unrelated types with collection names
+namespace Linters\Tests\DontUseHackCollections;
+use type Example\Vector;
+use namespace Example as Other;
+type UnrelatedCollections = (Vector<int>, Other\Pair<int, string>);
+
+//##! 0 Members, functions, constants, and strings are not type references
+function Vector(): void {}
+function unrelated_members(dynamic $value): void {
+  Vector();
+  $value->Vector();
+  $_ = $value->Pair;
+  $_ = OtherType::Vector;
+  $_ = 'HH\\Vector';
+}
+
+//##! 0 Imports of functions, constants, and namespaces are not type references
+use function Example\Vector;
+use const Example\Pair;
+use namespace Example\Map;
+
+//##! 2 Global spellings
+type GlobalCollections = (\Vector<int>, \Pair<int, string>);
+
+//##! 0 Collection imports alone are allowed
+namespace Linters\Tests\DontUseHackCollections;
+use type HH\Vector;
+use type HH\Pair as LegacyPair;
+use type HH\{Map as LegacyMap, ImmSet};
+use type ConstCollection;
