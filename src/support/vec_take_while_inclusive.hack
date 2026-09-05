@@ -3,7 +3,7 @@ namespace HTL\PhaLinters\Support;
 
 /**
  * Returns a new vec with all elements up until and including the first element
- * for which the does not predicate hold.
+ * for which the predicate does not hold.
  * If the predicate holds for all elements, all elements are returned.
  *
  * ```

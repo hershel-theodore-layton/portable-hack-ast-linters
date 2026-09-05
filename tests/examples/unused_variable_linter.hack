@@ -75,7 +75,7 @@ function func5(): void {
 function func6(): void {
   $a = vec[];
   $b = 1;
-  // This test is a little contrived, this proves $b is not unused.
+  // This test is a little contrived; it proves $b is not unused.
   list($a[$b]) = $a;
 }
 
@@ -88,7 +88,7 @@ function func7(inout vec<int> $items, inout vec<int> $unused): void {
   };
 }
 
-//##! 5 Pre and post increment are not expressions in hhvm 4.38 and above
+//##! 5 Pre- and post-increment are not expressions in HHVM 4.38 and above
 //      For this reason, we can treat them as assignments (not as a use).
 
 function func8(int $unused, inout int $used): void {

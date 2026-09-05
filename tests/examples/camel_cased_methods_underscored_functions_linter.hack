@@ -6,12 +6,12 @@ final class X1 {
   public function funcName(): void {}
 }
 
-//##! 1 snake cased method
+//##! 1 snake-cased method
 final class X2 {
   public function func_name(): void {}
 }
 
-//##! 1 camel cased function
+//##! 1 camel-cased function
 function funcName(): void {}
 
 //##! 0 factory functions
@@ -28,7 +28,7 @@ function GenericFactory(): GenericFactory<int> {
   return new GenericFactory();
 }
 
-//##! 0 special cased suffixes
+//##! 0 special-cased suffixes
 
 final class X3 {
   public function __construct()[] {}

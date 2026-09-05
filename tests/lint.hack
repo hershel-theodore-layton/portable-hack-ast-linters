@@ -88,7 +88,7 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\concat_merge_or_union_expression_can_be_simplified_linter<>,
     PhaLinters\context_list_must_be_explicit_linter<>,
     /*
-    context_list_must_be_explicit_on_io_functions_linter superceded by the above
+    context_list_must_be_explicit_on_io_functions_linter superseded by the above
     */
     PhaLinters\count_expression_can_be_simplified_linter<>,
     PhaLinters\dict_literal_keys_must_be_unique_linter<>,

@@ -71,10 +71,10 @@ function getter_method_could_have_a_context_list_linter(
         |> Pha\node_get_code_compressed($script, $$)
         // This is a rather crude heuristic.
         // It matches `$this->it`, `$this->it as Type`, and `$this->it is Type`.
-        // The idea is to have little false positives.
+        // The idea is to have few false positives.
         // A false negative, such as `$this->it < 6` is fine.
-        // This could be a getter, but maybe this is simple
-        // as an implementation detail, who knows?
+        // This could be a getter, but maybe this is simply
+        // an implementation detail, who knows?
         |> Regex\matches($$, re'/^\$this->(\w)+$/');
     })
     |> Vec\map(

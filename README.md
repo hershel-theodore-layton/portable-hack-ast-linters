@@ -19,7 +19,7 @@ _This choice of license does not change the license for the rest of this project
 
 ## Which linters are included?
 
-For the full list, see [bundled linters](./BUNDLED_LINTERS.md), almost all linters from HHAST are included, and some never before seen linters, only available in portable-hack-ast-linters.
+For the full list, see [bundled linters](./BUNDLED_LINTERS.md). Almost all linters from HHAST are included, along with some never-before-seen linters available only in portable-hack-ast-linters.
 
 ### Missing linters from HHAST
 
@@ -27,33 +27,33 @@ Some linters from HHAST are not included in this library.
 
 - [HHClientLinter.hack](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/HHClientLinter.hack)
   - This linter does not use the HHAST framework. It is a wrapper around the
-    `hh_client --lint` cli. The lints that `hh_client` suggest are very high
-    quality and can/do utilize type information. The HHAST implementation has
+    `hh_client --lint` CLI. The lints that `hh_client` suggests are very high
+    quality and can and do utilize type information. The HHAST implementation has
     [serious performance problems](https://github.com/hhvm/hhast/issues/432).
     A separate tool could be developed, since it doesn't need anything from
     HHAST (or Pha for that matter).
 - [DataProviderTypesLinter.hack](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/DataProviderTypesLinter.hack)
-  - This linter was a well intentioned attempt at making `<<DataProvider(...)>>`
-    annotations typesafe. By its nature, it is a crude heuristic based
+  - This linter was a well-intentioned attempt at making `<<DataProvider(...)>>`
+    annotations type-safe. By its nature, it is a crude heuristic-based
     approximation of a typechecker. It suggests you do things that are actively
-    harmful like abusing the `nothing` type. The "real" solution is to the
-    change the `<<DataProvider>>` mechanism to complement the Hack language.
+    harmful like abusing the `nothing` type. `test-chain` is type-safe without
+    a linter that tries to act like `hh_client`.
 - [MustUseOverrideAttributeLinter.hack](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/MustUseOverrideAttributeLinter.hack)
   - The output of this linter depends not just on the arguments, but on global information.
     A change in a parent class will require a file to be linted again.
-    Caching lint results in a cross request manner would require extensive dependency tracking.
-    `hh_client --lint` does the job of this linter better and doesn't depend on the `\ReflectionClass` api.
+    Caching lint results in a cross-request manner would require extensive dependency tracking.
+    `hh_client --lint` does the job of this linter better and doesn't depend on the `\ReflectionClass` API.
 - [StrictModeOnlyLinter.hack](https://github.com/hhvm/hhast/blob/v4.168.3/src/Linters/StrictModeOnlyLinter.hack)
   - This linter was needed in the early days of Hack.
     Files used to have the `.php` or `.hh` extension and the mode was determined by a comment.
     `<?hh` would "kick your `.php` file into Hack partial mode".
     You'd explicitly enable "strict mode" by using `<?hh // strict`.
-    Since the release of [hhvm version 4.0](https://hhvm.com/blog/2019/02/11/hhvm-4.0.0.html) you can use `.hack` files.
+    Since the release of [HHVM version 4.0](https://hhvm.com/blog/2019/02/11/hhvm-4.0.0.html) you can use `.hack` files.
 
 ## Fixme directives
 
 Lint errors can't (and shouldn't) always be fixed. Sometimes an await-in-a-loop
-isn't a sign of a false dependency for example in [sgml-stream's ConcurrentReusableRenderer](https://github.com/hershel-theodore-layton/sgml-stream/blob/65da582da8e5a7c363d9017158f68733f2a417e2/src/rendering/ConcurrentReusableRenderer.hack):
+isn't a sign of a false dependency, for example in [sgml-stream's ConcurrentReusableRenderer](https://github.com/hershel-theodore-layton/sgml-stream/blob/65da582da8e5a7c363d9017158f68733f2a417e2/src/rendering/ConcurrentReusableRenderer.hack):
 
 ```HACK
 async function consider_the_following_code_async(): void {
@@ -82,10 +82,10 @@ The `$snippet->feedBytesToConsumerAsync(...)` method awaits an Awaitable that
 was already started in `->primeAsync(...)`. Internally, it also awaits on
 `$consumer->consumeAsync(...)` which must be called sequentially.
 This await-in-a-loop is required for the code to work correctly.
-To inform hhast, a `HHAST_IGNORE_ERROR[DontAwaitInALoop]` comment was added.
+To inform HHAST, a `HHAST_IGNORE_ERROR[DontAwaitInALoop]` comment was added.
 
 This comment-to-suppress-a-lint-error mechanism has always bothered me a little.
-I subscribe wholehartedly to the following quote from the [CppCoreGuidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines):
+I subscribe wholeheartedly to the following quote from the [CppCoreGuidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines):
 
 ```
 Compilers don’t read comments ...

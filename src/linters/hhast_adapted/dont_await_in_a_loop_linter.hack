@@ -14,7 +14,7 @@ function dont_await_in_a_loop_linter(
   $linter = __FUNCTION__;
 
   // Only includes possible direct statement parents of the await expression.
-  // Those marked with `// (...)` indicate that the await must be a expression
+  // Those marked with `// (...)` indicate that the await must be an expression
   // inside of the parens, not the body, since these structures usually have
   // a statement list `{}` as their body. If you do something like:
   // `if (...) await x;` this fails to hold.
@@ -95,8 +95,8 @@ function dont_await_in_a_loop_linter(
       $statement = Pha\node_get_ancestors($script, $await)
         |> C\findx($$, $is_statement);
 
-      // Allow an await in a loop if the this block ends with a
-      // return or throw statement, since no effective parrallism is lost.
+      // Allow an await in a loop if this block ends with a
+      // return or throw statement, since no effective parallelism is lost.
       return Pha\node_get_parent($script, $statement)
         |> Pha\node_get_children($script, $$)
         |> Vec\slice($$, C\find_key($$, $n ==> $n === $statement) as nonnull)

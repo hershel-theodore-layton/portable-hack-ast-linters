@@ -4,7 +4,7 @@ namespace Linters\Tests\CountExpressionCanBeSimplified;
 use namespace HH\Lib\C;
 
 function func1(): void {
-  // an error on hhvm 26.06.05, negation of an int is not allowed
+  // an error on HHVM 26.06.05, negation of an int is not allowed
   // $_ = !C\count(vec[]);
 
   $_ = C\count(vec[]) === 0;

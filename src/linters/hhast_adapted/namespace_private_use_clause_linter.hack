@@ -28,7 +28,7 @@ function namespace_private_use_clause_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
-  // If you have multiple namespaces per file, "why else use namespace blocks?",
+  // If you have multiple namespaces per file, "why else would you use namespace blocks?",
   // this linter will ignore this file. I won't object to a PR that adds this support.
   if (
     C\any(Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_NAMESPACE_BODY))

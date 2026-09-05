@@ -15,15 +15,15 @@ function prefer_single_quoted_string_literals_linter(
 
   // hackfmt-ignore
   $escape_sequences = vec[
-    '\\e', // ansi escape
+    '\\e', // ANSI escape
     '\\f', // form feed
     '\\t', // horizontal tab
     '\\r', // carriage return
     '\\n', // newline
-    '\\u', // unicode codepoint
+    '\\u', // Unicode code point
     '\\v', // vertical tab
     '\\x', // hex
-    "'", // single quote,
+    "'", // single quote
     '\$', // anti-variable interpolation
     '\\0', '\\1', '\\2', '\\3', '\\4', '\\5', '\\6', '\\7' // octal
   ];

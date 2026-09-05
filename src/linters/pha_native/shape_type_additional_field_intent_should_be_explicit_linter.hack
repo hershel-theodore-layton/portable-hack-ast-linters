@@ -51,9 +51,9 @@ function shape_type_additional_field_intent_should_be_explicit_linter(
         $pragma_map,
         $shape,
         $linter,
-        'The intent of whether this shape accepts additional fields is not expliticly expressed. '.
+        'The intent of whether this shape accepts additional fields is not explicitly expressed. '.
         'If you intended to accept these fields, and any number of unspecified fields, '.
-        'add `, ...` after the last field. If you can not want to accept additional fields, add '.
+        'add `, ...` after the last field. If you do not want to accept additional fields, add '.
         $closed_shape_marker.
         ' before the closing parenthesis.',
         Pha\patches(

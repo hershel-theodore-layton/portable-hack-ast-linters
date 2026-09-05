@@ -18,7 +18,7 @@ final class C1 {
   }
 }
 
-//##! 0 Adding explicit contexts (not just `[]`) supresses the lint error
+//##! 0 Adding explicit contexts (not just `[]`) suppresses the lint error
 
 final class C2 {
   private int $it = 42;

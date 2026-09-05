@@ -12,10 +12,10 @@ function func2_async(): Awaitable<void> {
 
 async function func3_asyncx(): Awaitable<void> {}
 
-//##! 1 missing _async suffix
+//##! 1 missing `_async` suffix
 async function func2(): Awaitable<void> {}
 
-//##! 1 missing _async suffix
+//##! 1 missing `_async` suffix
 function func3(): Awaitable<void> {
   return async {
   };
@@ -34,12 +34,12 @@ final class X3 {
   public async function funcAsyncx(): Awaitable<void> {}
 }
 
-//##! 1 missing Async suffix
+//##! 1 missing `Async` suffix
 final class X4 {
   public async function func(): Awaitable<void> {}
 }
 
-//##! 1 missing Async suffix
+//##! 1 missing `Async` suffix
 final class X5 {
   public function func(): Awaitable<void> {
     return async {

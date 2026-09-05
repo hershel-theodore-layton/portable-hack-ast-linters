@@ -21,7 +21,7 @@ function no_elseif_linter(
       $f,
       $linter,
       'Use else if instead of elseif. '.
-      'This syntax will be removed in a future version of hhvm.',
+      'This syntax will be removed in a future version of HHVM.',
       Pha\patches($script, Pha\patch_node(
         $f,
         'else if',

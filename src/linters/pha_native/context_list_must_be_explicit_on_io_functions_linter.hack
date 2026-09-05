@@ -50,7 +50,7 @@ function context_list_must_be_explicit_on_io_functions_linter(
         $linter,
         'This function performs I/O (it contains await), '.
         'so this is likely a good candidate for `[defaults]`.'.
-        'If this lint is wrong, add the proper context list.',
+        ' If this lint is wrong, add the proper context list.',
         Pha\patches(
           $script,
           Pha\patch_node(

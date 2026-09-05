@@ -98,7 +98,7 @@ async function run_async()[defaults]: Awaitable<void> {
   // This is a Hack error, so reporting a lint error is not needed.
   // The version number (Mmmmpp) Major, minor, patch is the first version
   // where a 0 (rather than the stored error count) is expected.
-  $tests_that_should_have_zero_errrors_on_hhvm_version = dict[
+  $tests_that_should_have_zero_errors_on_hhvm_version = dict[
     'no_elseif_linter' => 415800,
   ];
 
@@ -179,7 +179,7 @@ async function run_async()[defaults]: Awaitable<void> {
           $err_cnt = Str\to_int($expected['err_cnt']) as nonnull;
           $should_be_a_noop = \HHVM_VERSION_ID >=
             idx(
-              $tests_that_should_have_zero_errrors_on_hhvm_version,
+              $tests_that_should_have_zero_errors_on_hhvm_version,
               $linter_name,
               Math\INT64_MAX,
             );

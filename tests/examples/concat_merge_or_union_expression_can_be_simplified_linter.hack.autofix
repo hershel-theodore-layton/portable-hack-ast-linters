@@ -9,7 +9,7 @@ function func1(): void {
   vec(vec[]);
 }
 
-//##! 1 Multi arg calls are okay.
+//##! 1 Multi-arg calls are okay.
 use function HH\Lib\Dict\merge;
 use function HH\Lib\Keyset\union;
 use function HH\Lib\Vec\concat;

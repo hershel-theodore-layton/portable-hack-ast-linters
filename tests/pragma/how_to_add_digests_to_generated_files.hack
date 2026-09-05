@@ -6,7 +6,7 @@ use type HTL\Pragma\Pragmas;
  * This function demonstrates how you can add digests to generated sources.
  * This file adds a digest to itself when executed.
  * In your codegen logic, you would use the `$source` you just codegenned,
- * instead of contents of `__FILE__`.
+ * instead of the contents of `__FILE__`.
  */
 <<file: Pragmas(vec['PhaLinters', 'digest:'])>>
 

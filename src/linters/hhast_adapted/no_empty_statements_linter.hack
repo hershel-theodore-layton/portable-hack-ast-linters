@@ -58,9 +58,9 @@ function no_empty_statements_linter(
     // The `|>` operator has no side-effect, but this common idiom needs to be ok.
     // `some_cumbersome_expr |> side_effecty_function($$);`
     // This is preferred when this results in easier to read code.
-    // Is is not always possible to use a discard statement `$_ = ...`,
+    // It is not always possible to use a discard statement `$_ = ...`,
     // since the type of this expression may be void.
-    // Assigned void to `$_` is not allowed.
+    // Assigning void to `$_` is not allowed.
     Pha\KIND_BAR_GREATER_THAN,
   );
 

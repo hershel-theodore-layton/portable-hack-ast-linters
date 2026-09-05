@@ -45,7 +45,7 @@ function func3(): void {
 //##! 0 Special rules for parent and self, since it is not always valid to
 //      form a function reference to them. parent::m1<> is never allowed,
 //      whereas self::m1<> is only allowed in final classes.
-//      The lint doesn't bother checking for finality, so both lint clean.
+//      The lint doesn't bother checking for finality, so both are lint-clean.
 
 abstract class X {
   public static function m1(): void {}

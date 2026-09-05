@@ -98,7 +98,7 @@ function unused_variable_linter(
   $is_assignment_expression = $node ==> $is_binary_expression($node) &&
     $is_assignment_operator($get_binop_operator($node));
 
-  $is_promoted_contructor_parameter = (Pha\Token $token) ==>
+  $is_promoted_constructor_parameter = (Pha\Token $token) ==>
     Pha\node_get_syntax_ancestors($script, $token)
     |> C\find($$, $is_parameter_declaration)
     |> $$ is nonnull && !Pha\is_missing($get_parameter_visibility($$));
@@ -198,7 +198,7 @@ function unused_variable_linter(
 
       if ($is_scope($node)) {
         $ret['scopes'][] = $node;
-        // Any assignment to a inout variable should be treated as a use.
+        // Any assignment to an `inout` variable should be treated as a use.
         // Reason being, they have effects on the outer scopes / the caller.
         if (
           !$is_param &&
@@ -282,7 +282,7 @@ function unused_variable_linter(
 
   $is_unused = (Support\TUnusedVariableLinterAfterShadowing $a) ==>
     !Str\starts_with($a['var_name'], '$_') &&
-    !$is_promoted_contructor_parameter($a['var']) &&
+    !$is_promoted_constructor_parameter($a['var']) &&
     !C\any($a['owners'], $is_abstract_scope) &&
     !C\any(
       idx($usages_by_name, $a['var_name'], vec[]),

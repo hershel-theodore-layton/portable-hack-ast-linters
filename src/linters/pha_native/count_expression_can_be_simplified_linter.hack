@@ -29,7 +29,7 @@ function count_expression_can_be_simplified_linter(
     Pha\KIND_EXCLAMATION_EQUAL_EQUAL,
   );
   $is_less_than = Pha\create_token_matcher($script, Pha\KIND_LESS_THAN);
-  $is_less_than_or_greater =
+  $is_less_than_or_equal =
     Pha\create_token_matcher($script, Pha\KIND_LESS_THAN_EQUAL);
   $is_prefix_unary_expression =
     Pha\create_syntax_matcher($script, Pha\KIND_PREFIX_UNARY_EXPRESSION);
@@ -63,7 +63,7 @@ function count_expression_can_be_simplified_linter(
     if ($is_less_than($n)) {
       return Support\ComparisonKind::LESS_THAN;
     }
-    if ($is_less_than_or_greater($n)) {
+    if ($is_less_than_or_equal($n)) {
       return Support\ComparisonKind::LESS_THAN_OR_EQUAL;
     }
     if ($is_greater_than($n)) {
@@ -103,7 +103,7 @@ function count_expression_can_be_simplified_linter(
       return tuple('', null);
     }
 
-    // Need this because of yoda conditions `0 === C\count(...)`.
+    // Need this because of Yoda conditions `0 === C\count(...)`.
     // In Hack, `C\count(...) === 0` is canonical.
     $is_canonical = $get_binop_lhs($parent) === $call;
     $cmp = $is_canonical ? $get_binop_rhs($parent) : $get_binop_lhs($parent)

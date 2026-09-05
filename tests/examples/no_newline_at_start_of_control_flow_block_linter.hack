@@ -1,4 +1,4 @@
-//##! 0 A class-likes and function-likes are not control flow blocks
+//##! 0 Class-like and function-like constructs are not control-flow blocks
 namespace Linters\Tests\NoNewlineAtStartOfControlFlowBlock;
 
 final class C1 {
@@ -15,7 +15,7 @@ function func1(): void {
   };
 }
 
-//##! 4 empty loops 
+//##! 4 Empty loops
 function func2(): void {
   foreach (vec[] as $_) {
 
@@ -31,7 +31,7 @@ function func2(): void {
   } while (true);
 }
 
-//##! 4 Non-empty control flow blocks
+//##! 4 Non-empty control-flow blocks
 function func3(): void {
   foreach (vec[] as $_) {
 
@@ -51,7 +51,7 @@ function func3(): void {
   } while (true);
 }
 
-//##! 7 Other control flow statements
+//##! 7 Other control-flow statements
 async function func4(): Awaitable<void> {
   $awaitable = async {
 

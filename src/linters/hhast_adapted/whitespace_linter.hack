@@ -7,7 +7,7 @@ use namespace HTL\Pha;
 // This linter implements no_white_space_at_end_of_line_linter.
 //
 // It also doubles as consistent_line_endings_linter.
-// In a unix line ending world, `\r\n` is whitespace at eol, since `\r` is whitespace.
+// In a Unix line ending world, `\r\n` is whitespace at EOL, since `\r` is whitespace.
 //
 // It also triples as must_have_newline_at_end_of_file_linter.
 //

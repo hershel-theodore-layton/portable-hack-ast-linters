@@ -13,7 +13,7 @@ final class C1 {
 //##! 0 has context list
 function func4()[]: void {}
 
-//##! 2 does io and doesn't have a context list
+//##! 2 does I/O and doesn't have a context list
 use namespace HH\Asio;
 
 final class C2 {

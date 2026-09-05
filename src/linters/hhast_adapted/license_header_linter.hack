@@ -30,7 +30,7 @@ function license_header_linter(
         $pragma_map,
         C\firstx($$),
         $linter,
-        'Expected the find your license header at the top of this file: '.
+        'Expected to find your license header at the top of this file: '.
         $expected_license_header,
         Pha\patches($script, Pha\patch_node(
           $first_thing,
