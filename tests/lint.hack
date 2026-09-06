@@ -104,6 +104,7 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\group_use_statements_linter<>,
     PhaLinters\keywords_should_be_lowercase_linter<>,
     PhaLinters\lambda_parameter_list_parentheses_can_be_removed_linter<>,
+    PhaLinters\method_constant_resolves_to_enclosing_lambda_linter<>,
     PhaLinters\must_use_braces_for_control_flow_linter<>,
     PhaLinters\namespace_private_symbol_linter<>,
     PhaLinters\namespace_private_use_clause_linter<>,
