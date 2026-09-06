@@ -60,6 +60,7 @@ async function run_async()[defaults]: Awaitable<void> {
     PhaLinters\unused_pipe_variable_linter<>,
     PhaLinters\unused_use_clause_linter<>,
     PhaLinters\unused_variable_linter<>,
+    PhaLinters\use_statement_could_be_removed_linter<>,
     PhaLinters\use_statement_with_as_linter<>,
     PhaLinters\use_statement_with_leading_backslash_linter<>,
     PhaLinters\use_statement_without_kind_linter<>,
