@@ -52,6 +52,7 @@ async function run_async()[defaults]: Awaitable<void> {
     PhaLinters\no_newline_at_start_of_control_flow_block_linter<>,
     PhaLinters\pragma_could_not_be_parsed_linter<>,
     PhaLinters\prefer_lambdas_linter<>,
+    PhaLinters\prefer_semicolon_bodied_namespace_linter<>,
     PhaLinters\prefer_single_quoted_string_literals_linter<>,
     PhaLinters\prefer_require_once_linter<>,
     PhaLinters\region_comments_must_be_balanced_linter<>,
