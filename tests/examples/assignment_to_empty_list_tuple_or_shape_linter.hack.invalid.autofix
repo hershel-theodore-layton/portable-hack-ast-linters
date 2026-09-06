@@ -1,0 +1,50 @@
+//##! 1 Empty list assignment
+function empty_list(): void {
+  $_ = tuple(1, 2);
+}
+
+//##! 1 Comments do not make a target nonempty
+function commented_list(): void {
+  $_ = tuple(1, 2);
+}
+
+//##! 0 Nonempty targets and empty values
+function valid_list(): void {
+  list($a, $b) = tuple(1, 2);
+  list(, $c) = tuple(1, 2);
+  $_ = tuple($a, $b, $c);
+  $_ = shape();
+}
+
+//##! 2 Empty experimental destructuring targets
+function empty_targets(): void {
+  $_ = tuple(1, 2);
+  $_ = shape('x' => 1);
+}
+
+//##! 2 Comments inside experimental targets
+function commented_targets(): void {
+  $_ = tuple(1, 2);
+  $_ = shape('x' => 1);
+}
+
+//##! 0 Nonempty experimental targets and empty values
+function nonempty_targets(): void {
+  tuple($a, $b) = tuple(1, 2);
+  shape('x' => $c) = shape('x' => 1);
+  $d = tuple();
+  $e = shape();
+}
+
+//##! 3 Parenthesized assignment targets
+function parenthesized_targets(): void {
+  $_ = tuple(1, 2);
+  $_ = tuple(1, 2);
+  $_ = shape('x' => 1);
+}
+
+//##! 0 Comparisons are not assignments
+function comparisons(): void {
+  $_ = tuple() === tuple();
+  $_ = shape() === shape();
+}

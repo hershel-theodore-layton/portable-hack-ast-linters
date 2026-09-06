@@ -83,6 +83,7 @@ function get_linters()[]: vec<TLinter> {
   $known_pragma_prefixes = keyset['PhaLinters'];
 
   $linters = vec[
+    PhaLinters\assignment_to_empty_list_tuple_or_shape_linter<>,
     PhaLinters\async_function_and_method_linter<>,
     PhaLinters\camel_cased_methods_underscored_functions_linter<>,
     PhaLinters\concat_merge_or_union_expression_can_be_simplified_linter<>,
