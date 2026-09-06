@@ -24,7 +24,6 @@ final class Names {
 }
 
 function names(Names $TRUE): vec<string> {
-  // TRUE, False, NULL are words in a comment.
   $TRUE->True();
   $TRUE->False();
   $TRUE->Null();
