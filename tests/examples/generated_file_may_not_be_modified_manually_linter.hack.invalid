@@ -14,6 +14,6 @@ function func2(): void {}
 
 use type HTL\Pragma\Pragmas;
 
-<<file: Pragmas(vec['PhaLinters', 'digest:919df0675ebaa63123df'])>>
+<<file: Pragmas(vec['PhaLinters', 'digest:68f2afd352e70736e9e2'])>>
 
 function func3(): void {}

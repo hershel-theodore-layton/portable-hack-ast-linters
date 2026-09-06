@@ -1,11 +1,11 @@
+/* Example License Text */
 //##! 1 Wrong license header
 <?hh
-/* Example License Text */
 /* Wrong license header */
 namespace Linters\Tests\LicenseHeaderLinter;
 
-//##! 1 Missing license header
 /* Example License Text */
+//##! 1 Missing license header
 function func1(): void {}
 
 // Alternatively, on older HHVM versions, where #! is a comment...

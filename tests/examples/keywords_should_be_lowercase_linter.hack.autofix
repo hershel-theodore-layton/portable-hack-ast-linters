@@ -1,17 +1,17 @@
-#! 9
+//##! 9
 namespace Linters\Tests\KeywordsShouldBeLowercaseLinter;
 
 function literals(): vec<mixed> {
   return vec[true, true, true, false, false, false, null, null, null];
 }
 
-#! 0
+//##! 0
 
 function canonical(): vec<mixed> {
   return vec[true, false, null];
 }
 
-#! 0
+//##! 0
 
 final class Names {
   const string TRUE = 'TRUE';
@@ -30,7 +30,7 @@ function names(Names $TRUE): vec<string> {
   return vec[Names::TRUE, Names::FALSE, Names::NULL, "True False Null"];
 }
 
-#! 3
+//##! 3
 
 function trivia(?bool $value = /* before */ null /* after */): bool {
   return $value ?? /* before */ true /* after */ ? false : false;

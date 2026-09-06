@@ -54,6 +54,7 @@ async function run_async()[defaults]: Awaitable<void> {
     PhaLinters\prefer_lambdas_linter<>,
     PhaLinters\prefer_single_quoted_string_literals_linter<>,
     PhaLinters\prefer_require_once_linter<>,
+    PhaLinters\region_comments_must_be_balanced_linter<>,
     PhaLinters\shout_case_enum_members_linter<>,
     PhaLinters\solitary_escape_sequences_should_be_disambiguated_linter<>,
     PhaLinters\unreachable_code_linter<>,
@@ -157,7 +158,11 @@ async function run_async()[defaults]: Awaitable<void> {
       $test_groups as
         $test_number => list($linter, $linter_name, $full_file, $autofix)
     ) {
-      foreach (Str\split($full_file, '//#') |> Vec\filter($$) as $test) {
+      // Keep fixture markers as comments, rather than turning them into
+      // hashbang tokens. Region markers such as //#region are not separators.
+      foreach (
+        Regex\split($full_file, re'~(?=//\#\#! )~') |> Vec\filter($$) as $test
+      ) {
         ++$test_count;
         list($script, $ctx) = Pha\parse($test, $ctx);
         $syntax_index = Pha\create_syntax_kind_index($script);

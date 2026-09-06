@@ -122,6 +122,7 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\prefer_lambdas_linter<>,
     PhaLinters\prefer_require_once_linter<>,
     PhaLinters\prefer_single_quoted_string_literals_linter<>,
+    PhaLinters\region_comments_must_be_balanced_linter<>,
     PhaLinters\shout_case_enum_members_linter<>,
     PhaLinters\solitary_escape_sequences_should_be_disambiguated_linter<>,
     PhaLinters\unreachable_code_linter<>,
