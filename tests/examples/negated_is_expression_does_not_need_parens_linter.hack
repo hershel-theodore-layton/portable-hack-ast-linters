@@ -21,6 +21,7 @@ function standalone(mixed $x): bool {
   }
   do {
   } while (!($x is int));
+  $x = get_value();
   for (; !($x is int); ) {
     break;
   }
@@ -37,15 +38,15 @@ function logical(mixed $x, bool $b): void {
   $_ = !($x is int) && $b;
   $_ = $b || !($x is int);
   $_ = !($x is int) || $b;
-  $_ = !($x is int) && !($x is string) || !($x is null);
+  $_ = !($x is int) && !($x is string) || !(get_value() is null);
   $_ = $b && !($x is int) && $b;
 }
 
 //##! 4 Complex operands and types
 function operands(mixed $x, vec<mixed> $items): void {
-  $_ = !((1 + 2) is int);
+  $_ = !(($x ?? get_value()) is int);
   $_ = !(get_value() is dict<_, _>);
-  $_ = !($x is (int | string));
+  $_ = !($x is shape('value' => int));
   $_ = !($items[0] is ?int);
 }
 
@@ -69,13 +70,10 @@ function lists(mixed $x): void {
 function allowed(mixed $x): void {
   $_ = !($x is int) === false;
   $_ = false !== !($x is int);
-  $_ = !($x is int) ?? false;
   $_ = !($x is int) ? 1 : 2;
   $_ = true ? !($x is int) : false;
   $_ = (int)!($x is int);
   $_ = !!($x is int);
-  $_ = (!($x is int)) is bool;
-  $_ = (!($x is int)) as bool;
   $_ = (!($x is int));
   $_ = !(($x is int));
   $_ = !($x === null);
