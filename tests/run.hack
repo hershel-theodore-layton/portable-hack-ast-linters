@@ -34,6 +34,7 @@ async function run_async()[defaults]: Awaitable<void> {
     PhaLinters\generated_file_may_not_be_modified_manually_linter<>,
     PhaLinters\getter_method_could_have_a_context_list_linter<>,
     PhaLinters\group_use_statement_alphabetization_linter<>,
+    PhaLinters\group_use_statement_could_be_simplified_linter<>,
     PhaLinters\group_use_statements_linter<>,
     PhaLinters\keywords_should_be_lowercase_linter<>,
     PhaLinters\lambda_parameter_list_parentheses_can_be_removed_linter<>,

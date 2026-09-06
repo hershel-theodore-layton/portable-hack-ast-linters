@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters\Support;
 
-use namespace HH\Lib\{Str};
+use namespace HH\Lib\Str;
 use namespace HTL\Pha;
 
 function insert_digest(
