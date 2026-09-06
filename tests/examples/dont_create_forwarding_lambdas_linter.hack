@@ -41,7 +41,6 @@ function func3(): void {
   $_ = $x ==> \is_dir($root.'/'.$x);
 }
 
-
 //##! 0 Special rules for parent and self, since it is not always valid to
 //      form a function reference to them. parent::m1<> is never allowed,
 //      whereas self::m1<> is only allowed in final classes.

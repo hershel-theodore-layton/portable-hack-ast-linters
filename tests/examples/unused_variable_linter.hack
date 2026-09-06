@@ -34,7 +34,6 @@ function func3(): void {
   example($a);
 }
 
-
 //##! 1 Shadowing lambda parameter
 
 function func4(): void {

@@ -6,13 +6,11 @@ use namespace HTL\Pha;
 const Pha\Syntax NIL = Pha\SCRIPT_NODE;
 
 abstract class XhpConstructor {
-  public function __construct(mixed ... $_) {}
+  public function __construct(mixed ...$_) {}
 }
 
 final xhp class ExampleElement extends XhpConstructor {}
 final xhp class UI:ExampleElement extends XhpConstructor {}
-
-
 
 //##! 1 Unused namespace
 use namespace HH\Lib\NotVec;

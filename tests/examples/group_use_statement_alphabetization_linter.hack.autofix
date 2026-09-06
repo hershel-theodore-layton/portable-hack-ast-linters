@@ -3,7 +3,7 @@ namespace Linters\Tests\GroupUseStatementAlphabetizationLinter;
 
 use namespace One\{Three, Two};
 use namespace \{Five, Four};
-use namespace \{/*1*/One/*b*/\Seven/*2*/, /*3*/One/*a*/\Six/*4*/};
+use namespace \{/*1*/One/*b*/\Seven/*2*/, /*3*/ One/*a*/\Six/*4*/};
 
 //##! 0
 use namespace One\{_Three, _Two};

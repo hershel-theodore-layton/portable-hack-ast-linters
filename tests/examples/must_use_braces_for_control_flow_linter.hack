@@ -13,7 +13,8 @@ function func1(): void {
   foreach ($a as $b) // which could consume the opening curly
     echo 7;
 
-  for(; ;) echo 8;
+  for (; ; )
+    echo 8;
 
   do // and break the nesting
     return;
