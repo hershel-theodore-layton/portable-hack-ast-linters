@@ -1,0 +1,85 @@
+//##! 11 Standalone expressions
+namespace Linters\Tests\NegatedIsExpressionDoesNotNeedParens;
+
+function consume(bool ...$values): void {}
+
+final class Box {
+  public function __construct(bool $_) {}
+}
+
+function get_value(): mixed {
+  return null;
+}
+
+function standalone(mixed $x): bool {
+  !($x is int);
+  $b = !($x is int);
+  if (!($x is int)) {
+  }
+  while (!($x is int)) {
+    break;
+  }
+  do {
+  } while (!($x is int));
+  for (; !($x is int); ) {
+    break;
+  }
+  consume(!($x is int));
+  consume(true, !($x is int), false);
+  new Box(!($x is int));
+  $f = $y ==> !($y is int);
+  return !($x is int);
+}
+
+//##! 8 Either operand and chains
+function logical(mixed $x, bool $b): void {
+  $_ = $b && !($x is int);
+  $_ = !($x is int) && $b;
+  $_ = $b || !($x is int);
+  $_ = !($x is int) || $b;
+  $_ = !($x is int) && !($x is string) || !($x is null);
+  $_ = $b && !($x is int) && $b;
+}
+
+//##! 4 Complex operands and types
+function operands(mixed $x, vec<mixed> $items): void {
+  $_ = !((1 + 2) is int);
+  $_ = !(get_value() is dict<_, _>);
+  $_ = !($x is (int | string));
+  $_ = !($items[0] is ?int);
+}
+
+//##! 2 Preserve comments and whitespace
+function trivia(mixed $x): bool {
+  $_ = ! /* before */ (/* inside */ $x is int /* end */) /* after */;
+  return !(
+    // Keep this comment.
+    $x is int
+  );
+}
+
+//##! 3 List elements
+function lists(mixed $x): void {
+  $_ = vec[!($x is int)];
+  $_ = tuple(true, !($x is int));
+  $_ = vec[true, !($x is int), false];
+}
+
+//##! 0 Other operators and extra parentheses are allowed
+function allowed(mixed $x): void {
+  $_ = !($x is int) === false;
+  $_ = false !== !($x is int);
+  $_ = !($x is int) ?? false;
+  $_ = !($x is int) ? 1 : 2;
+  $_ = true ? !($x is int) : false;
+  $_ = (int)!($x is int);
+  $_ = !!($x is int);
+  $_ = (!($x is int)) is bool;
+  $_ = (!($x is int)) as bool;
+  $_ = (!($x is int));
+  $_ = !(($x is int));
+  $_ = !($x === null);
+  $_ = !($x is int && true);
+  $_ = !$x is int;
+  $_ = ($x is int);
+}

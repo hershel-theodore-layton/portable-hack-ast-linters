@@ -111,6 +111,7 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\must_use_braces_for_control_flow_linter<>,
     PhaLinters\namespace_private_symbol_linter<>,
     PhaLinters\namespace_private_use_clause_linter<>,
+    PhaLinters\negated_is_expression_does_not_need_parens_linter<>,
     PhaLinters\no_elseif_linter<>,
     PhaLinters\no_empty_statements_linter<>,
     PhaLinters\no_final_method_in_final_classes_linter<>,
