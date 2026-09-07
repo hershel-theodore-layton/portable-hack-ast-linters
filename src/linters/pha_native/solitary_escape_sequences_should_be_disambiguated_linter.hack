@@ -3,6 +3,7 @@ namespace HTL\PhaLinters;
 
 use namespace HH\Lib\{C, Str, Vec};
 use namespace HTL\Pha;
+use function ctype_digit;
 
 function solitary_escape_sequences_should_be_disambiguated_linter(
   Pha\Script $script,
@@ -34,7 +35,7 @@ function solitary_escape_sequences_should_be_disambiguated_linter(
         $contents[0] === '\\' &&
         (
           C\contains_key($escape_chars, $contents[1]) ||
-          \ctype_digit($contents[1])
+          ctype_digit($contents[1])
         );
     })
     |> Vec\map(

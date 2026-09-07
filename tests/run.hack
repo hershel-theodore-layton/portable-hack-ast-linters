@@ -15,6 +15,7 @@ async function run_async()[defaults]: Awaitable<void> {
   }
 
   await pragma_test_async();
+  decorator_test();
 
   $linters = vec[
     PhaLinters\assignment_to_empty_list_tuple_or_shape_linter<>,
@@ -54,6 +55,7 @@ async function run_async()[defaults]: Awaitable<void> {
     PhaLinters\prefer_lambdas_linter<>,
     PhaLinters\prefer_semicolon_bodied_namespace_linter<>,
     PhaLinters\prefer_single_quoted_string_literals_linter<>,
+    PhaLinters\prefer_use_clause_over_fully_qualified_names_linter<>,
     PhaLinters\prefer_require_once_linter<>,
     PhaLinters\region_comments_must_be_balanced_linter<>,
     PhaLinters\shout_case_enum_members_linter<>,

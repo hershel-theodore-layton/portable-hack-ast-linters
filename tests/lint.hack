@@ -123,6 +123,8 @@ function get_linters()[]: vec<TLinter> {
     PhaLinters\prefer_require_once_linter<>,
     PhaLinters\prefer_semicolon_bodied_namespace_linter<>,
     PhaLinters\prefer_single_quoted_string_literals_linter<>,
+    PhaLinters\prefer_use_clause_over_fully_qualified_names_linter<>
+      |> PhaLinters\Support\disable_in_generated_source($$),
     PhaLinters\region_comments_must_be_balanced_linter<>,
     PhaLinters\shout_case_enum_members_linter<>,
     PhaLinters\solitary_escape_sequences_should_be_disambiguated_linter<>,
