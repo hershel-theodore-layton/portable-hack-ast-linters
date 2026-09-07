@@ -2,7 +2,7 @@
 namespace HTL\PhaLinters;
 
 use namespace HH\Lib\{C, Str, Vec};
-use namespace HTL\Pha;
+use namespace HTL\{HH4Shim, Pha};
 
 function use_statement_order_linter(
   Pha\Script $script,
@@ -87,6 +87,9 @@ function use_statement_order_linter(
       $prefix = Pha\node_get_code_compressed($script, $prefix_node)
         |> Str\strip_prefix($$, '\\');
       $key = (string)$kind.';'.$prefix;
+      // Hack ignores assignments from earlier inner-loop iterations.
+      // https://github.com/facebook/hhvm/issues/9852
+      $previous = HH4Shim\to_mixed($previous) as ?string;
       if (
         $previous is nonnull && !$reported && Str\compare($previous, $key) > 0
       ) {
