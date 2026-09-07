@@ -32,8 +32,10 @@ function unused_variable_linter(
   $is_lambda = $build_matcher(Pha\KIND_LAMBDA_EXPRESSION);
   $is_lambda_signature = $build_matcher(Pha\KIND_LAMBDA_SIGNATURE);
   $is_list_expression = $build_matcher(Pha\KIND_LIST_EXPRESSION);
-  $is_member_selection_expression =
-    $build_matcher(Pha\KIND_MEMBER_SELECTION_EXPRESSION);
+  $is_property_access = $build_matcher(
+    Pha\KIND_MEMBER_SELECTION_EXPRESSION,
+    Pha\KIND_SCOPE_RESOLUTION_EXPRESSION,
+  );
   $is_methodish_declaration = $build_matcher(Pha\KIND_METHODISH_DECLARATION);
   $is_node_list = $build_matcher(Pha\KIND_NODE_LIST);
   $is_parameter_declaration = $build_matcher(Pha\KIND_PARAMETER_DECLARATION);
@@ -44,6 +46,8 @@ function unused_variable_linter(
     Pha\KIND_LAMBDA_EXPRESSION,
     Pha\KIND_METHODISH_DECLARATION,
   );
+  $is_scope_resolution_expression =
+    $build_matcher(Pha\KIND_SCOPE_RESOLUTION_EXPRESSION);
   $is_unary_expression = $build_matcher(
     Pha\KIND_PREFIX_UNARY_EXPRESSION,
     Pha\KIND_POSTFIX_UNARY_EXPRESSION,
@@ -81,6 +85,13 @@ function unused_variable_linter(
     Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_NAME);
   $get_parameter_visibility =
     Pha\create_member_accessor($script, Pha\MEMBER_PARAMETER_VISIBILITY);
+  $get_scope_resolution_name =
+    Pha\create_member_accessor($script, Pha\MEMBER_SCOPE_RESOLUTION_NAME);
+  $get_unary_operand = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_PREFIX_UNARY_OPERAND,
+    Pha\MEMBER_POSTFIX_UNARY_OPERAND,
+  );
   $get_unary_operator = Pha\create_member_accessor(
     $script,
     Pha\MEMBER_PREFIX_UNARY_OPERATOR,
@@ -110,7 +121,7 @@ function unused_variable_linter(
     Pha\Token $var,
   ) ==> Pha\node_get_syntax_ancestors($script, $var)
     |> Support\vec_take_while_inclusive($$, $node ==> $node !== $assignment)
-    |> C\any($$, $is_member_selection_expression);
+    |> C\any($$, $is_property_access);
 
   $inout_scopes = Pha\index_get_nodes_by_kind($token_index, Pha\KIND_INOUT)
     |> Vec\map(
@@ -130,6 +141,16 @@ function unused_variable_linter(
     |> Dict\map($$, $shapes ==> Vec\map($shapes, $s ==> $s['scope']));
 
   $classify_use = ($variable): ?Support\TUnusedVariableLinterUsage ==> {
+    // `C::$property` makes `$property` look like a local, which it is not.
+    // `$class_name::$property` still means `$class_name` is a local.
+    $parent = Pha\token_get_parent($script, $variable);
+    if (
+      $is_scope_resolution_expression($parent) &&
+      $get_scope_resolution_name($parent) === $variable
+    ) {
+      return null;
+    }
+
     $ret = shape(
       'is_assignment' => false,
       'disposable_assignment' => null,
@@ -155,10 +176,14 @@ function unused_variable_linter(
       ) ||
       (
         $is_unary_expression($loop_node) &&
-        $is_plus_plus_or_minus_minus($get_unary_operator($loop_node))
+        $is_plus_plus_or_minus_minus($get_unary_operator($loop_node)) &&
+        Support\get_first_token($script, $get_unary_operand($loop_node)) ===
+          $variable &&
+        !$assignment_has_non_local_effects($loop_node, $variable)
       ) ||
       (
         $is_list_expression($loop_node) &&
+        !$assignment_has_non_local_effects($loop_node, $variable) &&
         // Only mark `$a` and `$c` as assigned: `$list($a[$b], $c)`
         C\any(
           $get_list_expr_members($loop_node)

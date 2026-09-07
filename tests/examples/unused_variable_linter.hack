@@ -102,6 +102,386 @@ function func8(int $unused, inout int $used): void {
   $used++;
 }
 
+//##! 0 Named static property increments and decrements are non-local effects.
+
+class StaticCounter {
+  public static int $count = 0;
+}
+
+function increment_static_counter(): void {
+  ++StaticCounter::$count;
+  StaticCounter::$count++;
+  --StaticCounter::$count;
+  StaticCounter::$count--;
+}
+
+//##! 0 self:: property increments and decrements are non-local effects.
+
+class SelfCounter {
+  private static int $count = 0;
+
+  public static function increment(): void {
+    ++self::$count;
+    self::$count++;
+    --self::$count;
+    self::$count--;
+  }
+}
+
+//##! 0 Late static binding property increments and decrements are non-local effects.
+
+class LateStaticCounter {
+  protected static int $count = 0;
+
+  public static function increment(): void {
+    ++static::$count;
+    static::$count++;
+    --static::$count;
+    static::$count--;
+  }
+}
+
+//##! 0 Plain and compound static property assignments do not report unused variables.
+
+class AssignedStaticCounter {
+  public static int $count = 0;
+
+  public static function assign(): void {
+    self::$count = 0;
+    self::$count += 1;
+    self::$count -= 1;
+  }
+}
+
+//##! 0 A used local and a static property may share a name.
+
+class SameNamedCounter {
+  public static int $count = 0;
+
+  public static function increment(int $count): int {
+    ++self::$count;
+    self::$count++;
+    --self::$count;
+    self::$count--;
+    return $count;
+  }
+}
+
+//##! 6 Static property reads and writes must not hide unused same-named locals.
+
+class IndependentStaticCounter {
+  protected static int $count = 0;
+
+  public function read_self(int $count): int {
+    return self::$count;
+  }
+
+  public function read_static(int $count): int {
+    return static::$count;
+  }
+
+  public function read_named(int $count): int {
+    return IndependentStaticCounter::$count;
+  }
+
+  public function read_this(int $count): int {
+    return $this::$count;
+  }
+
+  public function write(int $count): void {
+    self::$count = 0;
+    static::$count += 1;
+    IndependentStaticCounter::$count -= 1;
+    $this::$count = 2;
+  }
+
+  public function increment(int $count): void {
+    ++self::$count;
+    static::$count++;
+    --IndependentStaticCounter::$count;
+    $this::$count--;
+  }
+}
+
+//##! 0 Access through $this keeps both static and instance property names intact.
+
+class ThisCounter {
+  public static int $shared = 0;
+  public int $count = 0;
+
+  public function increment(): void {
+    ++$this::$shared;
+    $this::$shared++;
+    --$this::$shared;
+    $this::$shared--;
+    ++$this->count;
+    $this->count++;
+    --$this->count;
+    $this->count--;
+  }
+}
+
+//##! 1 Instance property reads do not use a same-named local either.
+
+class IndependentInstanceCounter {
+  public int $count = 0;
+
+  public function read(int $count): int {
+    return $this->count;
+  }
+}
+
+//##! 1 parent:: property access must not be confused with a local variable.
+
+class ParentCounter {
+  protected static int $count = 0;
+}
+
+class ChildCounter extends ParentCounter {
+  public function increment(int $count): int {
+    ++parent::$count;
+    parent::$count++;
+    --parent::$count;
+    parent::$count--;
+    return parent::$count;
+  }
+}
+
+//##! 0 Class qualifiers are used even when a static property is only written.
+
+function mutate_class_properties(
+  StaticCounter $pre_inc,
+  StaticCounter $post_inc,
+  StaticCounter $pre_dec,
+  StaticCounter $post_dec,
+  StaticCounter $assign,
+  StaticCounter $compound,
+  StaticCounter $destructure,
+): void {
+  ++$pre_inc::$count;
+  $post_inc::$count++;
+  --$pre_dec::$count;
+  $post_dec::$count--;
+  $assign::$count = 0;
+  $compound::$count += 1;
+  list($destructure::$count) = tuple(1);
+}
+
+//##! 0 Object receivers are used even when a property is only written.
+
+function mutate_instance_properties(
+  ThisCounter $pre_inc,
+  ThisCounter $post_inc,
+  ThisCounter $pre_dec,
+  ThisCounter $post_dec,
+  ThisCounter $assign,
+  ThisCounter $compound,
+  ThisCounter $destructure,
+): void {
+  ++$pre_inc->count;
+  $post_inc->count++;
+  --$pre_dec->count;
+  $post_dec->count--;
+  $assign->count = 0;
+  $compound->count += 1;
+  list($destructure->count) = tuple(1);
+}
+
+//##! 0 Indices into static properties are reads during increments and decrements.
+
+class StaticArrayCounter {
+  public static vec<int> $counts = vec[0];
+
+  public function increment(
+    int $pre_inc,
+    int $post_inc,
+    int $pre_dec,
+    int $post_dec,
+  ): void {
+    ++self::$counts[$pre_inc];
+    static::$counts[$post_inc]++;
+    --StaticArrayCounter::$counts[$pre_dec];
+    $this::$counts[$post_dec]--;
+  }
+}
+
+//##! 1 Static property access in a lambda does not use its same-named parameter.
+
+function static_property_lambda(): void {
+  $_ = (int $count) ==> {
+    ++StaticCounter::$count;
+    return StaticCounter::$count;
+  };
+}
+
+//##! 0 A class qualifier and its property can have the same spelling.
+
+function same_named_class_qualifier(StaticCounter $count): void {
+  ++$count::$count;
+}
+
+//##! 5 Local array mutations remain assignments, but their indices are uses.
+
+function increment_local_array(
+  int $pre_inc,
+  int $post_inc,
+  int $pre_dec,
+  int $post_dec,
+): void {
+  $counts = vec[0];
+  ++$counts[$pre_inc];
+  $counts[$post_inc]++;
+  --$counts[$pre_dec];
+  $counts[$post_dec]--;
+}
+
+//##! 1 A static property read does not use a same-named local assignment.
+
+function read_static_property(): int {
+  $count = 0;
+  return StaticCounter::$count;
+}
+
+//##! 0 Array writes use the qualifier, indices, and right-hand sides.
+
+function write_static_array(
+  StaticArrayCounter $compound,
+  StaticArrayCounter $append,
+  int $key,
+  int $value,
+): void {
+  $compound::$counts[$key] += $value;
+  $append::$counts[] = $value;
+}
+
+//##! 1 Nested destructuring uses the qualifier but leaves unrelated locals unused.
+
+function destructure_static_property(StaticCounter $foo, int $count): void {
+  list(list($foo::$count)) = tuple(tuple(1));
+}
+
+//##! 1 An instance property can supply the variable used as a static qualifier.
+
+class CounterHolder {
+  public function __construct(public StaticCounter $counter) {}
+}
+
+function write_nested_static_property(CounterHolder $foo, int $count): void {
+  $counter = $foo->counter;
+  $counter::$count = 1;
+}
+
+//##! 0 An instance property can be reached through a static property.
+
+class StaticCounterHolder {
+  public static ?ThisCounter $counter = null;
+}
+
+function write_nested_instance_property(StaticCounterHolder $foo): void {
+  ($foo::$counter as nonnull)->count = 1;
+}
+
+//##! 1 A closure uses its captured qualifier, not a same-named local property token.
+
+function capture_static_qualifier(StaticCounter $foo, int $count): void {
+  $_ = () ==> {
+    $foo::$count = 1;
+  };
+}
+
+//##! 0 A local used only as a static property qualifier is still used.
+
+function local_static_qualifier(): void {
+  $foo = new StaticCounter();
+  $foo::$count *= 2;
+}
+
+//##! 0 Properties used by the static assignment operator tests.
+
+class StaticOperatorProperties {
+  public static int $count = 0;
+  public static num $number = 0;
+  public static string $text = '';
+}
+
+//##! 1 Static = uses $foo but does not use the same-named local $count.
+
+function static_property_assign(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count = 1;
+}
+
+//##! 1 Static += uses $foo but does not use the same-named local $count.
+
+function static_property_add(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count += 1;
+}
+
+//##! 1 Static -= uses $foo but does not use the same-named local $count.
+
+function static_property_subtract(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count -= 1;
+}
+
+//##! 1 Static *= uses $foo but does not use the same-named local $count.
+
+function static_property_multiply(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count *= 2;
+}
+
+//##! 1 Static /= uses $foo but does not use the same-named local $number.
+
+function static_property_divide(StaticOperatorProperties $foo, num $number): void {
+  $foo::$number /= 2;
+}
+
+//##! 1 Static %= uses $foo but does not use the same-named local $count.
+
+function static_property_modulo(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count %= 2;
+}
+
+//##! 1 Static **= uses $foo but does not use the same-named local $number.
+
+function static_property_power(StaticOperatorProperties $foo, num $number): void {
+  $foo::$number **= 2;
+}
+
+//##! 1 Static .= uses $foo but does not use the same-named local $text.
+
+function static_property_concatenate(StaticOperatorProperties $foo, string $text): void {
+  $foo::$text .= 'x';
+}
+
+//##! 1 Static &= uses $foo but does not use the same-named local $count.
+
+function static_property_bitwise_and(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count &= 1;
+}
+
+//##! 1 Static |= uses $foo but does not use the same-named local $count.
+
+function static_property_bitwise_or(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count |= 1;
+}
+
+//##! 1 Static ^= uses $foo but does not use the same-named local $count.
+
+function static_property_bitwise_xor(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count ^= 1;
+}
+
+//##! 1 Static <<= uses $foo but does not use the same-named local $count.
+
+function static_property_shift_left(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count <<= 1;
+}
+
+//##! 1 Static >>= uses $foo but does not use the same-named local $count.
+
+function static_property_shift_right(StaticOperatorProperties $foo, int $count): void {
+  $foo::$count >>= 1;
+}
+
 //##! 8 Special autofix, when dealing with unused `using` disposables, it is
 //      preferred to delete the variable, instead of using an underscore.
 

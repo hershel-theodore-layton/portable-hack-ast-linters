@@ -1,0 +1,11 @@
+//##! 1 Static property ??= is experimental, but its qualifier is still used.
+//      Keep this outside the typechecked fixtures until HHVM enables it.
+
+class OptionalStaticCounter {
+  public static ?int $count = null;
+}
+
+function initialize_static_property(OptionalStaticCounter $foo, int $count): void {
+  $foo::$count ??= 1;
+}
+
