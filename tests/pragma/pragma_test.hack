@@ -5,8 +5,7 @@ use namespace HH\Lib\{C, Dict, File, Str, Vec};
 use namespace HTL\{Pha, PhaLinters};
 use function HH\fun_get_function;
 
-<<__EntryPoint>>
-async function pragma_test_async(): Awaitable<void> {
+async function pragma_test_async()[defaults]: Awaitable<void> {
   // Ignoring no_elseif and use_statement_without_kind.
   // They make the file unparsable for other linters.
   // This list of linters, although long, isn't exhaustive.

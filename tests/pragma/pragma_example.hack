@@ -78,6 +78,7 @@ final class IsFinal {
   <<Pragmas(
     vec['PhaLinters', 'fixme:no_final_method_in_final_classes'],
     vec['PhaLinters', 'fixme:unused_variable'],
+    vec['PhaLinters', 'fixme:context_list_must_be_explicit'],
   )>>
   final public function final(string $x): void {
 
