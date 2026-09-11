@@ -1,0 +1,39 @@
+//##! 4
+namespace Linters\Tests\AutoloadYourCodeLinter;
+
+include 'file.hack';
+include_once 'file.hack';
+require 'file.hack';
+require_once 'file.hack';
+
+//##! 4
+
+include('file.hack');
+include_once('file.hack');
+require('file.hack');
+require_once('file.hack');
+
+//##! 2
+
+function load_code(string $file): void {
+  if (true) {
+    require_once $file;
+  }
+  $result = include $file;
+}
+
+//##! 0
+
+interface I {}
+class C {}
+
+trait T {
+  require implements I;
+  require extends C;
+}
+
+function ordinary_code(): void {
+  $text = 'require_once file.hack';
+  // include 'file.hack';
+  new C();
+}
