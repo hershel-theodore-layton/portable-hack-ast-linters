@@ -18,7 +18,10 @@ use type HTL\Pragma\Pragmas;
 use function HTL\Pragma\pragma;
 use function glob, realpath;
 
-<<file: Pragmas(vec['PhaLinters', 'fixme:license_header'])>>
+<<file: Pragmas(
+  vec['PhaLinters', 'fixme:autoload_your_code'],
+  vec['PhaLinters', 'fixme:license_header'],
+)>>
 
 type TLinter = (function(
   Pha\Script,

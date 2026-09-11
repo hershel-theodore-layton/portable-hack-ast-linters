@@ -4,7 +4,10 @@ namespace HTL\PhaLinters\Tests;
 use namespace HH;
 use namespace HH\Lib\{C, Dict, File, Math, OS, Regex, Str, Vec};
 use namespace HTL\{Pha, PhaLinters};
+use type HTL\Pragma\Pragmas;
 use function HH\fun_get_function;
+
+<<file: Pragmas(vec['PhaLinters', 'fixme:autoload_your_code'])>>
 
 <<__EntryPoint>>
 async function run_async()[defaults]: Awaitable<void> {
