@@ -16,4 +16,29 @@ function func2(): void {
   "\u{2603}";
   "\0";
   "\$a";
+  "quoted \"line\n\"";
+  "'\"";
+  "\\n";
+}
+
+//##! 0
+function escaped_quotes(): vec<string> {
+  return vec[
+    "say \"hi\"",
+    "\"",
+    "\\\"",
+    "\\\\\"",
+    "\q\"",
+    "a\"b\"c",
+    "\\\"tail\\",
+    "\8\"",
+  ];
+}
+
+//##! 2
+function escaped_backslashes(): vec<string> {
+  return vec[
+    '\\\\',
+    'tail\\',
+  ];
 }

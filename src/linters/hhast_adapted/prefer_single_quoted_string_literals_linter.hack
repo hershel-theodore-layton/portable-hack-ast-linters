@@ -24,6 +24,7 @@ function prefer_single_quoted_string_literals_linter(
     '\\v', // vertical tab
     '\\x', // hex
     "'", // single quote
+    '\\"', // escaped double quote
     '\$', // anti-variable interpolation
     '\\0', '\\1', '\\2', '\\3', '\\4', '\\5', '\\6', '\\7' // octal
   ];
