@@ -26,8 +26,7 @@ function func1(): void {
   $_ = 1 <= C\count(vec[]);
 }
 
-//##! 1 All OK cases, plus one error, just to show that
-//      the different use clause didn't change the outcome.
+//##! 1 A function import still permits a diagnostic, but not a C namespace patch.
 use function HH\Lib\C\count;
 
 function func2(): void {
@@ -49,4 +48,75 @@ function func2(): void {
 //      which can not be passed to C\is_empty().
 function func3(): void {
   $_ = count(vec[]) === 0;
+}
+
+//##! 8 Fully qualified calls without a C namespace import
+namespace CountWithoutImport;
+function no_import(): void {
+  $_ = \HH\Lib\C\count(vec[]) === 0;
+  $_ = \HH\Lib\C\count(vec[]) !== 0;
+  $_ = \HH\Lib\C\count(vec[]) <= 0;
+  $_ = \HH\Lib\C\count(vec[]) > 0;
+  $_ = \HH\Lib\C\count(vec[]) < 1;
+  $_ = \HH\Lib\C\count(vec[]) >= 1;
+  $_ = 0 === \HH\Lib\C\count(vec[]);
+  $_ = 1 <= \HH\Lib\C\count(vec[]);
+}
+
+//##! 1 A different namespace imported as C is not sufficient
+namespace CountWrongImport;
+use namespace HH\Lib\Vec as C;
+function wrong_import(): bool {
+  C\map(vec[], $value ==> $value);
+  return \HH\Lib\C\count(vec[]) === 0;
+}
+
+//##! 1 Importing the right namespace under another alias is not sufficient
+namespace CountOtherAlias;
+use namespace HH\Lib\C as Containers;
+function other_alias(): bool {
+  return Containers\count(vec[]) === 0;
+}
+
+//##! 2 An existing resolved C name enables patches for other count calls
+namespace CountGroupImport;
+use namespace HH\Lib\{C, Vec};
+use function HH\Lib\C\count;
+function group_import(): void {
+  C\is_empty(vec[]);
+  $_ = \HH\Lib\C\count(vec[]) === 0;
+  $_ = count(vec[]) > 0;
+}
+
+//##! 1 An unused C alias does not establish a resolved C name
+namespace CountExplicitAlias;
+use namespace \HH\Lib\C as C;
+function explicit_alias(): bool {
+  return \HH\Lib\C\count(vec[]) === 0;
+}
+
+//##! 1 An unused unqualified-kind import does not enable patches
+namespace CountUntypedImport;
+use HH\Lib\C;
+function untyped_import(): bool {
+  return \HH\Lib\C\count(vec[]) === 0;
+}
+
+//##! 1 A function imported as C is not a namespace import
+namespace CountFunctionImport;
+use function HH\Lib\C\count as C;
+function function_import(): bool {
+  return \HH\Lib\C\count(vec[]) === 0;
+}
+
+//##! 2 Multiple namespaces retain diagnostics without patches
+namespace CountSemicolonWithImport;
+use namespace HH\Lib\C;
+function semicolon_with_import(): bool {
+  C\is_empty(vec[]);
+  return \HH\Lib\C\count(vec[]) === 0;
+}
+namespace CountSemicolonWithoutImport;
+function semicolon_without_import(): bool {
+  return \HH\Lib\C\count(vec[]) === 0;
 }

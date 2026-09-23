@@ -1,0 +1,40 @@
+//##! 1 Negation still reports a diagnostic without a namespace import
+namespace CountNegationWithoutImport;
+function no_import(): bool {
+  return !\HH\Lib\C\count(vec[]);
+}
+
+//##! 1 Negation can be patched with a namespace import
+namespace CountNegationWithImport;
+use namespace HH\Lib\C;
+function with_import(): bool {
+  return C\is_empty(vec[]);
+}
+
+//##! 1 Type imports do not import namespaces
+namespace CountTypeImport;
+use type HH\Lib\C;
+function type_import(): bool {
+  return \HH\Lib\C\count(vec[]) === 0;
+}
+
+//##! 1 A function clause inside a mixed group is not a namespace import
+namespace CountMixedGroupImport;
+use HH\Lib\{function C\count as C};
+function mixed_group_import(): bool {
+  return \HH\Lib\C\count(vec[]) === 0;
+}
+
+//##! 2 Multiple namespace blocks retain diagnostics without patches
+namespace CountBlockWithImport {
+  use namespace HH\Lib\C;
+  function with_import(): bool {
+    C\is_empty(vec[]);
+    return \HH\Lib\C\count(vec[]) === 0;
+  }
+}
+namespace CountBlockWithoutImport {
+  function without_import(): bool {
+    return \HH\Lib\C\count(vec[]) === 0;
+  }
+}

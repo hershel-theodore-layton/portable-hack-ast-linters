@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters;
 
-use namespace HH\Lib\{Str, Vec};
+use namespace HH\Lib\{C, Str, Vec};
 use namespace HTL\Pha;
 
 function count_expression_can_be_simplified_linter(
@@ -50,6 +50,18 @@ function count_expression_can_be_simplified_linter(
   $is_c_count = $call ==> $get_call_receiver($call)
     |> Pha\resolve_name($resolver, $script, $$) === 'HH\Lib\C\count';
 
+  $can_use_c = C\count(Pha\index_get_nodes_by_kind(
+    $syntax_index,
+    Pha\KIND_NAMESPACE_DECLARATION,
+  )) <= 1 && C\any(
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_QUALIFIED_NAME),
+    $name ==> {
+      $code = Pha\node_get_code_compressed($script, $name);
+      return Str\starts_with($code, 'C\\') &&
+        Pha\resolve_name($resolver, $script, $name) === 'HH\\Lib\\'.$code;
+    },
+  );
+
   $is_logical_not = $n ==> $is_prefix_unary_expression($n) &&
     $is_exclamation($get_prefix_operator($n));
 
@@ -76,15 +88,17 @@ function count_expression_can_be_simplified_linter(
   };
 
   $get_error = ($parent, $call) ==> {
-    $replace_with = $function_name ==> Pha\patches($script, Pha\patch_node(
-      $parent,
-      Str\format(
-        '%s(%s)',
-        $function_name,
-        Pha\node_get_code($script, $get_argument_list($call)),
-      ),
-      shape('trivia' => Pha\RetainTrivia::BOTH),
-    ));
+    $replace_with = $function_name ==> $can_use_c
+      ? Pha\patches($script, Pha\patch_node(
+        $parent,
+        Str\format(
+          '%s(%s)',
+          $function_name,
+          Pha\node_get_code($script, $get_argument_list($call)),
+        ),
+        shape('trivia' => Pha\RetainTrivia::BOTH),
+      ))
+      : null;
 
     if ($is_logical_not($parent)) {
       return tuple(
