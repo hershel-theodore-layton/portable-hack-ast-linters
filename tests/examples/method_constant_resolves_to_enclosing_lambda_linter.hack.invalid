@@ -1,0 +1,5 @@
+//##! 3 Lambda in a parameter default
+function lambda_parameter_default(
+  mixed $callback = () ==>
+    tuple(__FUNCTION__, __METHOD__, __FUNCTION_CREDENTIAL__),
+): void {}

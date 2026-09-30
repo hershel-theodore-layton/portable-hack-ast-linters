@@ -85,12 +85,6 @@ final class MethodConstantOutsideCallable {
   public string $methodName = __METHOD__;
 }
 
-//##! 3 Lambda in a parameter default
-function lambda_parameter_default(
-  mixed $callback = () ==>
-    tuple(__FUNCTION__, __METHOD__, __FUNCTION_CREDENTIAL__),
-): void {}
-
 //##! 3 Async blocks create implicit lambdas
 function async_block(): void {
   $_ = async {
