@@ -14,10 +14,17 @@ function shout_case_enum_members_linter(
   $linter = __FUNCTION__;
 
   $get_enumerator =
-    Pha\create_member_accessor($script, Pha\MEMBER_ENUMERATOR_NAME)
+    Pha\create_member_accessor(
+      $script,
+      Pha\MEMBER_ENUMERATOR_NAME,
+      Pha\MEMBER_ENUM_CLASS_ENUMERATOR_NAME,
+    )
     |> Pha\returns_token($$);
 
-  return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ENUMERATOR)
+  return Vec\concat(
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ENUMERATOR),
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ENUM_CLASS_ENUMERATOR),
+  )
     |> Vec\filter(
       $$,
       $e ==> $get_enumerator($e)
