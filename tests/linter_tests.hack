@@ -2,24 +2,14 @@
 namespace HTL\PhaLinters\Tests;
 
 use namespace HH;
-use namespace HH\Lib\{C, Dict, File, Math, OS, Regex, Str, Vec};
-use namespace HTL\{Pha, PhaLinters};
-use type HTL\Pragma\Pragmas;
+use namespace HH\Lib\{C, Dict, File, OS, Regex, Str, Vec};
+use namespace HTL\{Pha, PhaLinters, TestChain};
 use function HH\fun_get_function;
 
-<<file: Pragmas(vec['PhaLinters', 'fixme:autoload_your_code'])>>
-
-<<__EntryPoint>>
-async function run_async()[defaults]: Awaitable<void> {
-  $autoloader = __DIR__.'/../vendor/autoload.hack';
-  if (HH\could_include($autoloader)) {
-    require_once $autoloader;
-    new \ReflectionFunction('Facebook\AutoloadMap\initialize') |> $$->invoke();
-  }
-
-  await pragma_test_async();
-  decorator_test();
-
+<<TestChain\Discover>>
+async function linter_fixtures_async(
+  TestChain\Chain $chain,
+)[defaults]: Awaitable<TestChain\Chain> {
   $linters = vec[
     PhaLinters\assignment_to_empty_list_tuple_or_shape_linter<>,
     PhaLinters\async_function_and_method_linter<>,
@@ -109,16 +99,6 @@ async function run_async()[defaults]: Awaitable<void> {
       '/*_*/',
     );
 
-  // Some tests change their behavior on more recent versions of hhvm.
-  // For example, no_elseif_linter<>, since `elseif (expression) {}` will be
-  // parsed as a function call followed by a legacy curly brace subscript.
-  // This is a Hack error, so reporting a lint error is not needed.
-  // The version number (Mmmmpp) Major, minor, patch is the first version
-  // where a 0 (rather than the stored error count) is expected.
-  $tests_that_should_have_zero_errors_on_hhvm_version = dict[
-    'no_elseif_linter' => 415800,
-  ];
-
   $test_groups = await Vec\map_async(
     Vec\concat(
       \glob(__DIR__.'/examples/*.hack') as vec<_>,
@@ -153,118 +133,94 @@ async function run_async()[defaults]: Awaitable<void> {
         $autofix_contents = null;
       }
 
-      return tuple($linter, $name, $contents, $autofix_contents);
+      return tuple(
+        $linter,
+        $name,
+        Str\strip_prefix($p, __DIR__.'/examples/'),
+        $contents,
+        $autofix_contents,
+      );
     },
   );
 
-  // execute linters in a pure context
-  list($errors, $test_count) = ()[] ==> {
-    $errors = vec[];
-    $test_count = 0;
-    $ctx = Pha\create_context();
-
+  $chain = $chain->group(__FUNCTION__);
+  foreach (
+    $test_groups as
+      list($linter, $linter_name, $fixture_name, $full_file, $autofix)
+  ) {
+    // Fixture markers are comments; region markers are not separators.
     foreach (
-      $test_groups as
-        $test_number => list($linter, $linter_name, $full_file, $autofix)
+      Regex\split($full_file, re'~(?=//\#\#! )~') |> Vec\filter($$) as
+        $case_number => $test
     ) {
-      // Keep fixture markers as comments, rather than turning them into
-      // hashbang tokens. Region markers such as //#region are not separators.
-      foreach (
-        Regex\split($full_file, re'~(?=//\#\#! )~') |> Vec\filter($$) as $test
-      ) {
-        ++$test_count;
-        list($script, $ctx) = Pha\parse($test, $ctx);
-        $syntax_index = Pha\create_syntax_kind_index($script);
-        $token_index = Pha\create_token_kind_index($script);
-        $resolver =
-          Pha\create_name_resolver($script, $syntax_index, $token_index);
-        $pragma_map = Pha\create_pragma_map($script, $syntax_index);
-
-        $expected_errors =
-          Regex\every_match($test, re'/\#! (?<err_cnt>\d+)\s/');
-        if (C\count($expected_errors) !== 1) {
-          $errors[] = "ERROR Failed to parse error count directive: \n".$test;
-          continue;
-        }
-
-        $expected = C\onlyx($expected_errors);
-
-        try {
-          $lint_errors = $linter(
-            $script,
-            $syntax_index,
-            $token_index,
-            $resolver,
-            $pragma_map,
-          );
-          $err_cnt = Str\to_int($expected['err_cnt']) as nonnull;
-          $should_be_a_noop = \HHVM_VERSION_ID >=
-            idx(
-              $tests_that_should_have_zero_errors_on_hhvm_version,
-              $linter_name,
-              Math\INT64_MAX,
-            );
-          if ($should_be_a_noop) {
-            $err_cnt = 0;
-          }
-
-          if (C\count($lint_errors) !== $err_cnt) {
-            $errors[] = Str\format(
-              "ERROR Expected %d errors, got %d: %s\n%s",
-              $err_cnt,
-              C\count($lint_errors),
-              Str\join(Vec\map($lint_errors, $e ==> $e->toString()), "\n"),
-              $test,
-            );
-          }
-
-          $patches = Vec\map($lint_errors, $e ==> $e->getPatches())
-            |> Vec\filter_nulls($$);
-
-          if ($autofix is null) {
-            $errors[] = Str\format(
-              "ERROR Expected an autofix file for %s\n",
-              $linter_name,
-            );
-            continue;
-          }
-
-          $autofixed = !C\is_empty($patches)
-            ? Pha\patches_combine_without_conflict_resolution($patches)
-              |> Pha\patches_apply($$)
-            : Pha\node_get_code($script, Pha\SCRIPT_NODE);
-
-          if (!Str\contains($autofix, $autofixed) && !$should_be_a_noop) {
-            $errors[] = Str\format(
-              "The autofix for test %s:%d was not found in the autofix file.\n%s\n",
-              $linter_name,
-              $test_number,
-              $autofixed,
-            );
-          }
-        } catch (Pha\PhaException $e) {
-          $errors[] = Str\format(
-            "ERROR Exception: %s\nCore dump: %s",
-            $e->getMessage(),
-            Pha\node_get_code($script, Pha\SCRIPT_NODE),
-          );
-        }
-      }
+      $chain = $chain->test(
+        $fixture_name.':'.(string)$case_number,
+        ()[] ==> assert_linter_fixture($linter, $linter_name, $test, $autofix),
+      );
     }
+  }
+  return $chain;
+}
 
-    return tuple($errors, $test_count);
-  }();
+function assert_linter_fixture(
+  (function(
+    Pha\Script,
+    Pha\SyntaxIndex,
+    Pha\TokenIndex,
+    Pha\Resolver,
+    Pha\PragmaMap,
+  )[]: vec<PhaLinters\LintError>) $linter,
+  string $linter_name,
+  string $test,
+  ?string $autofix,
+)[]: void {
+  $ctx = Pha\create_context();
+  list($script, $ctx) = Pha\parse($test, $ctx);
+  $syntax_index = Pha\create_syntax_kind_index($script);
+  $token_index = Pha\create_token_kind_index($script);
+  $resolver = Pha\create_name_resolver($script, $syntax_index, $token_index);
+  $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
-  echo Str\format("Ran %d tests, %d failed.\n", $test_count, C\count($errors));
-
-  foreach ($errors as $error) {
-    echo $error."\n\n";
+  $expected_errors = Regex\every_match($test, re'/\#! (?<err_cnt>\d+)\s/');
+  invariant(
+    C\count($expected_errors) === 1,
+    "Failed to parse error count directive:\n%s",
+    $test,
+  );
+  $expected = C\onlyx($expected_errors);
+  $err_cnt = Str\to_int($expected['err_cnt']) as nonnull;
+  $should_be_a_noop =
+    $linter_name === 'no_elseif_linter' && \HHVM_VERSION_ID >= 415800;
+  if ($should_be_a_noop) {
+    $err_cnt = 0;
   }
 
-  echo Str\format(
-    "Running these tests took: %g MB of RAM\n",
-    \memory_get_peak_usage(true) as num / 1000000.,
+  $lint_errors =
+    $linter($script, $syntax_index, $token_index, $resolver, $pragma_map);
+  invariant(
+    C\count($lint_errors) === $err_cnt,
+    "Expected %d errors, got %d: %s\n%s",
+    $err_cnt,
+    C\count($lint_errors),
+    Str\join(Vec\map($lint_errors, $e ==> $e->toString()), "\n"),
+    $test,
   );
 
-  exit(C\is_empty($errors) ? 0 : 1);
+  invariant(
+    $autofix is nonnull,
+    'Expected an autofix file for %s',
+    $linter_name,
+  );
+  $patches = Vec\map($lint_errors, $e ==> $e->getPatches())
+    |> Vec\filter_nulls($$);
+  $autofixed = !C\is_empty($patches)
+    ? Pha\patches_combine_without_conflict_resolution($patches)
+      |> Pha\patches_apply($$)
+    : Pha\node_get_code($script, Pha\SCRIPT_NODE);
+  invariant(
+    Str\contains($autofix, $autofixed) || $should_be_a_noop,
+    "The autofix for %s was not found in the autofix file.\n%s",
+    $linter_name,
+    $autofixed,
+  );
 }

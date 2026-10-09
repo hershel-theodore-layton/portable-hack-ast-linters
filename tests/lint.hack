@@ -41,6 +41,10 @@ async function lint_async()[defaults]: Awaitable<void> {
     new \ReflectionFunction('Facebook\AutoloadMap\initialize') |> $$->invoke();
   }
 
+  exit(await lint_sources_async() ? 0 : 1);
+}
+
+async function lint_sources_async()[defaults]: Awaitable<bool> {
   $linters = get_linters();
   $files = await get_files_async();
   $ctx = Pha\create_context();
@@ -77,7 +81,7 @@ async function lint_async()[defaults]: Awaitable<void> {
 
   await $stdout->writeAllAsync($ok ? "No errors!\n" : "Get fixin'!\n");
 
-  exit($ok ? 0 : 1);
+  return $ok;
 }
 
 function get_linters()[]: vec<TLinter> {

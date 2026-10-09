@@ -17,6 +17,13 @@ this library. This means you can do all the things permitted by the MIT license,
 without having to keep the license comment in the file intact.
 _This choice of license does not change the license for the rest of this project._
 
+## Running the tests
+
+Run `vendor/bin/test-chain --ci` after installing development dependencies.
+The suite checks linter fixtures and autofixes, pragma handling, decorators,
+and the project's source linting. CI runs these before the production package
+is trimmed and typechecked.
+
 ## Which linters are included?
 
 For the full list, see [bundled linters](./BUNDLED_LINTERS.md). Almost all linters from HHAST are included, along with some never-before-seen linters available only in portable-hack-ast-linters.

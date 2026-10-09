@@ -2,7 +2,13 @@
 namespace HTL\PhaLinters\Tests;
 
 use namespace HH\Lib\C;
-use namespace HTL\{Pha, PhaLinters};
+use namespace HTL\{Pha, PhaLinters, TestChain};
+
+<<TestChain\Discover>>
+function decorator_tests(TestChain\Chain $chain)[]: TestChain\Chain {
+  return $chain->group(__FUNCTION__)
+    ->test('decorator_test', decorator_test<>);
+}
 
 function decorator_test()[]: void {
   $linter = PhaLinters\Support\disable_in_generated_source(

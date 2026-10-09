@@ -2,8 +2,14 @@
 namespace HTL\PhaLinters\Tests;
 
 use namespace HH\Lib\{C, Dict, File, Str, Vec};
-use namespace HTL\{Pha, PhaLinters};
+use namespace HTL\{Pha, PhaLinters, TestChain};
 use function HH\fun_get_function;
+
+<<TestChain\Discover>>
+function pragma_tests(TestChain\Chain $chain)[]: TestChain\Chain {
+  return $chain->group(__FUNCTION__)
+    ->testAsync('pragma_test_async', pragma_test_async<>);
+}
 
 async function pragma_test_async()[defaults]: Awaitable<void> {
   // Ignoring no_elseif and use_statement_without_kind.
