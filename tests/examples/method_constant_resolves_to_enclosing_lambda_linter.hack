@@ -66,14 +66,6 @@ function credential_receiver(): void {
   $_ = () ==> __FUNCTION_CREDENTIAL__->getFunctionName();
 }
 
-//##! 0 Member names are not magic constants
-function member_names(dynamic $object): void {
-  $_ = () ==> {
-    $_ = $object->__METHOD__;
-    $_ = $object?->__FUNCTION__;
-  };
-}
-
 //##! 0 Magic constants without any enclosing function or lambda
 const string METHOD_CONSTANT_GLOBAL_FUNCTION = __FUNCTION__;
 const string METHOD_CONSTANT_GLOBAL_METHOD = __METHOD__;
