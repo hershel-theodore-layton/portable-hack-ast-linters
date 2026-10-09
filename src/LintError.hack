@@ -119,8 +119,11 @@ final class LintError {
     return $pragma_map->getOverlappingPragmas($position)
       |> Vec\filter(
         $$,
-        $p ==> Str\trim($p[0], '"\'')
-          |> $$ === 'PhaLinters' || $$ === 'HTL\PhaLinters',
+        $p ==> !C\is_empty($p) &&
+          (
+            Str\trim($p[0], '"\'')
+            |> $$ === 'PhaLinters' || $$ === 'HTL\PhaLinters'
+          ),
       )
       |> Vec\flatten($$)
       |> Vec\map($$, $str ==> Str\trim($str, '"\''))

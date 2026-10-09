@@ -14,9 +14,12 @@ function pragma_prefix_unknown_linter(
   return $pragma_map->getAllPragmas()
     |> Vec\filter(
       $$,
-      $p ==> $p[2][0]
-        |> Str\trim($$, '"\'')
-        |> !C\contains_key($known_pragma_prefixes, $$),
+      $p ==> C\is_empty($p[2]) ||
+        (
+          $p[2][0]
+          |> Str\trim($$, '"\'')
+          |> !C\contains_key($known_pragma_prefixes, $$)
+        ),
     )
     |> Vec\map(
       $$,
@@ -25,7 +28,11 @@ function pragma_prefix_unknown_linter(
         $pragma_map,
         $p[0],
         $linter,
-        'This pragma prefix is not known. '.
+        (
+          C\is_empty($p[2])
+            ? 'This pragma has no prefix. '
+            : 'This pragma prefix is not known. '
+        ).
         'Known prefixes: '.
         Str\join($known_pragma_prefixes, ', '),
       ),

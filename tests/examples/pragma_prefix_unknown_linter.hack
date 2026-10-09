@@ -11,3 +11,16 @@ function func1(): void {
   pragma('known_prefix', 'ok=1');
   pragma('unknown_prefix', 'ok=0');
 }
+
+//##! 3
+namespace Linters\Tests\EmptyPragmaPrefix;
+
+use type HTL\Pragma\Pragmas;
+use function HTL\Pragma\pragma;
+
+<<file: Pragmas(vec[])>>
+
+<<Pragmas(vec[])>>
+function empty_directives(): void {
+  pragma();
+}
