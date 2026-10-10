@@ -37,3 +37,22 @@ function func2(): void {
     }
   }
 }
+
+//##! 5
+function nested_if_bodies(bool $x, vec<bool> $xs): void {
+  while ($x) if ($x) { break; }
+  for (; $x; ) if ($x) { break; }
+  foreach ($xs as $v) if ($v) { break; }
+  do if ($x) { break; } while ($x);
+  if ($x) if ($x) { echo 'yes'; } else { echo 'no'; }
+}
+
+//##! 0
+function else_if_chain(bool $x): void {
+  if ($x) { echo 'a'; } else if ($x) { echo 'b'; } else { echo 'c'; }
+}
+
+//##! 2
+function nested_unbraced_bodies(bool $x): void {
+  while ($x) if ($x) echo 'yes'; else { echo 'no'; }
+}

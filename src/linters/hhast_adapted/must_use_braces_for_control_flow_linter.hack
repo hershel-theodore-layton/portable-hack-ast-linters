@@ -1,7 +1,7 @@
 /** portable-hack-ast-linters is MIT licensed, see /LICENSE. */
 namespace HTL\PhaLinters;
 
-use namespace HH\Lib\Vec;
+use namespace HH\Lib\{C, Vec};
 use namespace HTL\Pha;
 
 function must_use_braces_for_control_flow_linter(
@@ -13,6 +13,9 @@ function must_use_braces_for_control_flow_linter(
 )[]: vec<LintError> {
   $linter = __FUNCTION__;
 
+  $is_compound_statement =
+    Pha\create_syntax_matcher($script, Pha\KIND_COMPOUND_STATEMENT);
+  $is_else_clause = Pha\create_syntax_matcher($script, Pha\KIND_ELSE_CLAUSE);
   $is_compound_statement_or_if_statement = Pha\create_syntax_matcher(
     $script,
     Pha\KIND_COMPOUND_STATEMENT,
@@ -29,10 +32,14 @@ function must_use_braces_for_control_flow_linter(
     Pha\MEMBER_WHILE_BODY,
   );
 
-  $is_braceless = $node ==>
-    $get_body($node) |> !$is_compound_statement_or_if_statement($$);
+  $is_braceless = $node ==> $get_body($node)
+    |> !(
+      $is_else_clause($node)
+        ? $is_compound_statement_or_if_statement($$)
+        : $is_compound_statement($$)
+    );
 
-  return Vec\concat(
+  $braceless = Vec\concat(
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_DO_STATEMENT),
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_ELSE_CLAUSE),
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_IF_STATEMENT),
@@ -40,21 +47,29 @@ function must_use_braces_for_control_flow_linter(
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_FOREACH_STATEMENT),
     Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_WHILE_STATEMENT),
   )
-    |> Vec\filter($$, $is_braceless)
-    |> Vec\map(
-      $$,
-      $n ==> LintError::createWithPatches(
-        $script,
-        $pragma_map,
-        $n,
-        $linter,
-        'Use curly braces {} for control flow.',
-        Pha\patches($script, Pha\patch_node(
+    |> Vec\filter($$, $is_braceless);
+
+  return Vec\map(
+    $braceless,
+    $n ==> LintError::createWithPatches(
+      $script,
+      $pragma_map,
+      $n,
+      $linter,
+      'Use curly braces {} for control flow.',
+      // Fix inner bodies first, so nested diagnostics never overlap patches.
+      C\any(
+        $braceless,
+        $other ==> $n !== $other &&
+          C\contains(Pha\node_get_syntax_ancestors($script, $other), $n),
+      )
+        ? null
+        : Pha\patches($script, Pha\patch_node(
           $get_body($n),
           $get_body($n)
             |> Pha\node_get_code($script, $$)
             |> "{\n ".$$.'}',
         )),
-      ),
-    );
+    ),
+  );
 }
