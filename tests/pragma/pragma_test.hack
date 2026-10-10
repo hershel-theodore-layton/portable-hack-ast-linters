@@ -8,7 +8,81 @@ use function HH\fun_get_function;
 <<TestChain\Discover>>
 function pragma_tests(TestChain\Chain $chain)[]: TestChain\Chain {
   return $chain->group(__FUNCTION__)
-    ->testAsync('pragma_test_async', pragma_test_async<>);
+    ->testAsync('pragma_test_async', pragma_test_async<>)
+    ->testWith2Params(
+      'empty pragma directives',
+      () ==> dict[
+        'empty call' => tuple(
+          'use function HTL\Pragma\pragma; '.
+          'function f(): void { pragma(); "x"; }',
+          false,
+        ),
+        'empty attribute' => tuple(
+          'use type HTL\Pragma\Pragmas; '.
+          '<<Pragmas(vec[])>> function f(): void { "x"; }',
+          false,
+        ),
+        'empty file attribute' => tuple(
+          'use type HTL\Pragma\Pragmas; '.
+          '<<file: Pragmas(vec[])>> function f(): void { "x"; }',
+          false,
+        ),
+        'empty alongside valid pragma' => tuple(
+          'use type HTL\Pragma\Pragmas; '.
+          "<<Pragmas(vec[], vec['PhaLinters', ".
+          "'fixme:pragma_prefix_unknown', ".
+          "'fixme:prefer_single_quoted_string_literals'])>> ".
+          'function f(): void { "x"; }',
+          true,
+        ),
+      ],
+      (string $source, bool $expect_ignored) ==> {
+        list($empty_script, $_ctx) = Pha\parse($source, Pha\create_context());
+        $empty_syntax_index = Pha\create_syntax_kind_index($empty_script);
+        $empty_token_index = Pha\create_token_kind_index($empty_script);
+        $empty_resolver = Pha\create_name_resolver(
+          $empty_script,
+          $empty_syntax_index,
+          $empty_token_index,
+        );
+        $empty_map = Pha\create_pragma_map($empty_script, $empty_syntax_index);
+        $quote_errors = PhaLinters\prefer_single_quoted_string_literals_linter(
+          $empty_script,
+          $empty_syntax_index,
+          $empty_token_index,
+          $empty_resolver,
+          $empty_map,
+        );
+        invariant(
+          C\count($quote_errors) === 1,
+          'Expected one quote diagnostic',
+        );
+        invariant(
+          $quote_errors[0]->isIgnored() === $expect_ignored,
+          'Only the valid pragma can ignore the quote error',
+        );
+        $prefix_errors = PhaLinters\pragma_prefix_unknown_linter(
+          $empty_script,
+          $empty_map,
+          keyset['PhaLinters'],
+        );
+        invariant(
+          C\count($prefix_errors) === 1,
+          'Expected one empty-prefix diagnostic',
+        );
+        invariant(
+          Str\starts_with(
+            $prefix_errors[0]->getDescription(),
+            'This pragma has no prefix.',
+          ),
+          'Expected the empty-prefix message',
+        );
+        invariant(
+          $prefix_errors[0]->isIgnored() === $expect_ignored,
+          'Only the valid pragma can ignore the empty-prefix error',
+        );
+      },
+    );
 }
 
 async function pragma_test_async()[defaults]: Awaitable<void> {
@@ -87,74 +161,4 @@ async function pragma_test_async()[defaults]: Awaitable<void> {
     }
   }
 
-  // Empty directives cannot suppress an ordinary diagnostic or abort linting.
-  foreach (
-    vec[
-      tuple(
-        'use function HTL\Pragma\pragma; '.
-        'function f(): void { pragma(); "x"; }',
-        false,
-      ),
-      tuple(
-        'use type HTL\Pragma\Pragmas; '.
-        '<<Pragmas(vec[])>> function f(): void { "x"; }',
-        false,
-      ),
-      tuple(
-        'use type HTL\Pragma\Pragmas; '.
-        '<<file: Pragmas(vec[])>> function f(): void { "x"; }',
-        false,
-      ),
-      tuple(
-        'use type HTL\Pragma\Pragmas; '.
-        "<<Pragmas(vec[], vec['PhaLinters', ".
-        "'fixme:pragma_prefix_unknown', ".
-        "'fixme:prefer_single_quoted_string_literals'])>> ".
-        'function f(): void { "x"; }',
-        true,
-      ),
-    ] as list($source, $expect_ignored)
-  ) {
-    list($empty_script, $ctx) = Pha\parse($source, $ctx);
-    $empty_syntax_index = Pha\create_syntax_kind_index($empty_script);
-    $empty_token_index = Pha\create_token_kind_index($empty_script);
-    $empty_resolver = Pha\create_name_resolver(
-      $empty_script,
-      $empty_syntax_index,
-      $empty_token_index,
-    );
-    $empty_map = Pha\create_pragma_map($empty_script, $empty_syntax_index);
-    $quote_errors = PhaLinters\prefer_single_quoted_string_literals_linter(
-      $empty_script,
-      $empty_syntax_index,
-      $empty_token_index,
-      $empty_resolver,
-      $empty_map,
-    );
-    invariant(C\count($quote_errors) === 1, 'Expected one quote diagnostic');
-    invariant(
-      $quote_errors[0]->isIgnored() === $expect_ignored,
-      'Only the valid pragma can ignore the quote error',
-    );
-    $prefix_errors = PhaLinters\pragma_prefix_unknown_linter(
-      $empty_script,
-      $empty_map,
-      keyset['PhaLinters'],
-    );
-    invariant(
-      C\count($prefix_errors) === 1,
-      'Expected one empty-prefix diagnostic',
-    );
-    invariant(
-      Str\starts_with(
-        $prefix_errors[0]->getDescription(),
-        'This pragma has no prefix.',
-      ),
-      'Expected the empty-prefix message',
-    );
-    invariant(
-      $prefix_errors[0]->isIgnored() === $expect_ignored,
-      'Only the valid pragma can ignore the empty-prefix error',
-    );
-  }
 }
