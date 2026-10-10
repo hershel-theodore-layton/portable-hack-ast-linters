@@ -33,8 +33,7 @@ function prefer_use_clause_over_fully_qualified_names_linter(
 
   $errors = vec[];
   foreach (
-    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_QUALIFIED_NAME) as
-      $node
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_QUALIFIED_NAME) as $node
   ) {
     $name = Pha\node_get_code_compressed($script, $node);
     if (!Str\starts_with($name, '\\')) {

@@ -50,17 +50,18 @@ function count_expression_can_be_simplified_linter(
   $is_c_count = $call ==> $get_call_receiver($call)
     |> Pha\resolve_name($resolver, $script, $$) === 'HH\Lib\C\count';
 
-  $can_use_c = C\count(Pha\index_get_nodes_by_kind(
-    $syntax_index,
-    Pha\KIND_NAMESPACE_DECLARATION,
-  )) <= 1 && C\any(
-    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_QUALIFIED_NAME),
-    $name ==> {
-      $code = Pha\node_get_code_compressed($script, $name);
-      return Str\starts_with($code, 'C\\') &&
-        Pha\resolve_name($resolver, $script, $name) === 'HH\\Lib\\'.$code;
-    },
-  );
+  $can_use_c = C\count(
+    Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_NAMESPACE_DECLARATION),
+  ) <=
+    1 &&
+    C\any(
+      Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_QUALIFIED_NAME),
+      $name ==> {
+        $code = Pha\node_get_code_compressed($script, $name);
+        return Str\starts_with($code, 'C\\') &&
+          Pha\resolve_name($resolver, $script, $name) === 'HH\\Lib\\'.$code;
+      },
+    );
 
   $is_logical_not = $n ==> $is_prefix_unary_expression($n) &&
     $is_exclamation($get_prefix_operator($n));
