@@ -56,3 +56,8 @@ function else_if_chain(bool $x): void {
 function nested_unbraced_bodies(bool $x): void {
   while ($x) if ($x) echo 'yes'; else { echo 'no'; }
 }
+
+//##! 3
+function three_nested_bodies(bool $x): void {
+  while ($x) if ($x) if ($x) echo 'yes'; else { echo 'no'; }
+}

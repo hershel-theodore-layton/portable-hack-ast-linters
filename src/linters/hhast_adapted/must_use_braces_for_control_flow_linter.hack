@@ -61,7 +61,13 @@ function must_use_braces_for_control_flow_linter(
       C\any(
         $braceless,
         $other ==> $n !== $other &&
-          C\contains(Pha\node_get_syntax_ancestors($script, $other), $n),
+          (
+            $other === $get_body($n) ||
+            C\contains(
+              Pha\node_get_syntax_ancestors($script, $other),
+              $get_body($n),
+            )
+          ),
       )
         ? null
         : Pha\patches($script, Pha\patch_node(
