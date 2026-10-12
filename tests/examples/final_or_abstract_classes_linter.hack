@@ -35,3 +35,12 @@ xhp /* Keep the modifier comment. */ class XhpClass {}
 <<__ConsistentConstruct>> final class AlreadyFinal {}
 
 <<__ConsistentConstruct>> abstract class AlreadyAbstract {}
+
+//##! 1
+
+<<__ConsistentConstruct>>class NoSpace {}
+
+//##! 1
+
+<<__ConsistentConstruct>> // Keep this line comment above the modifier.
+class TrailingComment {}
