@@ -21,6 +21,8 @@ function final_or_abstract_classes_linter(
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_NAME);
   $get_class_keyword =
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_KEYWORD);
+  $get_xhp_keyword =
+    Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_XHP);
   $get_classish_modifiers =
     Pha\create_member_accessor($script, Pha\MEMBER_CLASSISH_MODIFIERS);
 
@@ -37,18 +39,29 @@ function final_or_abstract_classes_linter(
     )
     |> Vec\map(
       $$,
-      $c ==> LintError::createWithPatches(
-        $script,
-        $pragma_map,
-        $get_class_name($c),
-        $linter,
-        'Classes should be abstract or final.',
-        Pha\patches($script, Pha\patch_node(
-          $c,
-          'final '.
-          Pha\node_get_code_without_leading_or_trailing_trivia($script, $c),
-          shape('trivia' => Pha\RetainTrivia::BOTH),
-        )),
-      ),
+      $c ==> {
+        $first = Support\get_first_token($script, $get_classish_modifiers($c));
+        if ($first === Pha\NIL) {
+          $xhp = $get_xhp_keyword($c);
+          $first = Pha\is_missing($xhp) ? $get_class_keyword($c) : $xhp;
+        }
+
+        return LintError::createWithPatches(
+          $script,
+          $pragma_map,
+          $get_class_name($c),
+          $linter,
+          'Classes should be abstract or final.',
+          Pha\patches($script, Pha\patch_node(
+            Pha\as_nonnil($first),
+            'final '.
+            Pha\node_get_code_without_leading_or_trailing_trivia(
+              $script,
+              $first,
+            ),
+            shape('trivia' => Pha\RetainTrivia::BOTH),
+          )),
+        );
+      },
     );
 }
