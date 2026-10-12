@@ -97,3 +97,50 @@ function example(): mixed {
 function example(mixed $value = \Legacy\OLD_VALUE): void {
   other(\Legacy\OLD_VALUE);
 }
+
+//##! 2 Enum values
+namespace Client;
+use const Legacy\OLD_VALUE as IMPORTED_VALUE;
+enum E: int {
+  VALUE = IMPORTED_VALUE;
+}
+enum class EC: int {
+  int VALUE = \Legacy\OLD_VALUE;
+}
+
+//##! 2 Nameof with fully qualified and current namespace names
+namespace Legacy;
+function example(): void {
+  $a = nameof \Legacy\OldType;
+  $b = nameof OldType;
+}
+
+//##! 6 Attributes, class constants, traits, requirements, and catches
+namespace Client;
+use type Legacy\OldType as Old;
+use const Legacy\OLD_VALUE as VALUE;
+<<Old(VALUE)>>
+class Example {
+  use Old;
+  const int C = VALUE;
+  public function example(): void {
+    try {} catch (Old $e) {}
+  }
+}
+trait ExampleTrait {
+  require extends Old;
+}
+
+//##! 3 Imported builtin function and auto-imported type
+namespace Client;
+use function var_dump;
+function example(): void {
+  var_dump('value');
+  \var_dump('value');
+  new Vector();
+}
+
+//##! 1 XHP opening names
+function example(): void {
+  $element = <Legacy:old_element></Legacy:old_element>;
+}

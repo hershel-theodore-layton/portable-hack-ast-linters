@@ -46,6 +46,9 @@ advice reported at each reference. Names resolve through namespaces and import
 aliases; imports and declarations themselves do not produce diagnostics.
 This lets projects deprecate symbols they do not own. Diagnostics support the
 usual `fixme:disallowed_function_type_or_constant` pragma and have no autofix.
+Matching uses the spelling returned by `Pha\Resolver`. Its current resolver
+does not resolve unqualified imported type aliases in `nameof`; use a fully
+qualified name there to receive this diagnostic.
 
 ### Missing linters from HHAST
 

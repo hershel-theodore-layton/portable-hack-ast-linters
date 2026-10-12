@@ -77,11 +77,14 @@ async function linter_fixtures_async(
     PhaLinters\disallowed_function_type_or_constant_linter(shape(
       'functions' => dict[
         'Legacy\\run' => 'Use Modern\\run() instead.',
+        'var_dump' => 'Use structured logging instead.',
         '\\Legacy\\Shared' => 'Function advice.',
       ],
       'types' => dict[
         '\\Legacy\\OldType' => 'Use Modern\\NewType instead.',
         'Legacy\\Shared' => 'Type advice.',
+        'Vector' => 'Use vec instead.',
+        'Legacy\\old_element' => 'Use the new element instead.',
       ],
       'constants' => dict[
         'Legacy\\OLD_VALUE' => 'Use Modern\\NEW_VALUE instead.',
@@ -177,7 +180,10 @@ async function linter_fixtures_async(
   }
   $chain = $chain->test('Disallowed symbol configuration and advice', ()[] ==> {
     list($script, $_) = Pha\parse(
-      'namespace Legacy; function example(): void { '.
+      'namespace Legacy; use type HTL\\Pragma\\Pragmas; '.
+      "<<file: Pragmas(vec['PhaLinters', ".
+      "'fixme:disallowed_function_type_or_constant'])>> ".
+      'function example(): void { '.
       'Shared(); new Shared(); $value = Shared; }',
       Pha\create_context(),
     );
@@ -214,6 +220,10 @@ async function linter_fixtures_async(
         Vec\map($errors, $e ==> $e->getDescription()) === $expected,
         'Expected advice for the configured symbol kinds in source order',
       );
+      foreach ($errors as $error) {
+        invariant($error->isIgnored(), 'Expected file pragma suppression');
+        invariant($error->getPatches() is null, 'Expected no autofix');
+      }
     }
   });
   return $chain;

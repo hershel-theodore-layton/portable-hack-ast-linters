@@ -43,6 +43,8 @@ function disallowed_function_type_or_constant_linter(
       Pha\MEMBER_CONSTRUCTOR_CALL_TYPE,
       Pha\MEMBER_SCOPE_RESOLUTION_QUALIFIER,
       Pha\MEMBER_COLLECTION_LITERAL_NAME,
+      Pha\MEMBER_NAMEOF_TARGET,
+      Pha\MEMBER_XHP_OPEN_NAME,
     ],
     'constants' => vec[
       Pha\MEMBER_BINARY_LEFT_OPERAND,
@@ -60,6 +62,8 @@ function disallowed_function_type_or_constant_linter(
       Pha\MEMBER_THROW_EXPRESSION,
       Pha\MEMBER_YIELD_OPERAND,
       Pha\MEMBER_SIMPLE_INITIALIZER_VALUE,
+      Pha\MEMBER_ENUMERATOR_VALUE,
+      Pha\MEMBER_CAST_OPERAND,
       Pha\MEMBER_FUNCTION_CALL_ARGUMENT_LIST,
       Pha\MEMBER_CONSTRUCTOR_CALL_ARGUMENT_LIST,
       Pha\MEMBER_ELEMENT_KEY,
@@ -97,7 +101,11 @@ function disallowed_function_type_or_constant_linter(
     $is_name = Pha\create_matcher(
       $script,
       vec[Pha\KIND_QUALIFIED_NAME],
-      vec[Pha\KIND_NAME],
+      vec[
+        Pha\KIND_NAME,
+        Pha\KIND_XHP_CLASS_NAME,
+        Pha\KIND_XHP_ELEMENT_NAME,
+      ],
       vec[],
     );
     $is_list = Pha\create_syntax_matcher($script, Pha\KIND_NODE_LIST);
