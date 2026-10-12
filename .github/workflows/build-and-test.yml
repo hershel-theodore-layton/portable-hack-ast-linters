@@ -42,5 +42,5 @@ jobs:
           # Source linting runs as part of the test-chain suite.
           skip_lint: true
           test_engine: test-chain
-          lint_engine: pha
+          lint_engine: pha-server
           typecheck_engine: strict
