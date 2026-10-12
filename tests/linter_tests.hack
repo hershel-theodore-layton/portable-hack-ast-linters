@@ -85,9 +85,13 @@ async function linter_fixtures_async(
         'Legacy\\Shared' => 'Type advice.',
         'Vector' => 'Use vec instead.',
         'Legacy\\old_element' => 'Use the new element instead.',
+        'Legacy\\OldTrait' => 'Use the new trait instead.',
+        'Legacy\\OldException' => 'Use the new exception instead.',
+        'Legacy\\OldAttribute' => 'Use the new attribute instead.',
       ],
       'constants' => dict[
         'Legacy\\OLD_VALUE' => 'Use Modern\\NEW_VALUE instead.',
+        'Legacy\\OLD_FLAG' => 'Use the new flag instead.',
         '\\Legacy\\Shared' => 'Constant advice.',
       ],
     ));
