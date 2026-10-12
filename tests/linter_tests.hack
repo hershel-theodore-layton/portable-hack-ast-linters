@@ -73,6 +73,22 @@ async function linter_fixtures_async(
       $f ==> Str\slice($f, Str\search_last($f, '\\') as nonnull + 1),
     );
 
+  $linters['disallowed_function_type_or_constant_linter'] =
+    PhaLinters\disallowed_function_type_or_constant_linter(shape(
+      'functions' => dict[
+        'Legacy\\run' => 'Use Modern\\run() instead.',
+        '\\Legacy\\Shared' => 'Function advice.',
+      ],
+      'types' => dict[
+        '\\Legacy\\OldType' => 'Use Modern\\NewType instead.',
+        'Legacy\\Shared' => 'Type advice.',
+      ],
+      'constants' => dict[
+        'Legacy\\OLD_VALUE' => 'Use Modern\\NEW_VALUE instead.',
+        '\\Legacy\\Shared' => 'Constant advice.',
+      ],
+    ));
+
   $linters['license_header_linter'] = ($script, $_, $_, $_, $pragma_map)[] ==>
     PhaLinters\license_header_linter(
       $script,
@@ -159,6 +175,47 @@ async function linter_fixtures_async(
       );
     }
   }
+  $chain = $chain->test('Disallowed symbol configuration and advice', ()[] ==> {
+    list($script, $_) = Pha\parse(
+      'namespace Legacy; function example(): void { '.
+      'Shared(); new Shared(); $value = Shared; }',
+      Pha\create_context(),
+    );
+    $syntax_index = Pha\create_syntax_kind_index($script);
+    $token_index = Pha\create_token_kind_index($script);
+    $resolver = Pha\create_name_resolver($script, $syntax_index, $token_index);
+    $pragma_map = Pha\create_pragma_map($script, $syntax_index);
+    $configurations = vec[
+      tuple(shape(), vec[]),
+      tuple(shape('functions' => dict['Legacy\\Shared' => '']), vec['']),
+      tuple(
+        shape('types' => dict['\\Legacy\\Shared' => 'Type advice.']),
+        vec['Type advice.'],
+      ),
+      tuple(
+        shape('constants' => dict['Legacy\\Shared' => 'Constant advice.']),
+        vec['Constant advice.'],
+      ),
+      tuple(
+        shape(
+          'functions' => dict['\\Legacy\\Shared' => 'Function advice.'],
+          'types' => dict['Legacy\\Shared' => 'Type advice.'],
+          'constants' => dict['\\Legacy\\Shared' => 'Constant advice.'],
+        ),
+        vec['Function advice.', 'Type advice.', 'Constant advice.'],
+      ),
+    ];
+    foreach ($configurations as list($configuration, $expected)) {
+      $linter =
+        PhaLinters\disallowed_function_type_or_constant_linter($configuration);
+      $errors =
+        $linter($script, $syntax_index, $token_index, $resolver, $pragma_map);
+      invariant(
+        Vec\map($errors, $e ==> $e->getDescription()) === $expected,
+        'Expected advice for the configured symbol kinds in source order',
+      );
+    }
+  });
   return $chain;
 }
 
