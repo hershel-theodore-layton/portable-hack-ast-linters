@@ -110,9 +110,12 @@ namespace DisallowedFixture\ExcludedReferences {
   use function Legacy\run;
   use type Legacy\OldType;
   use const Legacy\OLD_VALUE;
-  function example(\Other\InstanceType $value): void {
+  function example(
+    \Other\InstanceType $value,
+    ?\Other\InstanceType $nullable,
+  ): void {
     $value->run();
-    $value?->run();
+    $nullable?->run();
     \Other\Type::run();
     $constant = \Other\Type::OLD_VALUE;
     $callback = \Other\Type::run<>;
