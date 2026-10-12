@@ -226,6 +226,28 @@ async function linter_fixtures_async(
       }
     }
   });
+  $chain = $chain->test('Disallowed nameof references', ()[] ==> {
+    $source = '//##! 2 Nameof references'.
+      "\n".
+      'namespace Legacy; function example(): void { '.
+      '$a = nameof \\Legacy\\OldType; $b = nameof OldType; }';
+    list($script, $_) = Pha\parse($source, Pha\create_context());
+    $syntax_index = Pha\create_syntax_kind_index($script);
+    // Older HHVM parsers do not support nameof.
+    if (
+      C\is_empty(
+        Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_NAMEOF_EXPRESSION),
+      )
+    ) {
+      return;
+    }
+    assert_linter_fixture(
+      $linters['disallowed_function_type_or_constant_linter'],
+      'disallowed_function_type_or_constant_linter',
+      $source,
+      $source,
+    );
+  });
   return $chain;
 }
 

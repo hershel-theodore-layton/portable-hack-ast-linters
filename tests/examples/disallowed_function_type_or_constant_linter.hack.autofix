@@ -108,13 +108,6 @@ enum class EC: int {
   int VALUE = \Legacy\OLD_VALUE;
 }
 
-//##! 2 Nameof with fully qualified and current namespace names
-namespace Legacy;
-function example(): void {
-  $a = nameof \Legacy\OldType;
-  $b = nameof OldType;
-}
-
 //##! 6 Attributes, class constants, traits, requirements, and catches
 namespace Client;
 use type Legacy\OldType as Old;
