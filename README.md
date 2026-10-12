@@ -28,30 +28,6 @@ is trimmed and typechecked.
 
 For the full list, see [bundled linters](./BUNDLED_LINTERS.md). Almost all linters from HHAST are included, along with some never-before-seen linters available only in portable-hack-ast-linters.
 
-### Disallowing third-party symbols
-
-`disallowed_function_type_or_constant_linter` takes a shape with optional
-`functions`, `types`, and `constants` dictionaries and returns a regular linter:
-
-```Hack
-$linter = PhaLinters\disallowed_function_type_or_constant_linter(shape(
-  'functions' => dict['Legacy\\run' => 'Use Modern\\run() instead.'],
-  'types' => dict['\\Legacy\\OldType' => 'Use Modern\\NewType instead.'],
-  'constants' => dict['Legacy\\OLD_VALUE' => 'Use Modern\\NEW_VALUE instead.'],
-));
-```
-
-Keys are fully qualified names, with or without a leading `\`. Values are the
-advice reported at each reference. Names resolve through namespaces and import
-aliases; imports and declarations themselves do not produce diagnostics.
-This lets projects deprecate symbols they do not own. Diagnostics support the
-usual `fixme:disallowed_function_type_or_constant` pragma and have no autofix.
-Matching is exact and case-sensitive, using the spelling `Pha\Resolver`
-reports. XHP opening names such as `<Legacy:old_element>` use the key
-`Legacy\old_element`; closing tags do not produce a second diagnostic.
-The resolver does not resolve unqualified imported type aliases in `nameof`;
-use a fully qualified name there to receive this diagnostic.
-
 ### Missing linters from HHAST
 
 Some linters from HHAST are not included in this library.
