@@ -59,7 +59,7 @@ async function lint_sources_async()[defaults]: Awaitable<bool> {
     list($script, $ctx) = Pha\parse($file['contents'], $ctx);
     $syntax_index = Pha\create_syntax_kind_index($script);
     $token_index = Pha\create_token_kind_index($script);
-    $resolver = Pha\create_name_resolver($script, $syntax_index, $token_index);
+    $resolver = Pha\create_name_resolver_v2($script, $syntax_index, $token_index);
     $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
     $error_text = Vec\map(

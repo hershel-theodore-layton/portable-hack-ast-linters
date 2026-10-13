@@ -31,7 +31,7 @@ function decorator_test()[]: void {
     list($script, $ctx) = Pha\parse($source, $ctx);
     $syntax_index = Pha\create_syntax_kind_index($script);
     $token_index = Pha\create_token_kind_index($script);
-    $resolver = Pha\create_name_resolver($script, $syntax_index, $token_index);
+    $resolver = Pha\create_name_resolver_v2($script, $syntax_index, $token_index);
     $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
     $errors =

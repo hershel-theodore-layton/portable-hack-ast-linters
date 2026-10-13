@@ -193,7 +193,7 @@ async function linter_fixtures_async(
     );
     $syntax_index = Pha\create_syntax_kind_index($script);
     $token_index = Pha\create_token_kind_index($script);
-    $resolver = Pha\create_name_resolver($script, $syntax_index, $token_index);
+    $resolver = Pha\create_name_resolver_v2($script, $syntax_index, $token_index);
     $pragma_map = Pha\create_pragma_map($script, $syntax_index);
     $configurations = vec[
       tuple(shape(), vec[]),
@@ -231,10 +231,12 @@ async function linter_fixtures_async(
     }
   });
   $chain = $chain->test('Disallowed nameof references', ()[] ==> {
-    $source = '//##! 2 Nameof references'.
+    $source = '//##! 3 Nameof references'.
       "\n".
-      'namespace Legacy; function example(): void { '.
-      '$a = nameof \\Legacy\\OldType; $b = nameof OldType; }';
+      'namespace Legacy; use type Legacy\\OldType as Old; '.
+      'function example(): void { '.
+      '$a = nameof \\Legacy\\OldType; $b = nameof OldType; '.
+      '$c = nameof Old; }';
     list($script, $_) = Pha\parse($source, Pha\create_context());
     $syntax_index = Pha\create_syntax_kind_index($script);
     // Older HHVM parsers do not support nameof.
@@ -271,7 +273,7 @@ function assert_linter_fixture(
   list($script, $ctx) = Pha\parse($test, $ctx);
   $syntax_index = Pha\create_syntax_kind_index($script);
   $token_index = Pha\create_token_kind_index($script);
-  $resolver = Pha\create_name_resolver($script, $syntax_index, $token_index);
+  $resolver = Pha\create_name_resolver_v2($script, $syntax_index, $token_index);
   $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
   $expected_errors = Regex\every_match($test, re'/\#! (?<err_cnt>\d+)\s/');

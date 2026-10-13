@@ -40,7 +40,7 @@ function pragma_tests(TestChain\Chain $chain)[]: TestChain\Chain {
         list($empty_script, $_ctx) = Pha\parse($source, Pha\create_context());
         $empty_syntax_index = Pha\create_syntax_kind_index($empty_script);
         $empty_token_index = Pha\create_token_kind_index($empty_script);
-        $empty_resolver = Pha\create_name_resolver(
+        $empty_resolver = Pha\create_name_resolver_v2(
           $empty_script,
           $empty_syntax_index,
           $empty_token_index,
@@ -142,7 +142,7 @@ async function pragma_test_async()[defaults]: Awaitable<void> {
   list($script, $ctx) = Pha\parse($pragma_example, $ctx);
   $syntax_index = Pha\create_syntax_kind_index($script);
   $token_index = Pha\create_token_kind_index($script);
-  $resolver = Pha\create_name_resolver($script, $syntax_index, $token_index);
+  $resolver = Pha\create_name_resolver_v2($script, $syntax_index, $token_index);
   $pragma_map = Pha\create_pragma_map($script, $syntax_index);
 
   foreach ($linters as $linter_name => $linter) {
