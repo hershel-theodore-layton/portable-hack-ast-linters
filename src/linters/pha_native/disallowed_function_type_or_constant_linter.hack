@@ -6,12 +6,7 @@ use namespace HTL\Pha;
 
 /** Reports references to configured symbols with the supplied advice. */
 function disallowed_function_type_or_constant_linter(
-  shape(
-    ?'functions' => dict<string, string>,
-    ?'types' => dict<string, string>,
-    ?'constants' => dict<string, string>,
-    /*_*/
-  ) $configuration,
+  TDisallowedEntities $configuration,
 )[]: (function(
   Pha\Script,
   Pha\SyntaxIndex,

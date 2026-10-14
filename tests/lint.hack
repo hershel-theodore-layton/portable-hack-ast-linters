@@ -102,6 +102,9 @@ function get_linters()[]: vec<TLinter> {
     */
     PhaLinters\count_expression_can_be_simplified_linter<>,
     PhaLinters\dict_literal_keys_must_be_unique_linter<>,
+    PhaLinters\disallowed_function_type_or_constant_linter(
+      PhaLinters\disallowed_entities_preset_prefer_hsl(),
+    ),
     PhaLinters\dont_await_in_a_loop_linter<>,
     PhaLinters\dont_create_forwarding_lambdas_linter<>,
     PhaLinters\dont_discard_new_expressions_linter<>,

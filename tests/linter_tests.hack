@@ -196,7 +196,7 @@ async function linter_fixtures_async(
     $resolver = Pha\create_name_resolver_v2($script, $syntax_index, $token_index);
     $pragma_map = Pha\create_pragma_map($script, $syntax_index);
     $configurations = vec[
-      tuple(shape(), vec[]),
+      tuple(PhaLinters\merge_disallowed_entities(), vec[]),
       tuple(shape('functions' => dict['Legacy\\Shared' => '']), vec['']),
       tuple(
         shape('types' => dict['\\Legacy\\Shared' => 'Type advice.']),
@@ -205,6 +205,21 @@ async function linter_fixtures_async(
       tuple(
         shape('constants' => dict['Legacy\\Shared' => 'Constant advice.']),
         vec['Constant advice.'],
+      ),
+      tuple(
+        PhaLinters\merge_disallowed_entities(
+          shape(
+            'functions' => dict['Legacy\\Shared' => 'Function advice.'],
+            'types' => dict['\\Legacy\\Shared' => 'Type advice.'],
+          ),
+          shape(),
+          shape('functions' => dict[]),
+          shape(
+            'functions' => dict['\\Legacy\\Shared' => 'Later advice.'],
+            'constants' => dict['Legacy\\Shared' => 'Constant advice.'],
+          ),
+        ),
+        vec['Function advice.', 'Type advice.', 'Constant advice.'],
       ),
       tuple(
         shape(
@@ -228,6 +243,91 @@ async function linter_fixtures_async(
         invariant($error->isIgnored(), 'Expected file pragma suppression');
         invariant($error->getPatches() is null, 'Expected no autofix');
       }
+    }
+  });
+  $chain = $chain->test('Prefer HSL preset', ()[] ==> {
+    list($script, $_) = Pha\parse(
+      'namespace Client; use function strlen as byte_length; '.
+      'use function mb_strlen as text_length; '.
+      'use function curl_exec as request; use const M_PI as pi; '.
+      'function count(): int { return 0; } '.
+      'function example(): void { '.
+      '\\count(vec[]); byte_length("text"); '.
+      '$read = \\file_get_contents<>; '.
+      '\\array_map($x ==> $x, vec[]); \\sort(inout $values); '.
+      '\\strpos("text", "x"); \\random_int(0, 1); '.
+      '\\preg_match("/x/", "text"); '.
+      'text_length("text"); \\mb_substr("text", 0, 2); '.
+      '$limits = tuple(\\PHP_INT_MAX, \\PHP_INT_MIN, \\NAN, pi, \\M_E); '.
+      'request($curl); \\sleep(1); $connect = \\mysql_connect<>; '.
+      '\\mysql_query("SELECT 1"); '.
+      '$hsl = tuple(\\HH\\Lib\\Math\\INT64_MAX, \\HH\\Lib\\Math\\NAN); '.
+      '\\HH\\Asio\\usleep(1); \\HH\\Asio\\curl_exec($curl); '.
+      '\\AsyncMysqlClient::connect("host", 3306, "db", "user", "pass"); '.
+      '\\HH\\Lib\\C\\count(vec[]); \\Client\\count(); count(); }',
+      Pha\create_context(),
+    );
+    $syntax_index = Pha\create_syntax_kind_index($script);
+    $token_index = Pha\create_token_kind_index($script);
+    $resolver = Pha\create_name_resolver_v2($script, $syntax_index, $token_index);
+    $pragma_map = Pha\create_pragma_map($script, $syntax_index);
+    $preset = PhaLinters\disallowed_entities_preset_prefer_hsl();
+    $preset_linter =
+      PhaLinters\disallowed_function_type_or_constant_linter($preset);
+    $preset_errors = $preset_linter(
+      $script,
+      $syntax_index,
+      $token_index,
+      $resolver,
+      $pragma_map,
+    );
+    invariant(
+      Str\contains($preset_errors[0]->getDescription(), 'C\\count'),
+      'Expected the HSL count recommendation before project overrides',
+    );
+    $linter = PhaLinters\disallowed_function_type_or_constant_linter(
+      PhaLinters\merge_disallowed_entities(
+        shape('functions' => dict['\\count' => 'Project count advice.']),
+        $preset,
+      ),
+    );
+    $errors =
+      $linter($script, $syntax_index, $token_index, $resolver, $pragma_map);
+    invariant(C\count($errors) === 19, 'Expected only PHP builtin references');
+    foreach (
+      Vec\zip(
+        $errors,
+        vec[
+          'Project count advice.',
+          'Str\\length',
+          'File\\open_read_only',
+          'Vec\\map',
+          'Vec\\sort',
+          'Str\\search',
+          'SecureRandom\\int',
+          'Regex\\first_match',
+          'Str\\length_l',
+          'Str\\slice_l',
+          'Math\\INT64_MAX',
+          'Math\\INT64_MIN',
+          'Math\\NAN',
+          'Math\\PI; precision differs',
+          'Math\\E; precision differs',
+          'HH\\Asio\\curl_exec',
+          'HH\\Asio\\usleep',
+          'AsyncMysqlClient::connect',
+          'AsyncMysqlConnection::queryAsync',
+        ],
+      ) as list($error, $advice)
+    ) {
+      invariant(
+        Str\contains($error->getDescription(), $advice),
+        'Expected HSL migration advice in source order',
+      );
+      invariant(
+        $error->getPatches() is null,
+        'Expected advice without autofix',
+      );
     }
   });
   $chain = $chain->test('Disallowed nameof references', ()[] ==> {
