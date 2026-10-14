@@ -18,15 +18,34 @@ function unused_pipe_variable_linter(
 
   $get_binop_operator =
     Pha\create_member_accessor($script, Pha\MEMBER_BINARY_OPERATOR);
+  $get_binop_lhs =
+    Pha\create_member_accessor($script, Pha\MEMBER_BINARY_LEFT_OPERAND);
+  $is_binary_expression =
+    Pha\create_syntax_matcher($script, Pha\KIND_BINARY_EXPRESSION);
   $get_binop_rhs =
     Pha\create_member_accessor($script, Pha\MEMBER_BINARY_RIGHT_OPERAND);
 
   $is_pipe_expression = $binop ==>
     $get_binop_operator($binop) |> $is_pipe_arrow($$);
 
-  $rhs_uses_dollar_dollar = $binop ==> $get_binop_rhs($binop)
-    |> Pha\node_get_descendants($script, $$)
-    |> C\any($$, $is_dollar_dollar);
+  $rhs_uses_dollar_dollar = $binop ==> {
+    $pending = vec[$get_binop_rhs($binop)];
+    for ($i = 0; $i < C\count($pending); ++$i) {
+      $node = $pending[$i];
+      if ($is_dollar_dollar($node)) {
+        return true;
+      }
+      if ($is_binary_expression($node) && $is_pipe_expression($node)) {
+        // The inner left operand can use our value; its right owns a new $$.
+        $pending[] = $get_binop_lhs($node);
+      } else {
+        foreach (Pha\node_get_children($script, $node) as $child) {
+          $pending[] = $child;
+        }
+      }
+    }
+    return false;
+  };
 
   return Pha\index_get_nodes_by_kind($syntax_index, Pha\KIND_BINARY_EXPRESSION)
     |> Vec\filter(
