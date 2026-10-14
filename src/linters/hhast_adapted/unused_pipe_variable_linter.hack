@@ -29,18 +29,18 @@ function unused_pipe_variable_linter(
     $get_binop_operator($binop) |> $is_pipe_arrow($$);
 
   $rhs_uses_dollar_dollar = $binop ==> {
-    $pending = vec[$get_binop_rhs($binop)];
-    for ($i = 0; $i < C\count($pending); ++$i) {
-      $node = $pending[$i];
+    $work_queue = vec[$get_binop_rhs($binop)];
+    for ($i = 0; $i < C\count($work_queue); ++$i) {
+      $node = $work_queue[$i];
       if ($is_dollar_dollar($node)) {
         return true;
       }
       if ($is_binary_expression($node) && $is_pipe_expression($node)) {
         // The inner left operand can use our value; its right owns a new $$.
-        $pending[] = $get_binop_lhs($node);
+        $work_queue[] = $get_binop_lhs($node);
       } else {
         foreach (Pha\node_get_children($script, $node) as $child) {
-          $pending[] = $child;
+          $work_queue[] = $child;
         }
       }
     }
