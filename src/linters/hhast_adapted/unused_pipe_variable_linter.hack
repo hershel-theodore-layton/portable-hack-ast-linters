@@ -35,9 +35,12 @@ function unused_pipe_variable_linter(
       if ($is_dollar_dollar($node)) {
         return true;
       }
-      if ($is_binary_expression($node) && $is_pipe_expression($node)) {
+      if (
+        $is_binary_expression($node) &&
+        $is_pipe_expression(Pha\as_syntax($node))
+      ) {
         // The inner left operand can use our value; its right owns a new $$.
-        $work_queue[] = $get_binop_lhs($node);
+        $work_queue[] = $get_binop_lhs(Pha\as_syntax($node));
       } else {
         foreach (Pha\node_get_children($script, $node) as $child) {
           $work_queue[] = $child;
