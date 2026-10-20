@@ -35,8 +35,11 @@ function extract_digest(
     return null;
   }
 
-  return Pha\node_get_code($script, Pha\SCRIPT_NODE)
+  // Ignore digest occurrences within the pragma, but hash other source verbatim.
+  return Pha\node_get_code($script, $pragma)
     |> Str\replace($$, $digest, '')
+    |> Pha\patches($script, Pha\patch_node($pragma, $$))
+    |> Pha\patches_apply($$)
     |> sha1($$) as string
     |> Str\slice($$, 0, 20)
     |> shape('pragma' => $pragma, 'embedded' => $digest, 'hashed' => $$);
