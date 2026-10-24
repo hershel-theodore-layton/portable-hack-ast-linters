@@ -18,10 +18,18 @@ function license_header_linter(
     |> Pha\node_get_children($script, $$)
     |> C\findx($$, $n ==> !$is_markup_section($n));
 
-  return Pha\node_get_descendants($script, $first_thing)
+  $first_token = Support\get_first_token($script, $first_thing)
+    |> Pha\as_token($$);
+  $token_text = Pha\token_get_text_trivium($script, $first_token);
+  // Other comments may precede the license, but code may not.
+  $leading_trivia = Pha\node_get_children($script, $first_token)
+    |> Support\vec_take_while_inclusive($$, $n ==> $n !== $token_text);
+
+  return $leading_trivia
     |> C\any(
       $$,
       $n ==> Pha\is_trivium($n) &&
+        $n !== $token_text &&
         Str\contains(Pha\node_get_code($script, $n), $expected_license_header),
     )
       ? vec[]

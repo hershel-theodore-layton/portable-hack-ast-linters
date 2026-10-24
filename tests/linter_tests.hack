@@ -354,6 +354,55 @@ async function linter_fixtures_async(
       $source,
     );
   });
+  $chain = $chain->test('License headers precede code', ()[] ==> {
+    $header = '/* Example License Text */';
+    foreach (
+      vec[
+        tuple($header."\nfunction f(): void {}", false),
+        tuple("// File comment\n".$header."\nclass C {}", false),
+        tuple($header, false),
+        tuple('', true),
+        tuple('// Unrelated comment', true),
+        tuple('function f(): void { '.$header.' }', true),
+        tuple('class C { '.$header.' }', true),
+        tuple('namespace N { '.$header.' }', true),
+        tuple('function f(): void {} '.$header, true),
+        tuple('function f(): void {} '.$header.' class C {}', true),
+        tuple('<<A("'.$header.'")>> function f(): void {}', true),
+        tuple("<?hh\n".$header."\nfunction f(): void {}", false),
+        tuple("<?hh\nfunction f(): void { ".$header.' }', true),
+      ] as list($source, $missing)
+    ) {
+      list($script, $_) = Pha\parse($source, Pha\create_context());
+      $syntax_index = Pha\create_syntax_kind_index($script);
+      $pragma_map = Pha\create_pragma_map($script, $syntax_index);
+      $errors = PhaLinters\license_header_linter($script, $pragma_map, $header);
+      invariant(
+        C\count($errors) === ($missing ? 1 : 0),
+        'Unexpected license header result for %s',
+        $source,
+      );
+      if (!$missing) {
+        continue;
+      }
+      $fixed = C\onlyx($errors)->getPatches() as nonnull
+        |> Pha\patches_apply($$);
+      $expected = Str\starts_with($source, "<?hh\n")
+        ? "<?hh\n".$header."\n".Str\strip_prefix($source, "<?hh\n")
+        : $header."\n".$source;
+      invariant($fixed === $expected, 'Expected header insertion before code');
+      list($fixed_script, $_) = Pha\parse($fixed, Pha\create_context());
+      $fixed_index = Pha\create_syntax_kind_index($fixed_script);
+      invariant(
+        C\is_empty(PhaLinters\license_header_linter(
+          $fixed_script,
+          Pha\create_pragma_map($fixed_script, $fixed_index),
+          $header,
+        )),
+        'Expected the inserted header to satisfy the rule',
+      );
+    }
+  });
   return $chain;
 }
 
