@@ -35,3 +35,9 @@ namespace Linters\Tests\SingleGroup6 {
 namespace Linters\Tests\SingleGroupBlock {
   use type Foo\Bar\{Baz};
 }
+//##! 0 Clause kinds cannot be simplified by removing braces
+namespace Linters\Tests\SingleGroupClauseKinds {
+  use Foo\{function one};
+  use Foo\{const TWO as ALIAS};
+  use Foo\{/* before */function five /* after */,};
+}

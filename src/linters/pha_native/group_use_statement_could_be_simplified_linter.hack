@@ -27,13 +27,23 @@ function group_use_statement_could_be_simplified_linter(
   $get_separator =
     Pha\create_member_accessor($script, Pha\MEMBER_LIST_SEPARATOR);
 
+  $get_clause_kind = Pha\create_member_accessor(
+    $script,
+    Pha\MEMBER_NAMESPACE_USE_CLAUSE_KIND,
+  );
+
   return Pha\index_get_nodes_by_kind(
     $syntax_index,
     Pha\KIND_NAMESPACE_GROUP_USE_DECLARATION,
   )
     |> Vec\filter($$, $use ==> {
       $clauses = Pha\list_get_items_of_children($script, $get_clauses($use));
-      return C\count($clauses) === 1;
+      if (C\count($clauses) !== 1) {
+        return false;
+      }
+      // Removing braces would leave a clause-level kind inside the name.
+      $clause = C\onlyx($clauses) |> Pha\as_syntax($$);
+      return Pha\is_missing($get_clause_kind($clause));
     })
     |> Vec\map($$, $use ==> {
       $clauses = $get_clauses($use);
